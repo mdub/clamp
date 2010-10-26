@@ -1,0 +1,3 @@
+module Hammer
+  # Your code goes here...
+end
