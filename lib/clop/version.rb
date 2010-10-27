@@ -1,3 +1,3 @@
-module Hammer
+module Clop
   VERSION = "0.0.1".freeze
 end

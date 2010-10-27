@@ -1,3 +1,3 @@
-module Hammer
+module Clop
   # Your code goes here...
 end
