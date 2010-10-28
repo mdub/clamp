@@ -7,8 +7,10 @@ module Clop
     end
     
     attr_reader :name
-
+    attr_reader :arguments
+    
     def run(arguments)
+      @arguments = arguments
       execute
     end
 

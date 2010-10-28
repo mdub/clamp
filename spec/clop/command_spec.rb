@@ -2,14 +2,18 @@ require 'spec_helper'
 
 class SimpleCommand < Clop::Command
 
-  def executed?
-    @executed
-  end
-
   def execute
-    @executed = true
+    @execution = {
+      :arguments => arguments.dup
+    }
   end
 
+  attr_reader :execution
+  
+  def executed?
+    !!@execution
+  end
+  
 end
 
 describe Clop::Command do
@@ -18,14 +22,30 @@ describe Clop::Command do
     @command = SimpleCommand.new("simple")
   end
 
-  describe "#run", "with no args" do
+  describe "#run" do
 
-    before do
-      @command.run([])
+    describe "with no args" do
+
+      before do
+        @command.run([])
+      end
+
+      it "executes the #execute method" do
+        @command.should be_executed
+      end
+
     end
 
-    it "executes the #execute method" do
-      @command.should be_executed
+    describe "with args" do
+
+      before do
+        @command.run(%w(a b c))
+      end
+
+      it "provides access to the argument list" do
+        @command.execution[:arguments].should == %w(a b c)
+      end
+
     end
 
   end
