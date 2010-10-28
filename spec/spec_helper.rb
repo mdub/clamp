@@ -1,4 +1,5 @@
 require "rspec"
+require "clop"
 
 Rspec.configure do |config|
   
