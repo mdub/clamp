@@ -57,7 +57,8 @@ describe Clop::Command do
       option :flavour
       
       def execute
-        print arguments.inspect
+        puts "Flavour: #{flavour}" if flavour
+        puts "Arguments: #{arguments.join(', ')}"
       end
 
     end
@@ -76,6 +77,26 @@ describe Clop::Command do
       it "can be modified" do
         @command.flavour = "chocolate"
         @command.flavour.should == "chocolate"
+      end
+      
+    end
+    
+    describe "#parse" do
+      
+      describe "with a value for the option" do
+        
+        before do
+          @command.parse(%w(--flavour strawberry a b c))
+        end
+        
+        it "extracts the option value" do
+          @command.flavour.should == "strawberry"
+        end
+
+        it "retains unconsumed arguments" do
+          @command.arguments.should == %w(a b c)
+        end
+        
       end
       
     end
