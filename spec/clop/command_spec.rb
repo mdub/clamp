@@ -98,6 +98,16 @@ describe Clop::Command do
         end
         
       end
+
+      describe "with an unrecognised option" do
+        
+        it "raises a UsageError" do
+          lambda do
+            @command.parse(%w(--foo bar))
+          end.should raise_error(Clop::UsageError)
+        end
+        
+      end
       
     end
     

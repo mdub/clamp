@@ -1,3 +1,5 @@
+require 'clop/option'
+
 module Clop
   
   class Command
@@ -16,9 +18,9 @@ module Clop
         when /\A--\z/
           break
 
-        when /^--(\w+)/
-          option_name = $1
-          send("#{option_name}=", arguments.shift)
+        when /^(--\w+|-\w)/
+          option = get_option($1)
+          send("#{option.attribute}=", arguments.shift)
           
         else
           raise "can't handle #{option_argument}"
@@ -36,14 +38,45 @@ module Clop
       parse(arguments)
       execute
     end
+
+    private
+
+    def get_option(option_string)
+      option = self.class.options[option_string]
+      signal_usage_error "Unrecognised option '#{option_string}'" unless option
+      option
+    end
+
+    def signal_usage_error(message)
+      e = UsageError.new(message, self)
+      e.set_backtrace(caller)
+      raise e
+    end
     
     class << self
     
+      def options
+        @options ||= {}
+      end
+      
       def option(name)
-        attr_accessor name
+        option = Clop::Option.new(name)
+        options["--#{name}"] = option
+        attr_accessor option.attribute
       end
       
     end
+        
+  end
+  
+  class UsageError < StandardError
+    
+    def initialize(message, command)
+      super(message)
+      @command = command
+    end
+
+    attr_reader :command
     
   end
   
