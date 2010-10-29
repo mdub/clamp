@@ -15,15 +15,15 @@ describe Clop::Command do
     @out.string
   end
 
-  def self.given_command(&block)
+  def self.given_command(name, &block)
     before do
-      @command = Class.new(Clop::Command, &block).new("anon")
+      @command = Class.new(Clop::Command, &block).new(name)
     end
   end
   
   describe "simple" do
 
-    given_command do
+    given_command("simple") do
 
       def execute
         print arguments.inspect
@@ -47,20 +47,15 @@ describe Clop::Command do
       end
 
     end
-
+    
   end
 
   describe "with an option declared" do
 
-    given_command do
+    given_command("icecream") do
 
       option :flavour
       
-      def execute
-        puts "Flavour: #{flavour}" if flavour
-        puts "Arguments: #{arguments.join(', ')}"
-      end
-
     end
 
     it "has accessors for the option" do
