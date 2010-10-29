@@ -18,6 +18,14 @@ module Clop
       raise "you need to define #execute"
     end
     
+    class << self
+    
+      def option(name)
+        attr_accessor name
+      end
+      
+    end
+    
   end
   
 end

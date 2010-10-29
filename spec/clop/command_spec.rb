@@ -39,7 +39,7 @@ describe Clop::Command do
       end
 
       it "executes the #execute method" do
-        output.should_not == ""
+        output.should_not be_empty
       end
 
       it "provides access to the argument list" do
@@ -48,6 +48,38 @@ describe Clop::Command do
 
     end
 
+  end
+
+  describe "with an option declared" do
+
+    given_command do
+
+      option :flavour
+      
+      def execute
+        print arguments.inspect
+      end
+
+    end
+
+    it "has accessors for the option" do
+      @command.should respond_to(:flavour)
+      @command.should respond_to(:flavour=)
+    end
+    
+    describe "option value" do
+      
+      it "is nil by default" do
+        @command.flavour.should == nil
+      end
+
+      it "can be modified" do
+        @command.flavour = "chocolate"
+        @command.flavour.should == "chocolate"
+      end
+      
+    end
+    
   end
   
 end
