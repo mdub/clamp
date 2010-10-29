@@ -1,53 +1,53 @@
 require 'spec_helper'
-
-class SimpleCommand < Clop::Command
-
-  def execute
-    @execution = {
-      :arguments => arguments.dup
-    }
-  end
-
-  attr_reader :execution
-  
-  def executed?
-    !!@execution
-  end
-  
-end
+require 'stringio'
 
 describe Clop::Command do
 
   before do
-    @command = SimpleCommand.new("simple")
+    $stdout = @out = StringIO.new
   end
 
-  describe "#run" do
+  after do
+    $stdout = STDOUT
+  end
 
-    describe "with no args" do
+  def output
+    @out.string
+  end
 
+  def self.given_command(&block)
+    before do
+      @command = Class.new(Clop::Command, &block).new("anon")
+    end
+  end
+  
+  describe "simple" do
+
+    given_command do
+
+      def execute
+        print arguments.inspect
+      end
+
+    end
+    
+    describe "#run" do
+      
       before do
-        @command.run([])
+        @abc = %w(a b c)
+        @command.run(@abc)
       end
 
       it "executes the #execute method" do
-        @command.should be_executed
-      end
-
-    end
-
-    describe "with args" do
-
-      before do
-        @command.run(%w(a b c))
+        output.should_not == ""
       end
 
       it "provides access to the argument list" do
-        @command.execution[:arguments].should == %w(a b c)
+        output.should == @abc.inspect
       end
 
     end
 
   end
-
+  
 end
