@@ -108,6 +108,19 @@ describe Clop::Command do
         end
         
       end
+
+      describe "with option-like things beyond the arguments" do
+
+        before do
+          @command.parse(%w(a b c --flavour strawberry))
+        end
+        
+        it "treats them as positional arguments" do
+          @command.flavour.should == nil
+          @command.arguments.should == %w(a b c --flavour strawberry)
+        end
+        
+      end
       
     end
     
