@@ -54,8 +54,8 @@ describe Clop::Command do
 
     given_command("icecream") do
 
-      option :flavour
-      
+      option "--flavour", "FLAVOUR", "Flavour of the month"
+
     end
 
     it "has accessors for the option" do
@@ -115,6 +115,14 @@ describe Clop::Command do
           @command.arguments.should == %w(a b c --flavour strawberry)
         end
         
+      end
+      
+    end
+    
+    describe "#help" do
+      
+      it "includes option details" do
+        @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
       end
       
     end

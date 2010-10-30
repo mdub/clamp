@@ -39,10 +39,25 @@ module Clop
       execute
     end
 
+    def usage
+      "#{name} [OPTIONS]"
+    end
+    
+    def help
+      help = StringIO.new
+      help.puts "usage: #{usage}"
+      help.puts ""
+      help.puts "  OPTIONS"
+      self.class.options.each do |option|
+        help.puts option.help
+      end
+      help.string
+    end
+
     private
 
     def get_option(option_string)
-      option = self.class.options[option_string]
+      option = self.class.find_option(option_string)
       signal_usage_error "Unrecognised option '#{option_string}'" unless option
       option
     end
@@ -56,13 +71,17 @@ module Clop
     class << self
     
       def options
-        @options ||= {}
+        @options ||= []
       end
       
-      def option(name)
-        option = Clop::Option.new(name)
-        options["--#{name}"] = option
+      def option(name, argument_type, description)
+        option = Clop::Option.new(name, argument_type, description)
+        options << option
         attr_accessor option.attribute
+      end
+      
+      def find_option(name)
+        options.find { |o| o.name == name }
       end
       
     end
