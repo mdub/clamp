@@ -15,7 +15,7 @@ module Clop
     end
 
     def help
-      "    %-19s %s" % ["#{name} #{argument_type}", description]
+      "%-31s %s" % ["#{name} #{argument_type}", description]
     end
     
   end

@@ -49,7 +49,7 @@ module Clop
       help.puts ""
       help.puts "  OPTIONS"
       self.class.options.each do |option|
-        help.puts option.help
+        help.puts "    #{option.help}"
       end
       help.string
     end
