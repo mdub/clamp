@@ -2,20 +2,20 @@ module Clop
 
   class OptionHandler
 
-    def initialize(name, argument_type, description)
-      @name = name
+    def initialize(option, argument_type, description)
+      @option = option
       @argument_type = argument_type
       @description = description
     end
 
-    attr_reader :name, :argument_type, :description
+    attr_reader :option, :argument_type, :description
 
     def attribute
-      name.sub(/^--/, '')
+      option.sub(/^--/, '')
     end
 
     def help
-      "%-31s %s" % ["#{name} #{argument_type}", description]
+      "%-31s %s" % ["#{option} #{argument_type}", description]
     end
     
   end

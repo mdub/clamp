@@ -13,17 +13,17 @@ module Clop
 
     def parse(arguments)
       while arguments.first =~ /^-/
-        case (option_argument = arguments.shift)
+        case (option = arguments.shift)
 
         when /\A--\z/
           break
 
         when /^(--\w+|-\w)/
-          option = get_option($1)
-          send("#{option.attribute}=", arguments.shift)
+          option_handler = find_option_handler($1)
+          send("#{option_handler.attribute}=", arguments.shift)
           
         else
-          raise "can't handle #{option_argument}"
+          raise "can't handle #{option}"
           
         end
       end
@@ -48,18 +48,18 @@ module Clop
       help.puts "usage: #{usage}"
       help.puts ""
       help.puts "  OPTIONS"
-      self.class.options.each do |option|
-        help.puts "    #{option.help}"
+      self.class.option_handlers.each do |option_handler|
+        help.puts "    #{option_handler.help}"
       end
       help.string
     end
 
     private
 
-    def get_option(option_string)
-      option = self.class.find_option(option_string)
-      signal_usage_error "Unrecognised option '#{option_string}'" unless option
-      option
+    def find_option_handler(option)
+      handler = self.class.find_option_handler(option)
+      signal_usage_error "Unrecognised option '#{option}'" unless handler
+      handler
     end
 
     def signal_usage_error(message)
@@ -70,18 +70,18 @@ module Clop
     
     class << self
     
-      def options
-        @options ||= []
+      def option_handlers
+        @option_handlers ||= []
       end
       
-      def option(name, argument_type, description)
-        option = Clop::OptionHandler.new(name, argument_type, description)
-        options << option
-        attr_accessor option.attribute
+      def option(option, argument_type, description)
+        handler = Clop::OptionHandler.new(option, argument_type, description)
+        option_handlers << handler
+        attr_accessor handler.attribute
       end
       
-      def find_option(name)
-        options.find { |o| o.name == name }
+      def find_option_handler(option)
+        option_handlers.find { |o| o.option == option }
       end
       
     end
