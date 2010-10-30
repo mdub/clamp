@@ -1,6 +1,6 @@
 module Clop
 
-  class Option
+  class OptionHandler
 
     def initialize(name, argument_type, description)
       @name = name

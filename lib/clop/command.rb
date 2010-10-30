@@ -1,4 +1,4 @@
-require 'clop/option'
+require 'clop/option_handler'
 
 module Clop
   
@@ -75,7 +75,7 @@ module Clop
       end
       
       def option(name, argument_type, description)
-        option = Clop::Option.new(name, argument_type, description)
+        option = Clop::OptionHandler.new(name, argument_type, description)
         options << option
         attr_accessor option.attribute
       end

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Clop::Option do
+describe Clop::OptionHandler do
 
   before do
-    @option = Clop::Option.new("--source", "URL", "Source of data")
+    @option = Clop::OptionHandler.new("--source", "URL", "Source of data")
   end
 
   it "has a name" do
