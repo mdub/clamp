@@ -21,88 +21,78 @@ describe Clop::Command do
     end
   end
 
-  describe "simple" do
+  given_command("cmd") do
 
-    given_command("simple") do
-
-      def execute
-        print arguments.inspect
-      end
-
+    def execute
+      print arguments.inspect
     end
 
-    describe "#help" do
+  end
 
-      it "describes usage" do
-        @command.help.should include("Usage:\n    simple\n")
-      end
+  describe "#help" do
 
+    it "describes usage" do
+      @command.help.should include("Usage:\n    cmd\n")
     end
 
-    describe "#parse" do
+  end
 
-      it "sets arguments" do
-        @command.parse(%w(a b c))
-        @command.arguments.should == %w(a b c)
-      end
+  describe "#parse" do
 
-      describe "with an unrecognised option" do
-
-        it "raises a UsageError" do
-          lambda do
-            @command.parse(%w(--foo bar))
-          end.should raise_error(Clop::UsageError)
-        end
-
-      end
-
+    it "sets arguments" do
+      @command.parse(%w(a b c))
+      @command.arguments.should == %w(a b c)
     end
 
-    describe "#run" do
+    describe "with an unrecognised option" do
 
-      before do
-        @abc = %w(a b c)
-        @command.run(@abc)
-      end
-
-      it "executes the #execute method" do
-        output.should_not be_empty
-      end
-
-      it "provides access to the argument list" do
-        output.should == @abc.inspect
+      it "raises a UsageError" do
+        lambda do
+          @command.parse(%w(--foo bar))
+        end.should raise_error(Clop::UsageError)
       end
 
     end
 
   end
 
-  describe "with an option declared" do
+  describe "#run" do
 
-    given_command("icecream") do
-
-      option "--flavour", "FLAVOUR", "Flavour of the month"
-
+    before do
+      @abc = %w(a b c)
+      @command.run(@abc)
     end
 
-    it "has accessors for the option" do
-      @command.should respond_to(:flavour)
-      @command.should respond_to(:flavour=)
+    it "executes the #execute method" do
+      output.should_not be_empty
     end
 
-    describe "option value" do
-
-      it "is nil by default" do
-        @command.flavour.should == nil
-      end
-
-      it "can be modified" do
-        @command.flavour = "chocolate"
-        @command.flavour.should == "chocolate"
-      end
-
+    it "provides access to the argument list" do
+      output.should == @abc.inspect
     end
 
+  end
+
+  describe ".option" do
+
+    before do
+      @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
+    end
+
+    it "declares option argument accessors" do
+      @command.flavour.should == nil
+      @command.flavour = "chocolate"
+      @command.flavour.should == "chocolate"
+    end
+
+  end
+  
+  describe "with options" do
+
+    before do
+      @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
+    end
+    
     describe "#parse" do
 
       describe "with a value for the option" do
@@ -144,7 +134,7 @@ describe Clop::Command do
     describe "#help" do
 
       it "indicates that there are options" do
-        @command.help.should include("icecream [OPTIONS]")
+        @command.help.should include("cmd [OPTIONS]")
       end
 
       it "includes option details" do
