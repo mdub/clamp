@@ -32,13 +32,13 @@ describe Clop::Command do
     end
 
     describe "#help" do
-      
+
       it "describes usage" do
         @command.help.should include("usage: simple\n")
       end
-      
+
     end
-    
+
     describe "#parse" do
 
       it "sets arguments" do
@@ -77,24 +77,6 @@ describe Clop::Command do
 
   end
 
-  describe "with explicit usage" do
-
-    given_command("blah") do
-
-      usage "FOO BAR ..."
-
-    end
-
-    describe "#help" do
-      
-      it "includes the explicit usage" do
-        @command.help.should include("usage: blah FOO BAR ...\n")
-      end
-      
-    end
-    
-  end
-  
   describe "with an option declared" do
 
     given_command("icecream") do
@@ -214,5 +196,42 @@ describe Clop::Command do
     end
 
   end
-  
+
+  describe "with explicit usage" do
+
+    given_command("blah") do
+
+      usage "FOO BAR ..."
+
+    end
+
+    describe "#help" do
+
+      it "includes the explicit usage" do
+        @command.help.should include("usage: blah FOO BAR ...\n")
+      end
+
+    end
+
+  end
+
+  describe "with multiple usages" do
+
+    given_command("put") do
+
+      usage "THIS HERE"
+      usage "THAT THERE"
+
+    end
+
+    describe "#help" do
+
+      it "includes both potential usages" do
+        @command.help.should include("usage: put THIS HERE\n       put THAT THERE\n")
+     end
+
+    end
+
+  end
+
 end
