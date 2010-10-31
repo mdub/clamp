@@ -1,21 +1,21 @@
 module Clop
 
-  class OptionHandler
+  class Option
 
-    def initialize(option, argument_type, description)
-      @option = option
+    def initialize(switch, argument_type, description)
+      @switch = switch
       @argument_type = argument_type
       @description = description
     end
 
-    attr_reader :option, :argument_type, :description
+    attr_reader :switch, :argument_type, :description
 
     def attribute
-      option.sub(/^--/, '')
+      switch.sub(/^--/, '')
     end
 
     def help
-      "%-31s %s" % ["#{option} #{argument_type}", description]
+      "%-31s %s" % ["#{switch} #{argument_type}", description]
     end
     
     def flag?

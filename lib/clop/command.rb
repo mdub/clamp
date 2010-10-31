@@ -1,4 +1,4 @@
-require 'clop/option_handler'
+require 'clop/option'
 
 module Clop
   
@@ -13,18 +13,18 @@ module Clop
 
     def parse(arguments)
       while arguments.first =~ /^-/
-        case (option = arguments.shift)
+        case (switch = arguments.shift)
 
         when /\A--\z/
           break
 
         when /^(--\w+|-\w)/
-          option_handler = find_option_handler($1)
-          value = option_handler.requires_argument? ? arguments.shift : true
-          send("#{option_handler.attribute}=", value)
+          option = find_option($1)
+          value = option.requires_argument? ? arguments.shift : true
+          send("#{option.attribute}=", value)
           
         else
-          raise "can't handle #{option}"
+          raise "can't handle #{switch}"
           
         end
       end
@@ -49,18 +49,17 @@ module Clop
       help.puts "usage: #{usage}"
       help.puts ""
       help.puts "  OPTIONS"
-      self.class.option_handlers.each do |option_handler|
-        help.puts "    #{option_handler.help}"
+      self.class.options.each do |option|
+        help.puts "    #{option.help}"
       end
       help.string
     end
 
     private
 
-    def find_option_handler(option)
-      handler = self.class.find_option_handler(option)
-      signal_usage_error "Unrecognised option '#{option}'" unless handler
-      handler
+    def find_option(switch)
+      self.class.find_option(switch) || 
+      signal_usage_error("Unrecognised option '#{switch}'")
     end
 
     def signal_usage_error(message)
@@ -71,23 +70,23 @@ module Clop
     
     class << self
     
-      def option_handlers
-        @option_handlers ||= []
+      def options
+        @options ||= []
       end
       
-      def option(option, argument_type, description)
-        handler = Clop::OptionHandler.new(option, argument_type, description)
-        option_handlers << handler
-        attr_accessor handler.attribute
+      def option(switch, argument_type, description)
+        option = Clop::Option.new(switch, argument_type, description)
+        options << option
+        attr_accessor option.attribute
         if argument_type == :flag
-          alias_method "#{handler.attribute}?", handler.attribute
-          undef_method(handler.attribute)
+          alias_method "#{option.attribute}?", option.attribute
+          undef_method(option.attribute)
         else
         end
       end
       
-      def find_option_handler(option)
-        option_handlers.find { |o| o.option == option }
+      def find_option(switch)
+        options.find { |o| o.switch == switch }
       end
       
     end
