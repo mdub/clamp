@@ -20,7 +20,7 @@ module Clop
 
         when /^(--\w+|-\w)/
           option = find_option($1)
-          value = option.requires_argument? ? arguments.shift : true
+          value = option.flag? ? true : arguments.shift
           send("#{option.attribute}=", value)
           
         else
@@ -77,21 +77,32 @@ module Clop
       def option(switch, argument_type, description)
         option = Clop::Option.new(switch, argument_type, description)
         options << option
-        class_eval <<-RUBY
-
-        def #{option.writer}(value)
-          @#{option.attribute} = value
-        end
-
-        def #{option.reader}
-          @#{option.attribute}
-        end
-
-        RUBY
+        declare_option_reader(option)
+        declare_option_writer(option)
       end
       
       def find_option(switch)
         options.find { |o| o.switch == switch }
+      end
+      
+      private
+      
+      def declare_option_reader(option)
+        reader_name = option.attribute
+        reader_name += "?" if option.flag?
+        class_eval <<-RUBY
+        def #{reader_name}
+          @#{option.attribute}
+        end
+        RUBY
+      end
+
+      def declare_option_writer(option)
+        class_eval <<-RUBY
+        def #{option.attribute}=(value)
+          @#{option.attribute} = value
+        end
+        RUBY
       end
       
     end

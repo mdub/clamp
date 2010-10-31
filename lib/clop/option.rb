@@ -11,29 +11,17 @@ module Clop
     attr_reader :switch, :argument_type, :description
 
     def attribute
-      switch.sub(/^--/, '')
-    end
-
-    def reader
-      attribute + (flag? ? "?" : "")
-    end
-
-    def writer
-      attribute + "="
-    end
-    
-    def help
-      lhs = switch
-      lhs += " " + argument_type unless flag?
-      "%-31s %s" % [lhs, description]
+      switch.sub(/^--/, '').tr('-', '_')
     end
     
     def flag?
       @argument_type == :flag
     end
     
-    def requires_argument?
-      !flag?
+    def help
+      lhs = switch
+      lhs += " " + argument_type unless flag?
+      "%-31s %s" % [lhs, description]
     end
     
   end
