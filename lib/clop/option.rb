@@ -23,7 +23,9 @@ module Clop
     end
     
     def help
-      "%-31s %s" % ["#{switch} #{argument_type}", description]
+      lhs = switch
+      lhs += " " + argument_type unless flag?
+      "%-31s %s" % [lhs, description]
     end
     
     def flag?
