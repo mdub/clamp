@@ -77,12 +77,17 @@ module Clop
       def option(switch, argument_type, description)
         option = Clop::Option.new(switch, argument_type, description)
         options << option
-        attr_accessor option.attribute
-        if argument_type == :flag
-          alias_method "#{option.attribute}?", option.attribute
-          undef_method(option.attribute)
-        else
+        class_eval <<-RUBY
+
+        def #{option.writer}(value)
+          @#{option.attribute} = value
         end
+
+        def #{option.reader}
+          @#{option.attribute}
+        end
+
+        RUBY
       end
       
       def find_option(switch)

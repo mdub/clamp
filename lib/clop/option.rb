@@ -14,6 +14,14 @@ module Clop
       switch.sub(/^--/, '')
     end
 
+    def reader
+      attribute + (flag? ? "?" : "")
+    end
+
+    def writer
+      attribute + "="
+    end
+    
     def help
       "%-31s %s" % ["#{switch} #{argument_type}", description]
     end
