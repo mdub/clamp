@@ -159,8 +159,28 @@ describe Clop::Command do
       @command.should_not respond_to(:verbose)
     end
 
-    it "default to false" do
+    it "defaults to false" do
       @command.should_not be_verbose
+    end
+
+    describe "#parse" do
+
+      describe "with option" do
+
+        before do
+          @command.parse(%w(--verbose foo))
+        end
+
+        it "sets the option" do
+          @command.should be_verbose
+        end
+
+        it "does not consume an argument" do
+          @command.arguments.should == %w(foo)
+        end
+
+      end
+
     end
 
   end

@@ -18,6 +18,14 @@ module Clop
       "%-31s %s" % ["#{option} #{argument_type}", description]
     end
     
+    def flag?
+      @argument_type == :flag
+    end
+    
+    def requires_argument?
+      !flag?
+    end
+    
   end
 
 end

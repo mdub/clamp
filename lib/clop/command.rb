@@ -20,7 +20,8 @@ module Clop
 
         when /^(--\w+|-\w)/
           option_handler = find_option_handler($1)
-          send("#{option_handler.attribute}=", arguments.shift)
+          value = option_handler.requires_argument? ? arguments.shift : true
+          send("#{option_handler.attribute}=", value)
           
         else
           raise "can't handle #{option}"
