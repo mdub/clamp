@@ -1,0 +1,21 @@
+#! /usr/bin/env ruby
+
+require "clop"
+
+class Rename < Clop::Command
+
+  option "--verbose", :flag, "Be verbose"
+
+  def execute
+    puts "Blah blah blah" if verbose?
+  end
+  
+end
+
+begin 
+  Rename.new("rename").run(ARGV)
+rescue Clop::UsageError => e
+  $stderr.puts e.message
+  $stderr.puts ""
+  $stderr.puts e.command.help
+end
