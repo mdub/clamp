@@ -31,6 +31,14 @@ describe Clop::Command do
 
     end
 
+    describe "#help" do
+      
+      it "describes usage" do
+        @command.help.should include("usage: simple\n")
+      end
+      
+    end
+    
     describe "#parse" do
 
       it "sets arguments" do
@@ -135,6 +143,10 @@ describe Clop::Command do
 
     describe "#help" do
 
+      it "indicates that there are options" do
+        @command.help.should include("usage: icecream [OPTIONS]\n")
+      end
+
       it "includes option details" do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
       end
@@ -184,5 +196,5 @@ describe Clop::Command do
     end
 
   end
-
+  
 end

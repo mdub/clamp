@@ -41,7 +41,9 @@ module Clop
     end
 
     def usage
-      "#{name} [OPTIONS]"
+      usage = name
+      usage += " [OPTIONS]" if self.class.has_options?
+      usage
     end
     
     def help
@@ -79,6 +81,10 @@ module Clop
         options << option
         declare_option_reader(option)
         declare_option_writer(option)
+      end
+      
+      def has_options?
+        !options.empty?
       end
       
       def find_option(switch)
