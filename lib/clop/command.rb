@@ -78,6 +78,11 @@ module Clop
         handler = Clop::OptionHandler.new(option, argument_type, description)
         option_handlers << handler
         attr_accessor handler.attribute
+        if argument_type == :flag
+          alias_method "#{handler.attribute}?", handler.attribute
+          undef_method(handler.attribute)
+        else
+        end
       end
       
       def find_option_handler(option)

@@ -20,7 +20,7 @@ describe Clop::Command do
       @command = Class.new(Clop::Command, &block).new(name)
     end
   end
-  
+
   describe "simple" do
 
     given_command("simple") do
@@ -30,7 +30,7 @@ describe Clop::Command do
       end
 
     end
-    
+
     describe "#parse" do
 
       it "sets arguments" do
@@ -49,9 +49,9 @@ describe Clop::Command do
       end
 
     end
-    
+
     describe "#run" do
-      
+
       before do
         @abc = %w(a b c)
         @command.run(@abc)
@@ -66,7 +66,7 @@ describe Clop::Command do
       end
 
     end
-    
+
   end
 
   describe "with an option declared" do
@@ -81,9 +81,9 @@ describe Clop::Command do
       @command.should respond_to(:flavour)
       @command.should respond_to(:flavour=)
     end
-    
+
     describe "option value" do
-      
+
       it "is nil by default" do
         @command.flavour.should == nil
       end
@@ -92,17 +92,17 @@ describe Clop::Command do
         @command.flavour = "chocolate"
         @command.flavour.should == "chocolate"
       end
-      
+
     end
-    
+
     describe "#parse" do
-      
+
       describe "with a value for the option" do
-        
+
         before do
           @command.parse(%w(--flavour strawberry a b c))
         end
-        
+
         it "extracts the option value" do
           @command.flavour.should == "strawberry"
         end
@@ -110,7 +110,7 @@ describe Clop::Command do
         it "retains unconsumed arguments" do
           @command.arguments.should == %w(a b c)
         end
-        
+
       end
 
       describe "with option-like things beyond the arguments" do
@@ -119,7 +119,7 @@ describe Clop::Command do
           @command.parse(%w(a b c --flavour strawberry))
           @command.arguments.should == %w(a b c --flavour strawberry)
         end
-        
+
       end
 
       describe "with an option terminator" do
@@ -132,15 +132,37 @@ describe Clop::Command do
       end
 
     end
-    
+
     describe "#help" do
-      
+
       it "includes option details" do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
       end
-      
+
     end
-    
+
   end
-  
+
+  describe "with a flag option declared" do
+
+    given_command("hello") do
+
+      option "--verbose", :flag, "Be heartier"
+
+    end
+
+    it "has a predicate reader" do
+      @command.should respond_to(:verbose?)
+    end
+
+    it "does not have a non-predicate reader" do
+      @command.should_not respond_to(:verbose)
+    end
+
+    it "default to false" do
+      @command.should_not be_verbose
+    end
+
+  end
+
 end
