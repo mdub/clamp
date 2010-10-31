@@ -34,7 +34,7 @@ describe Clop::Command do
     describe "#help" do
 
       it "describes usage" do
-        @command.help.should include("usage: simple\n")
+        @command.help.should include("Usage:\n    simple\n")
       end
 
     end
@@ -144,7 +144,7 @@ describe Clop::Command do
     describe "#help" do
 
       it "indicates that there are options" do
-        @command.help.should include("usage: icecream [OPTIONS]\n")
+        @command.help.should include("icecream [OPTIONS]")
       end
 
       it "includes option details" do
@@ -208,7 +208,7 @@ describe Clop::Command do
     describe "#help" do
 
       it "includes the explicit usage" do
-        @command.help.should include("usage: blah FOO BAR ...\n")
+        @command.help.should include("blah FOO BAR ...\n")
       end
 
     end
@@ -227,7 +227,8 @@ describe Clop::Command do
     describe "#help" do
 
       it "includes both potential usages" do
-        @command.help.should include("usage: put THIS HERE\n       put THAT THERE\n")
+        @command.help.should include("put THIS HERE\n")
+        @command.help.should include("put THAT THERE\n")
      end
 
     end

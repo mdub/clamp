@@ -4,7 +4,12 @@ require "clop"
 
 class Rename < Clop::Command
 
-  option "--verbose", :flag, "Be verbose"
+  usage "TRANSFORM FILE ..."
+
+  argument "TRANSFORM", "a Ruby expression"
+  argument "FILE", "a file to rename"
+  
+  option "--verbose", :flag, "be verbose"
 
   def execute
     puts "Blah blah blah" if verbose?

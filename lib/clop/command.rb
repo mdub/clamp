@@ -1,3 +1,4 @@
+require 'clop/argument'
 require 'clop/option'
 
 module Clop
@@ -83,19 +84,38 @@ module Clop
         @usages << usage
       end
 
+      def arguments
+        @arguments ||= []
+      end
+      
+      def argument(name, description)
+        arguments << Argument.new(name, description)
+      end
+
+      def derived_usage
+        arguments.map { |a| a.name }.join(" ")
+      end
+      
       def help
         help = StringIO.new
-        usages = @usages || [""]
+        help.puts "Usage:"
+        usages = @usages || [derived_usage]
         usages.each_with_index do |usage, i|
-          prefix = (i.zero? ? "usage:" : "      ")
           command = "__COMMAND__" # placeholder
           command += " [OPTIONS]" if has_options?
-          help.puts "#{prefix} #{command} #{usage}".rstrip
+          help.puts "    #{command} #{usage}".rstrip
         end
-        help.puts ""
-        help.puts "  OPTIONS"
-        options.each do |option|
-          help.puts "    #{option.help}"
+        unless arguments.empty?
+          help.puts "\nArguments:"
+          arguments.each do |argument|
+            help.puts "    %-31s %s" % [argument.name, argument.description]
+          end
+        end
+        unless options.empty?
+          help.puts "\nOptions:"
+          options.each do |option|
+            help.puts "    #{option.help}"
+          end
         end
         help.string
       end
