@@ -64,11 +64,11 @@ module Clop
         @options ||= []
       end
       
-      def option(switch, argument_type, description)
+      def option(switch, argument_type, description, &block)
         option = Clop::Option.new(switch, argument_type, description)
         options << option
         declare_option_reader(option)
-        declare_option_writer(option)
+        declare_option_writer(option, &block)
       end
       
       def has_options?
@@ -133,12 +133,16 @@ module Clop
         RUBY
       end
 
-      def declare_option_writer(option)
-        class_eval <<-RUBY
-        def #{option.attribute}=(value)
-          @#{option.attribute} = value
+      def declare_option_writer(option, &block)
+        if block
+          define_method("#{option.attribute}=", &block)
+        else
+          class_eval <<-RUBY
+          def #{option.attribute}=(value)
+            @#{option.attribute} = value
+          end
+          RUBY
         end
-        RUBY
       end
       
     end

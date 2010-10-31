@@ -197,6 +197,30 @@ describe Clop::Command do
 
   end
 
+  describe "with an option that has a block" do
+
+    given_command("serve") do
+
+      option "--port", "PORT", "Port to listen on" do |port|
+        begin 
+          @port = Integer(port)
+        rescue ArgumentError
+          signal_usage_error "PORT must be an integer"
+        end
+      end
+
+    end
+
+    it "uses the block to generate an option-writer method" do
+      @command.port = "1234"
+      @command.port.should == 1234
+      lambda do
+        @command.port = "blah"
+      end.should raise_error(Clop::UsageError)
+    end
+
+  end
+
   describe "with explicit usage" do
 
     given_command("blah") do
@@ -229,7 +253,7 @@ describe Clop::Command do
       it "includes both potential usages" do
         @command.help.should include("put THIS HERE\n")
         @command.help.should include("put THAT THERE\n")
-     end
+      end
 
     end
 
