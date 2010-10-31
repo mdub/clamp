@@ -11,9 +11,7 @@ class Rename < Clop::Command
   
   option "--verbose", :flag, "be verbose"
 
-  option "--times", "TIMES", "repetitions" do 
-    |x| Integer(x)
-  end
+  option "--times", "TIMES", "repetitions", &method(:Integer)
 
   def execute
     puts "Blah blah blah" if verbose?
