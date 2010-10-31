@@ -93,7 +93,9 @@ module Clop
       end
 
       def derived_usage
-        arguments.map { |a| a.name }.join(" ")
+        parts = arguments.map { |a| a.name }
+        parts.unshift("[OPTIONS]") if has_options?
+        parts.join(" ")
       end
       
       def help
@@ -101,20 +103,19 @@ module Clop
         help.puts "Usage:"
         usages = @usages || [derived_usage]
         usages.each_with_index do |usage, i|
-          command = "__COMMAND__" # placeholder
-          command += " [OPTIONS]" if has_options?
-          help.puts "    #{command} #{usage}".rstrip
+          help.puts "    __COMMAND__ #{usage}".rstrip
         end
+        detail_format = "    %-29s %s"
         unless arguments.empty?
           help.puts "\nArguments:"
           arguments.each do |argument|
-            help.puts "    %-31s %s" % [argument.name, argument.description]
+            help.puts detail_format % [argument.name, argument.description]
           end
         end
         unless options.empty?
           help.puts "\nOptions:"
           options.each do |option|
-            help.puts "    #{option.help}"
+            help.puts detail_format % option.help
           end
         end
         help.string

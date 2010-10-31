@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe Clop::Option do
 
-  def help_string(part1, part2)
-    sprintf("%-32s%s", part1, part2)
-  end
-
   describe "with String argument" do
 
     before do
@@ -35,7 +31,7 @@ describe Clop::Option do
     describe "#help" do
 
       it "combines switch, argument_type and description" do
-        @option.help.should == help_string("--key-file FILE", "SSH identity")
+        @option.help.should == ["--key-file FILE", "SSH identity"]
       end
 
     end
@@ -51,7 +47,7 @@ describe Clop::Option do
     describe "#help" do
 
       it "does not include argument_type" do
-        @option.help.should == help_string("--verbose", "Blah blah blah")
+        @option.help.should == ["--verbose", "Blah blah blah"]
       end
 
     end

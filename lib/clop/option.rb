@@ -21,7 +21,7 @@ module Clop
     def help
       lhs = switch
       lhs += " " + argument_type unless flag?
-      "%-31s %s" % [lhs, description]
+      [lhs, description]
     end
     
   end

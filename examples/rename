@@ -4,7 +4,7 @@ require "clop"
 
 class Rename < Clop::Command
 
-  usage "TRANSFORM FILE ..."
+  usage "[--verbose] TRANSFORM FILE ..."
 
   argument "TRANSFORM", "a Ruby expression"
   argument "FILE", "a file to rename"
