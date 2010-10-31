@@ -77,6 +77,24 @@ describe Clop::Command do
 
   end
 
+  describe "with explicit usage" do
+
+    given_command("blah") do
+
+      usage "FOO BAR ..."
+
+    end
+
+    describe "#help" do
+      
+      it "includes the explicit usage" do
+        @command.help.should include("usage: blah FOO BAR ...\n")
+      end
+      
+    end
+    
+  end
+  
   describe "with an option declared" do
 
     given_command("icecream") do

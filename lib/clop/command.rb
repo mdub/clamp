@@ -40,23 +40,10 @@ module Clop
       execute
     end
 
-    def usage
-      usage = name
-      usage += " [OPTIONS]" if self.class.has_options?
-      usage
+    def help
+      self.class.help.gsub("__COMMAND__", name)
     end
     
-    def help
-      help = StringIO.new
-      help.puts "usage: #{usage}"
-      help.puts ""
-      help.puts "  OPTIONS"
-      self.class.options.each do |option|
-        help.puts "    #{option.help}"
-      end
-      help.string
-    end
-
     private
 
     def find_option(switch)
@@ -89,6 +76,30 @@ module Clop
       
       def find_option(switch)
         options.find { |o| o.switch == switch }
+      end
+
+      def usage(usage)
+        @usages ||= []
+        @usages << usage
+      end
+
+      def derived_usage
+        "[OPTIONS]" if has_options?
+      end
+      
+      def help
+        help = StringIO.new
+        usages = @usages || [derived_usage]
+        usages.each_with_index do |usage, i|
+          prefix = (i.zero? ? "usage:" : "      ")
+          help.puts "#{prefix} __COMMAND__ #{usage}".rstrip
+        end
+        help.puts ""
+        help.puts "  OPTIONS"
+        options.each do |option|
+          help.puts "    #{option.help}"
+        end
+        help.string
       end
       
       private
