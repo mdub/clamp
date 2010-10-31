@@ -202,23 +202,42 @@ describe Clop::Command do
     given_command("serve") do
 
       option "--port", "PORT", "Port to listen on" do |port|
-        begin 
-          @port = Integer(port)
-        rescue ArgumentError
-          signal_usage_error "PORT must be an integer"
-        end
+        Integer(port)
       end
 
     end
 
-    it "uses the block to generate an option-writer method" do
-      @command.port = "1234"
-      @command.port.should == 1234
+    it "uses the block to validate and convert the option argument" do
       lambda do
         @command.port = "blah"
-      end.should raise_error(Clop::UsageError)
+      end.should raise_error(ArgumentError)
+      @command.port = "1234"
+      @command.port.should == 1234
     end
 
+    describe "#parse" do
+      
+      describe "with a valid option argument" do
+        
+        it "stores the converted value" do
+          @command.parse(%w(--port 4321))
+          @command.port.should == 4321
+        end
+        
+      end
+
+      describe "with an invalid option argument" do
+        
+        it "raises a UsageError" do
+          lambda do
+            @command.parse(%w(--port blah))
+          end.should raise_error(Clop::UsageError, /^option '--port': invalid value/)
+        end
+        
+      end
+      
+    end
+  
   end
 
   describe "with explicit usage" do

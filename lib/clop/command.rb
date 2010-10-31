@@ -22,7 +22,11 @@ module Clop
         when /^(--\w+|-\w)/
           option = find_option($1)
           value = option.flag? ? true : arguments.shift
-          send("#{option.attribute}=", value)
+          begin
+            send("#{option.attribute}=", value)
+          rescue ArgumentError => e
+            signal_usage_error "option '#{switch}': #{e.message}"
+          end
           
         else
           raise "can't handle #{switch}"
@@ -134,14 +138,11 @@ module Clop
       end
 
       def declare_option_writer(option, &block)
-        if block
-          define_method("#{option.attribute}=", &block)
-        else
-          class_eval <<-RUBY
-          def #{option.attribute}=(value)
-            @#{option.attribute} = value
+        define_method("#{option.attribute}=") do |value|
+          if block
+            value = block.call(value)
           end
-          RUBY
+          instance_variable_set("@#{option.attribute}", value)
         end
       end
       

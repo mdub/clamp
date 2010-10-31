@@ -11,6 +11,10 @@ class Rename < Clop::Command
   
   option "--verbose", :flag, "be verbose"
 
+  option "--times", "TIMES", "repetitions" do 
+    |x| Integer(x)
+  end
+
   def execute
     puts "Blah blah blah" if verbose?
   end
@@ -20,7 +24,7 @@ end
 begin 
   Rename.new("rename").run(ARGV)
 rescue Clop::UsageError => e
-  $stderr.puts e.message
+  $stderr.puts "ERROR: #{e.message}"
   $stderr.puts ""
   $stderr.puts e.command.help
 end
