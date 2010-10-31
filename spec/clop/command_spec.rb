@@ -87,22 +87,24 @@ describe Clop::Command do
 
   end
   
-  describe "with options" do
+  describe "with options declared" do
 
     before do
       @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
+      @command.class.option "--color", "COLOR", "Preferred hue"
     end
     
     describe "#parse" do
 
-      describe "with a value for the option" do
+      describe "with options" do
 
         before do
-          @command.parse(%w(--flavour strawberry a b c))
+          @command.parse(%w(--flavour strawberry --color blue a b c))
         end
 
-        it "extracts the option value" do
+        it "extracts the option values" do
           @command.flavour.should == "strawberry"
+          @command.color.should == "blue"
         end
 
         it "retains unconsumed arguments" do
@@ -123,7 +125,7 @@ describe Clop::Command do
       describe "with an option terminator" do
 
         it "considers everything after the terminator to be an argument" do
-          @command.parse(%w(-- --flavour strawberry))
+          @command.parse(%w(--color blue -- --flavour strawberry))
           @command.arguments.should == %w(--flavour strawberry)
         end
 
@@ -139,6 +141,7 @@ describe Clop::Command do
 
       it "includes option details" do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
+        @command.help.should =~ %r(--color COLOR +Preferred hue)
       end
 
     end
@@ -147,22 +150,13 @@ describe Clop::Command do
 
   describe "with a flag option declared" do
 
-    given_command("hello") do
-
-      option "--verbose", :flag, "Be heartier"
-
+    before do
+      @command.class.option "--verbose", :flag, "Be heartier"
     end
 
-    it "has a predicate reader" do
+    it "declares a predicate-style reader" do
       @command.should respond_to(:verbose?)
-    end
-
-    it "does not have a non-predicate reader" do
       @command.should_not respond_to(:verbose)
-    end
-
-    it "defaults to false" do
-      @command.should_not be_verbose
     end
 
     describe "#parse" do
@@ -187,14 +181,12 @@ describe Clop::Command do
 
   end
 
-  describe "with an option that has a block" do
+ describe ".option, with a block" do
 
-    given_command("serve") do
-
-      option "--port", "PORT", "Port to listen on" do |port|
+    before do
+      @command.class.option "--port", "PORT", "Port to listen on" do |port|
         Integer(port)
       end
-
     end
 
     it "uses the block to validate and convert the option argument" do
