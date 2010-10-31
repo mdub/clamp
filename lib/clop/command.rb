@@ -83,16 +83,14 @@ module Clop
         @usages << usage
       end
 
-      def derived_usage
-        "[OPTIONS]" if has_options?
-      end
-      
       def help
         help = StringIO.new
-        usages = @usages || [derived_usage]
+        usages = @usages || [""]
         usages.each_with_index do |usage, i|
           prefix = (i.zero? ? "usage:" : "      ")
-          help.puts "#{prefix} __COMMAND__ #{usage}".rstrip
+          command = "__COMMAND__" # placeholder
+          command += " [OPTIONS]" if has_options?
+          help.puts "#{prefix} #{command} #{usage}".rstrip
         end
         help.puts ""
         help.puts "  OPTIONS"
