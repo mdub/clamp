@@ -4,17 +4,24 @@ require "clop"
 
 class Rename < Clop::Command
 
-  usage "[--verbose] TRANSFORM FILE ..."
+  usage "[OPTIONS] TRANSFORM FILE ..."
 
   argument "TRANSFORM", "a Ruby expression"
   argument "FILE", "a file to rename"
   
-  option "--verbose", :flag, "be verbose"
+  option ["-v", "--verbose"], :flag, "be verbose"
 
-  option "--times", "TIMES", "repetitions", &method(:Integer)
+  option ["-n", "--times"], "TIMES", "repetitions", &method(:Integer)
 
+  def initialize(name)
+    super
+    @times = 1
+  end
+  
   def execute
-    puts "Blah blah blah" if verbose?
+    @times.times do
+      puts "Blah blah blah" if verbose?
+    end
   end
   
 end

@@ -8,8 +8,8 @@ describe Clop::Option do
       @option = Clop::Option.new("--key-file", "FILE", "SSH identity")
     end
 
-    it "has a switch" do
-      @option.switch.should == "--key-file"
+    it "has a long_switch" do
+      @option.long_switch.should == "--key-file"
     end
 
     it "has an argument_type" do
@@ -52,6 +52,19 @@ describe Clop::Option do
 
     end
     
+  end
+
+  describe "with both short and long switches" do
+
+    before do
+      @option = Clop::Option.new(["-k", "--key-file"], "FILE", "SSH identity")
+    end
+
+    it "handles both switches" do
+      @option.handles?("--key-file").should be_true
+      @option.handles?("-k").should be_true
+    end
+
   end
   
 end

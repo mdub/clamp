@@ -80,7 +80,7 @@ module Clop
       end
       
       def find_option(switch)
-        options.find { |o| o.switch == switch }
+        options.find { |o| o.handles?(switch) }
       end
 
       def usage(usage)
