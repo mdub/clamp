@@ -31,6 +31,25 @@ describe Clop::Command do
 
     end
     
+    describe "#parse" do
+
+      it "sets arguments" do
+        @command.parse(%w(a b c))
+        @command.arguments.should == %w(a b c)
+      end
+
+      describe "with an unrecognised option" do
+
+        it "raises a UsageError" do
+          lambda do
+            @command.parse(%w(--foo bar))
+          end.should raise_error(Clop::UsageError)
+        end
+
+      end
+
+    end
+    
     describe "#run" do
       
       before do
@@ -94,29 +113,24 @@ describe Clop::Command do
         
       end
 
-      describe "with an unrecognised option" do
-        
-        it "raises a UsageError" do
-          lambda do
-            @command.parse(%w(--foo bar))
-          end.should raise_error(Clop::UsageError)
-        end
-        
-      end
-
       describe "with option-like things beyond the arguments" do
 
-        before do
-          @command.parse(%w(a b c --flavour strawberry))
-        end
-        
         it "treats them as positional arguments" do
-          @command.flavour.should == nil
+          @command.parse(%w(a b c --flavour strawberry))
           @command.arguments.should == %w(a b c --flavour strawberry)
         end
         
       end
-      
+
+      describe "with an option terminator" do
+
+        it "considers everything after the terminator to be an argument" do
+          @command.parse(%w(-- --flavour strawberry))
+          @command.arguments.should == %w(--flavour strawberry)
+        end
+
+      end
+
     end
     
     describe "#help" do
