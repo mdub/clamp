@@ -11,7 +11,11 @@ class Rename < Clop::Command
   
   option ["-v", "--verbose"], :flag, "be verbose"
 
-  option ["-n", "--times"], "TIMES", "repetitions", &method(:Integer)
+  option ["-n", "--times"], "TIMES", "repetitions" do |n|
+    n = Integer(n)
+    raise ArgumentError, "too big" if n > 9
+    n
+  end
 
   def initialize(name)
     super

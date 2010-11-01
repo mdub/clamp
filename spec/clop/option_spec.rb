@@ -46,8 +46,38 @@ describe Clop::Option do
 
     describe "#help" do
 
-      it "does not include argument_type" do
+      it "excludes option argument" do
         @option.help.should == ["--verbose", "Blah blah blah"]
+      end
+
+    end
+    
+  end
+
+  describe "negatable flag" do
+    
+    before do
+      @option = Clop::Option.new("--[no-]force", :flag, "Force installation")
+    end
+
+    it "handles both positive and negative forms" do
+      @option.handles?("--force").should be_true
+      @option.handles?("--no-force").should be_true
+    end
+
+    describe "#flag_value" do
+
+      it "returns true for the positive variant" do
+        @option.flag_value("--force").should be_true
+        @option.flag_value("--no-force").should be_false
+      end
+
+    end
+    
+    describe "#attribute" do
+
+      it "is derived from the (long) switch" do
+        @option.attribute.should == "force"
       end
 
     end
@@ -63,6 +93,14 @@ describe Clop::Option do
     it "handles both switches" do
       @option.handles?("--key-file").should be_true
       @option.handles?("-k").should be_true
+    end
+
+    describe "#help" do
+
+      it "includes both switches" do
+        @option.help.should == ["-k, --key-file FILE", "SSH identity"]
+      end
+
     end
 
   end

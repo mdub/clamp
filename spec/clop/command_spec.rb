@@ -86,14 +86,14 @@ describe Clop::Command do
     end
 
   end
-  
+
   describe "with options declared" do
 
     before do
       @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
       @command.class.option "--color", "COLOR", "Preferred hue"
     end
-    
+
     describe "#parse" do
 
       describe "with options" do
@@ -167,7 +167,7 @@ describe Clop::Command do
           @command.parse(%w(--verbose foo))
         end
 
-        it "sets the option" do
+        it "sets the flag" do
           @command.should be_verbose
         end
 
@@ -181,7 +181,44 @@ describe Clop::Command do
 
   end
 
- describe ".option, with a block" do
+  describe "with a negatable flag option declared" do
+
+    before do
+      @command.class.option "--[no-]sync", :flag, "Synchronise"
+    end
+
+    describe "#parse" do
+
+      describe "with --flag" do
+
+        before do
+          @command.parse(%w(--sync))
+        end
+
+        it "sets the flag" do
+          @command.sync?.should be_true
+        end
+
+      end
+
+      describe "with --no-flag" do
+
+        before do
+          @command.sync = true
+          @command.parse(%w(--no-sync))
+        end
+
+        it "clears the flag" do
+          @command.sync?.should be_false
+        end
+
+      end
+
+    end
+
+  end
+
+  describe ".option, with a block" do
 
     before do
       @command.class.option "--port", "PORT", "Port to listen on" do |port|
@@ -198,28 +235,28 @@ describe Clop::Command do
     end
 
     describe "#parse" do
-      
+
       describe "with a valid option argument" do
-        
+
         it "stores the converted value" do
           @command.parse(%w(--port 4321))
           @command.port.should == 4321
         end
-        
+
       end
 
       describe "with an invalid option argument" do
-        
+
         it "raises a UsageError" do
           lambda do
             @command.parse(%w(--port blah))
           end.should raise_error(Clop::UsageError, /^option '--port': invalid value/)
         end
-        
+
       end
-      
+
     end
-  
+
   end
 
   describe "with explicit usage" do

@@ -19,17 +19,18 @@ module Clop
         when /\A--\z/
           break
 
-        when /^(--\w+|-\w)/
-          option = find_option($1)
-          value = option.flag? ? true : arguments.shift
+        else
+          option = find_option(switch)
+          value = if option.flag?
+            option.flag_value(switch)
+          else
+            arguments.shift
+          end
           begin
             send("#{option.attribute}=", value)
           rescue ArgumentError => e
             signal_usage_error "option '#{switch}': #{e.message}"
           end
-          
-        else
-          raise "can't handle #{switch}"
           
         end
       end
