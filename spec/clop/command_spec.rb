@@ -5,14 +5,20 @@ describe Clop::Command do
 
   before do
     $stdout = @out = StringIO.new
+    $stderr = @err = StringIO.new
   end
 
   after do
     $stdout = STDOUT
+    $stderr = STDERR
   end
 
-  def output
+  def stdout
     @out.string
+  end
+
+  def stderr
+    @err.string
   end
 
   def self.given_command(name, &block)
@@ -64,11 +70,11 @@ describe Clop::Command do
     end
 
     it "executes the #execute method" do
-      output.should_not be_empty
+      stdout.should_not be_empty
     end
 
     it "provides access to the argument list" do
-      output.should == @abc.inspect
+      stdout.should == @abc.inspect
     end
 
   end

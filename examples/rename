@@ -30,10 +30,4 @@ class Rename < Clop::Command
   
 end
 
-begin 
-  Rename.new("rename").run(ARGV)
-rescue Clop::UsageError => e
-  $stderr.puts "ERROR: #{e.message}"
-  $stderr.puts ""
-  $stderr.puts e.command.help
-end
+Rename.run

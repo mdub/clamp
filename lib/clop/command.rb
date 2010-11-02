@@ -126,6 +126,16 @@ module Clop
         help.string
       end
       
+      def run(name = $0, args = ARGV)
+        begin 
+          new(name).run(args)
+        rescue Clop::UsageError => e
+          $stderr.puts "ERROR: #{e.message}"
+          $stderr.puts ""
+          $stderr.puts e.command.help
+        end
+      end
+
       private
       
       def declare_option_reader(option)
