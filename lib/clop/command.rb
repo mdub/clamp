@@ -133,6 +133,7 @@ module Clop
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
           $stderr.puts e.command.help
+          exit(1)
         end
       end
 
