@@ -26,6 +26,11 @@ describe Clop::Option do
         @option.attribute.should == "key_file"
       end
 
+      it "can be overridden" do
+        @option = Clop::Option.new("--key-file", "FILE", "SSH identity", :attribute => "ssh_identity")
+        @option.attribute.should == "ssh_identity"
+      end
+
     end
 
     describe "#help" do

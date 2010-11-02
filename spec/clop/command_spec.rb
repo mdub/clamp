@@ -93,6 +93,24 @@ describe Clop::Command do
 
   end
 
+  describe ".option", "with explicit :attribute" do
+
+    before do
+      @command.class.option "--foo", "FOO", "A foo", :attribute => :bar
+    end
+
+    it "uses the specified attribute name to name accessors" do
+      @command.bar = "chocolate"
+      @command.bar.should == "chocolate"
+    end
+
+    it "does not attempt to create the default accessors" do
+      @command.should_not respond_to(:foo)
+      @command.should_not respond_to(:foo=)
+    end
+    
+  end
+
   describe "with options declared" do
 
     before do

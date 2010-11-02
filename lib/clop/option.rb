@@ -2,10 +2,11 @@ module Clop
 
   class Option
 
-    def initialize(switches, argument_type, description)
+    def initialize(switches, argument_type, description, options = {})
       @switches = Array(switches)
       @argument_type = argument_type
       @description = description
+      @attribute = options[:attribute].to_s if options.has_key?(:attribute)
     end
 
     attr_reader :switches, :argument_type, :description

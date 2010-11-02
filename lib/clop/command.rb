@@ -69,15 +69,15 @@ module Clop
         @options ||= []
       end
       
-      def option(switches, argument_type, description, &block)
-        option = Clop::Option.new(switches, argument_type, description)
-        options << option
+      def option(switches, argument_type, description, opts = {}, &block)
+        option = Clop::Option.new(switches, argument_type, description, opts)
+        self.options << option
         declare_option_reader(option)
         declare_option_writer(option, &block)
       end
       
       def help_option(switches = ["-h", "--help"])
-        option(switches, :flag, "print help") do
+        option(switches, :flag, "print help", :attribute => :help_requested) do
           raise Clop::HelpWanted.new(self)
         end
       end
