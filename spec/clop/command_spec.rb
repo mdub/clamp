@@ -344,6 +344,24 @@ describe Clop::Command do
 
     end
 
+    describe "when help is requested" do
+
+      before do
+
+        @command.class.class_eval do
+          help_option "--help"
+        end
+
+        @command.class.run("cmd", ["--help"])
+
+      end
+
+      it "outputs help" do
+        stdout.should include "Usage:"
+      end
+
+    end
+
   end
 
 end

@@ -69,13 +69,19 @@ module Clop
         @options ||= []
       end
       
-      def option(switch, argument_type, description, &block)
-        option = Clop::Option.new(switch, argument_type, description)
+      def option(switches, argument_type, description, &block)
+        option = Clop::Option.new(switches, argument_type, description)
         options << option
         declare_option_reader(option)
         declare_option_writer(option, &block)
       end
       
+      def help_option(switches = ["-h", "--help"])
+        option(switches, :flag, "print help") do
+          raise Clop::HelpWanted.new(self)
+        end
+      end
+        
       def has_options?
         !options.empty?
       end
@@ -134,6 +140,8 @@ module Clop
           $stderr.puts ""
           $stderr.puts e.command.help
           exit(1)
+        rescue Clop::HelpWanted => e
+          puts e.command.help
         end
       end
 
@@ -152,7 +160,7 @@ module Clop
       def declare_option_writer(option, &block)
         define_method("#{option.attribute}=") do |value|
           if block
-            value = block.call(value)
+            value = instance_exec(value, &block)
           end
           instance_variable_set("@#{option.attribute}", value)
         end
@@ -162,7 +170,7 @@ module Clop
         
   end
   
-  class UsageError < StandardError
+  class Error < StandardError
     
     def initialize(message, command)
       super(message)
@@ -170,6 +178,18 @@ module Clop
     end
 
     attr_reader :command
+    
+  end
+
+  # raise to signal incorrect command usage
+  class UsageError < Error; end
+  
+  # raise to request usage help
+  class HelpWanted < Error
+    
+    def initialize(command)
+      super("I need help", command)
+    end
     
   end
   
