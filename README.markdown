@@ -1,14 +1,14 @@
-Clop
-====
+Clamp
+=====
 
-"Clop" is a minimal framework for command-line utilities.  
+"Clamp" is a minimal framework for command-line utilities.  
 
 It handles boring stuff like parsing the command-line, and generating help, so you can get on with making your command actually do stuff.
 
 Not another one!
 ----------------
 
-Yeah, sorry.  There are a bunch of existing command-line parsing libraries out there, and Clop draws inspiration from a variety of sources, including [Thor], [optparse], and [Clip].  In the end, though, I wanted a slightly rounder wheel.
+Yeah, sorry.  There are a bunch of existing command-line parsing libraries out there, and Clamp draws inspiration from a variety of sources, including [Thor], [optparse], and [Clip].  In the end, though, I wanted a slightly rounder wheel.
 
 [optparse]: http://ruby-doc.org/stdlib/libdoc/optparse/rdoc/index.html
 [Thor]: http://github.com/wycats/thor
@@ -17,11 +17,11 @@ Yeah, sorry.  There are a bunch of existing command-line parsing libraries out t
 Quick Start
 -----------
 
-Clop models a command as a Ruby class, and command invocations as instances of that class.
+Clamp models a command as a Ruby class, and command invocations as instances of that class.
 
-"Command classes" are subclasses of `Clop::Command`.  They look like this:
+"Command classes" are subclasses of `Clamp::Command`.  They look like this:
 
-    class InstallCommand < Clop::Command
+    class InstallCommand < Clamp::Command
     
       option "--force", :flag, ""
         
@@ -33,7 +33,7 @@ Clop models a command as a Ruby class, and command invocations as instances of t
 
 Class-level methods are available to declare command-line options, and document usage.  
 
-Clop commands are invoked like so:
+Clamp commands are invoked like so:
 
     InstallCommand.run
 

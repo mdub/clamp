@@ -1,4 +1,4 @@
-module Clop
+module Clamp
 
   class Option
 

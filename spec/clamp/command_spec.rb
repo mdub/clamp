@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'stringio'
 
-describe Clop::Command do
+describe Clamp::Command do
 
   before do
     $stdout = @out = StringIO.new
@@ -23,7 +23,7 @@ describe Clop::Command do
 
   def self.given_command(name, &block)
     before do
-      @command = Class.new(Clop::Command, &block).new(name)
+      @command = Class.new(Clamp::Command, &block).new(name)
     end
   end
 
@@ -55,7 +55,7 @@ describe Clop::Command do
       it "raises a UsageError" do
         lambda do
           @command.parse(%w(--foo bar))
-        end.should raise_error(Clop::UsageError)
+        end.should raise_error(Clamp::UsageError)
       end
 
     end
@@ -274,7 +274,7 @@ describe Clop::Command do
         it "raises a UsageError" do
           lambda do
             @command.parse(%w(--port blah))
-          end.should raise_error(Clop::UsageError, /^option '--port': invalid value/)
+          end.should raise_error(Clamp::UsageError, /^option '--port': invalid value/)
         end
 
       end

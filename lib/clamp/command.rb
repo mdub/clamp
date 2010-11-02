@@ -1,7 +1,7 @@
-require 'clop/argument'
-require 'clop/option'
+require 'clamp/argument'
+require 'clamp/option'
 
-module Clop
+module Clamp
   
   class Command
     
@@ -70,7 +70,7 @@ module Clop
       end
       
       def option(switches, argument_type, description, opts = {}, &block)
-        option = Clop::Option.new(switches, argument_type, description, opts)
+        option = Clamp::Option.new(switches, argument_type, description, opts)
         self.options << option
         declare_option_reader(option)
         declare_option_writer(option, &block)
@@ -78,7 +78,7 @@ module Clop
       
       def help_option(switches = ["-h", "--help"])
         option(switches, :flag, "print help", :attribute_name => :help_requested) do
-          raise Clop::HelpWanted.new(self)
+          raise Clamp::HelpWanted.new(self)
         end
       end
         
@@ -135,12 +135,12 @@ module Clop
       def run(name = $0, args = ARGV)
         begin 
           new(name).run(args)
-        rescue Clop::UsageError => e
+        rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
           $stderr.puts e.command.help
           exit(1)
-        rescue Clop::HelpWanted => e
+        rescue Clamp::HelpWanted => e
           puts e.command.help
         end
       end

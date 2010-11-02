@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Clop::Option do
+describe Clamp::Option do
 
   describe "with String argument" do
 
     before do
-      @option = Clop::Option.new("--key-file", "FILE", "SSH identity")
+      @option = Clamp::Option.new("--key-file", "FILE", "SSH identity")
     end
 
     it "has a long_switch" do
@@ -27,7 +27,7 @@ describe Clop::Option do
       end
 
       it "can be overridden" do
-        @option = Clop::Option.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
+        @option = Clamp::Option.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
         @option.attribute_name.should == "ssh_identity"
       end
 
@@ -46,7 +46,7 @@ describe Clop::Option do
   describe "flag" do
     
     before do
-      @option = Clop::Option.new("--verbose", :flag, "Blah blah blah")
+      @option = Clamp::Option.new("--verbose", :flag, "Blah blah blah")
     end
 
     describe "#help" do
@@ -62,7 +62,7 @@ describe Clop::Option do
   describe "negatable flag" do
     
     before do
-      @option = Clop::Option.new("--[no-]force", :flag, "Force installation")
+      @option = Clamp::Option.new("--[no-]force", :flag, "Force installation")
     end
 
     it "handles both positive and negative forms" do
@@ -92,7 +92,7 @@ describe Clop::Option do
   describe "with both short and long switches" do
 
     before do
-      @option = Clop::Option.new(["-k", "--key-file"], "FILE", "SSH identity")
+      @option = Clamp::Option.new(["-k", "--key-file"], "FILE", "SSH identity")
     end
 
     it "handles both switches" do

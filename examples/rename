@@ -1,8 +1,8 @@
 #! /usr/bin/env ruby
 
-require "clop"
+require "clamp"
 
-class Rename < Clop::Command
+class Rename < Clamp::Command
 
   usage "[OPTIONS] TRANSFORM FILE ..."
 

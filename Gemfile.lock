@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    clop (0.0.1)
+    clamp (0.0.1)
 
 GEM
   remote: http://rubygems.org/
@@ -24,7 +24,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  clop!
+  clamp!
   rake
   rr (~> 1.0.0)
   rspec (~> 2.0.1)
