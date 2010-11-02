@@ -93,13 +93,13 @@ describe Clop::Command do
 
   end
 
-  describe ".option", "with explicit :attribute" do
+  describe ".option", "with explicit :attribute_name" do
 
     before do
-      @command.class.option "--foo", "FOO", "A foo", :attribute => :bar
+      @command.class.option "--foo", "FOO", "A foo", :attribute_name => :bar
     end
 
-    it "uses the specified attribute name to name accessors" do
+    it "uses the specified attribute_name name to name accessors" do
       @command.bar = "chocolate"
       @command.bar.should == "chocolate"
     end

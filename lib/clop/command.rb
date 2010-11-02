@@ -27,7 +27,7 @@ module Clop
             arguments.shift
           end
           begin
-            send("#{option.attribute}=", value)
+            send("#{option.attribute_name}=", value)
           rescue ArgumentError => e
             signal_usage_error "option '#{switch}': #{e.message}"
           end
@@ -77,7 +77,7 @@ module Clop
       end
       
       def help_option(switches = ["-h", "--help"])
-        option(switches, :flag, "print help", :attribute => :help_requested) do
+        option(switches, :flag, "print help", :attribute_name => :help_requested) do
           raise Clop::HelpWanted.new(self)
         end
       end
@@ -148,21 +148,21 @@ module Clop
       private
       
       def declare_option_reader(option)
-        reader_name = option.attribute
+        reader_name = option.attribute_name
         reader_name += "?" if option.flag?
         class_eval <<-RUBY
         def #{reader_name}
-          @#{option.attribute}
+          @#{option.attribute_name}
         end
         RUBY
       end
 
       def declare_option_writer(option, &block)
-        define_method("#{option.attribute}=") do |value|
+        define_method("#{option.attribute_name}=") do |value|
           if block
             value = instance_exec(value, &block)
           end
-          instance_variable_set("@#{option.attribute}", value)
+          instance_variable_set("@#{option.attribute_name}", value)
         end
       end
       

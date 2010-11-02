@@ -20,15 +20,15 @@ describe Clop::Option do
       @option.description.should == "SSH identity"
     end
 
-    describe "#attribute" do
+    describe "#attribute_name" do
 
       it "is derived from the (long) switch" do
-        @option.attribute.should == "key_file"
+        @option.attribute_name.should == "key_file"
       end
 
       it "can be overridden" do
-        @option = Clop::Option.new("--key-file", "FILE", "SSH identity", :attribute => "ssh_identity")
-        @option.attribute.should == "ssh_identity"
+        @option = Clop::Option.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
+        @option.attribute_name.should == "ssh_identity"
       end
 
     end
@@ -79,10 +79,10 @@ describe Clop::Option do
 
     end
     
-    describe "#attribute" do
+    describe "#attribute_name" do
 
       it "is derived from the (long) switch" do
-        @option.attribute.should == "force"
+        @option.attribute_name.should == "force"
       end
 
     end

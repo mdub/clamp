@@ -6,13 +6,13 @@ module Clop
       @switches = Array(switches)
       @argument_type = argument_type
       @description = description
-      @attribute = options[:attribute].to_s if options.has_key?(:attribute)
+      @attribute_name = options[:attribute_name].to_s if options.has_key?(:attribute_name)
     end
 
     attr_reader :switches, :argument_type, :description
 
-    def attribute
-      @attribute ||= long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
+    def attribute_name
+      @attribute_name ||= long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
     end
     
     def long_switch
