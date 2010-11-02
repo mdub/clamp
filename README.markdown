@@ -35,7 +35,6 @@ Class-level methods are available to declare command-line options, and document 
 
 Clop commands are invoked like so:
 
-    InstallCommand.main(ARGV)
+    InstallCommand.run
 
 This will instantiate a new `InstallCommand`, handle command-line args, and finally call the  `#execute` method to do the real work.
-
