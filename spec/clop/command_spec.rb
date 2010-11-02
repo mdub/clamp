@@ -305,35 +305,28 @@ describe Clop::Command do
 
   describe ".run" do
 
-    before do
+    it "creates a new Command instance and runs it" do
       @xyz = %w(x y z)
       @command.class.run("cmd", @xyz)
-    end
-
-    it "creates a new Command instance and runs it" do
       stdout.should == @xyz.inspect
     end
 
-  end
-
-  describe "when there's a UsageError" do
-
-    before do
-      @command.class.class_eval do
-        def execute
-          signal_usage_error "bad dog!"
-        end
-      end
-    end
-
-    describe ".run" do
+    describe "when there's a UsageError" do
 
       before do
+
+        @command.class.class_eval do
+          def execute
+            signal_usage_error "bad dog!"
+          end
+        end
+
         begin 
           @command.class.run("cmd", [])
         rescue SystemExit => e
           @system_exit = e
         end
+
       end
 
       it "outputs the error message" do
@@ -348,7 +341,7 @@ describe Clop::Command do
         @system_exit.should_not be_nil
         @system_exit.status.should == 1
       end
-      
+
     end
 
   end
