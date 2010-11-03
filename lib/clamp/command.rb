@@ -136,9 +136,9 @@ module Clamp
         @subcommands ||= []
       end
       
-      def subcommand(name, &block)
+      def subcommand(name, description, &block)
         subcommand_class = Class.new(Command, &block)
-        subcommands << Subcommand.new(name, subcommand_class)
+        subcommands << Subcommand.new(name, description, subcommand_class)
       end
 
       def has_subcommands?
@@ -157,6 +157,7 @@ module Clamp
       def derived_usage
         parts = arguments.map { |a| a.name }
         parts.unshift("[OPTIONS]") if has_options?
+        parts.unshift("SUBCOMMAND") if has_subcommands?
         parts.join(" ")
       end
       
@@ -172,6 +173,12 @@ module Clamp
           help.puts "\nArguments:"
           arguments.each do |argument|
             help.puts detail_format % [argument.name, argument.description]
+          end
+        end
+        unless subcommands.empty?
+          help.puts "\nSubcommands:"
+          subcommands.each do |subcommand|
+            help.puts detail_format % subcommand.help
           end
         end
         unless options.empty?

@@ -9,13 +9,13 @@ describe Clamp::Command, "with subcommands" do
 
     @command_class = Class.new(Clamp::Command) do
 
-      subcommand "flip" do
+      subcommand "flip", "flip it" do
         def execute
           puts "FLIPPED"
         end
       end
 
-      subcommand "flop" do
+      subcommand "flop", "flop it" do
         def execute
           puts "FLOPPED"
         end

@@ -4,13 +4,13 @@ require "clamp"
 
 class FlipFlop < Clamp::Command
 
-  subcommand "flip" do
+  subcommand "flip", "flip it" do
     def execute
       puts "FLIPPED"
     end
   end
 
-  subcommand "flop" do
+  subcommand "flop", "flop it" do
     def execute
       puts "FLOPPED"
     end
