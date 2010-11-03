@@ -17,24 +17,39 @@ Yeah, sorry.  There are a bunch of existing command-line parsing libraries out t
 Quick Start
 -----------
 
-Clamp models a command as a Ruby class, and command invocations as instances of that class.
+Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They look something like this:
 
-"Command classes" are subclasses of `Clamp::Command`.  They look like this:
+    class SpeakCommand < Clamp::Command
 
-    class InstallCommand < Clamp::Command
-    
-      option "--force", :flag, ""
-        
-      def execute
-        # do something
+      option "--loud", :flag, "say it loud"
+      option "--iterations", "N", "say it N times"
+
+      argument "WORDS ...", "the thing to say"
+
+      def iterations
+        @iterations ||= 1         # provide a default
       end
-        
+      
+      def execute
+
+        signal_usage_error "I have nothing to say" if arguments.empty?
+        the_truth = arguments.join(" ")
+        the_truth.upcase! if loud?
+
+        iterations.times do
+          puts the_truth
+        end
+
+      end
+
     end
 
 Class-level methods are available to declare command-line options, and document usage.  
 
-Clamp commands are invoked like so:
+The command is invoked by instantiating the command-class, and asking it to run:
 
-    InstallCommand.run
+    SpeakCommand.new("speak").run(ARGV)
 
-This will instantiate a new `InstallCommand`, handle command-line args, and finally call the  `#execute` method to do the real work.
+or, more succintly:
+
+    SpeakCommand.run
