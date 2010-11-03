@@ -3,23 +3,7 @@ require 'stringio'
 
 describe Clamp::Command do
 
-  before do
-    $stdout = @out = StringIO.new
-    $stderr = @err = StringIO.new
-  end
-
-  after do
-    $stdout = STDOUT
-    $stderr = STDERR
-  end
-
-  def stdout
-    @out.string
-  end
-
-  def stderr
-    @err.string
-  end
+  include OutputCapture
 
   def self.given_command(name, &block)
     before do
