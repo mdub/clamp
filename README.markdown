@@ -22,13 +22,11 @@ Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They lo
     class SpeakCommand < Clamp::Command
 
       option "--loud", :flag, "say it loud"
-      option "--iterations", "N", "say it N times"
+      option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
+        Integer(s)
+      end
 
       argument "WORDS ...", "the thing to say"
-
-      def iterations
-        @iterations ||= 1         # provide a default
-      end
       
       def execute
 
