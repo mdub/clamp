@@ -373,17 +373,8 @@ describe Clamp::Command do
 
     describe "when help is requested" do
 
-      before do
-
-        @command.class.class_eval do
-          help_option "--help"
-        end
-
-        @command.class.run("cmd", ["--help"])
-
-      end
-
       it "outputs help" do
+        @command.class.run("cmd", ["--help"])
         stdout.should include "Usage:"
       end
 

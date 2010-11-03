@@ -17,8 +17,6 @@ class Rename < Clamp::Command
     n
   end
 
-  help_option
-  
   def initialize(name)
     super
     @times = 1

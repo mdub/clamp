@@ -63,27 +63,35 @@ module Clamp
       raise e
     end
     
+    def help_requested=(value)
+      raise Clamp::HelpWanted.new(self)
+    end
+    
     class << self
     
-      def options
-        @options ||= []
+      def declared_options
+        @declared_options ||= []
       end
       
       def option(switches, argument_type, description, opts = {}, &block)
         option = Clamp::Option.new(switches, argument_type, description, opts)
-        self.options << option
+        declared_options << option
         declare_option_reader(option)
         declare_option_writer(option, &block)
       end
-      
-      def help_option(switches = ["-h", "--help"])
-        option(switches, :flag, "print help", :attribute_name => :help_requested) do
-          raise Clamp::HelpWanted.new(self)
-        end
+
+      def options
+        declared_options + standard_options
+      end
+
+      HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
+
+      def standard_options
+        [HELP_OPTION]
       end
         
       def has_options?
-        !options.empty?
+        !declared_options.empty?
       end
       
       def find_option(switch)
