@@ -73,11 +73,14 @@ It works a little like `attr_accessor`, defining reader and writer methods on th
       puts "You chose #{flavour}.  Excellent choice!"
     end
 
-The second and third arguments to `option` are used mostly to generate usage doco for the command.
+If you don't like the inferred attribute name, you can override it:
+
+    option "--type", "TYPE", "type of widget", :attribute_name => :widget_type
+                                               # to avoid clobbering Object#type
 
 ### Flag options
 
-Some options are just boolean flags.  No problem: pass `:flag` as the second parameter to tell Clamp not to expect an option argument.
+Some options are just boolean flags.  Pass "`:flag`" as the second parameter to tell Clamp not to expect an option argument:
 
     option "--verbose", :flag, "be chatty"
 
@@ -87,4 +90,21 @@ Negatable flags are easy to generate, too:
 
     option "--[no-]force", :flag, "be forceful (or not)"
 
-With this declaration, Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
+Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
+
+Getting help
+------------
+
+All Clamp commands support a "`--help`" option, which outputs brief usage documentation, based on those seemingly useless extra parameters that you had to pass to `option` and `argument`.
+
+    $ speak --help
+    Usage:
+        speak [OPTIONS] WORDS ...
+
+    Arguments:
+        WORDS ...                     the thing to say
+
+    Options:
+        --loud                        say it loud
+        -n, --iterations N            say it N times
+        --help                        print help
