@@ -136,8 +136,14 @@ module Clamp
         @subcommands ||= []
       end
       
-      def subcommand(name, description, &block)
-        subcommand_class = Class.new(Command, &block)
+      def subcommand(name, description, subcommand_class = nil, &block)
+        if block
+          if subcommand_class
+            raise "no sense providing a subcommand_class AND an block"
+          else
+            subcommand_class = Class.new(Command, &block)
+          end
+        end
         subcommands << Subcommand.new(name, description, subcommand_class)
       end
 
