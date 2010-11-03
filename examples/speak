@@ -1,0 +1,30 @@
+#! /usr/bin/env ruby
+
+require "clamp"
+
+class SpeakCommand < Clamp::Command
+
+  option "--loud", :flag, "say it loud"
+  option "--iterations", "N", "say it N times"
+
+  argument "WORDS ...", "the thing to say"
+
+  def iterations
+    @iterations ||= 1         # provide a default
+  end
+  
+  def execute
+
+    signal_usage_error "I have nothing to say" if arguments.empty?
+    the_truth = arguments.join(" ")
+    the_truth.upcase! if loud?
+
+    iterations.times do
+      puts the_truth
+    end
+
+  end
+
+end
+
+SpeakCommand.run
