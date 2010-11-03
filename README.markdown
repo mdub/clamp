@@ -121,6 +121,43 @@ The `argument` method is used to declare command arguments:
 
 Use of `argument` is entirely for documentation purposes.  Whether or not you declare and describe your expected arguments, the actual arguments that remain after option parsing will be available as `arguments` when your `#execute` method is called.
 
+Sub-commands
+------------
+
+The `subcommand` method declares sub-commands:
+
+    class InitCommand < Clamp::Command
+
+      def execute
+        # ...
+      end
+
+    end
+    
+    class MainCommand < Clamp::Command
+
+      subcommand "init", "Initialize the repository", InitCommand
+      
+    end
+
+When sub-commands are declared, Clamp will attempt to delegate to a sub-command based on the first command-line argument (after options are parsed).  Remaining arguments will be passed on to the sub-command.
+
+Sub-commands can also be specified inline, by providing a block to `subcommand`, rather than a sub-command class:
+
+    class MainCommand < Clamp::Command
+
+      subcommand "init", "Initialize the repository" do
+
+        def execute
+          # ...
+        end
+
+      end
+      
+    end
+
+Used this way, Clamp will generate an anonymous subclass of `Clamp::Command` to represent the sub-command.
+    
 Getting help
 ------------
 
