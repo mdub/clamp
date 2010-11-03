@@ -1,0 +1,21 @@
+#! /usr/bin/env ruby
+
+require "clamp"
+
+class FlipFlop < Clamp::Command
+
+  subcommand "flip" do
+    def execute
+      puts "FLIPPED"
+    end
+  end
+
+  subcommand "flop" do
+    def execute
+      puts "FLOPPED"
+    end
+  end
+  
+end
+
+FlipFlop.run

@@ -1,5 +1,6 @@
 require 'clamp/argument'
 require 'clamp/option'
+require 'clamp/subcommand'
 
 module Clamp
   
@@ -36,11 +37,16 @@ module Clamp
       end
       @arguments = arguments
     end
-    
+
+    # default implementation
     def execute
-      raise "you need to define #execute"
+      if self.class.has_subcommands?
+        execute_subcommand
+      else
+        raise "you need to define #execute"
+      end
     end
-    
+
     def run(arguments)
       parse(arguments)
       execute
@@ -50,6 +56,16 @@ module Clamp
       self.class.help.gsub("__COMMAND__", name)
     end
     
+    protected
+
+    def execute_subcommand
+      signal_usage_error "no subcommand specified" if arguments.empty?
+      subcommand_name, *subcommand_args = arguments
+      subcommand_class = find_subcommand_class(subcommand_name)
+      subcommand = subcommand_class.new("#{name} #{subcommand_name}")
+      subcommand.run(subcommand_args)
+    end
+    
     private
 
     def find_option(switch)
@@ -57,6 +73,16 @@ module Clamp
       signal_usage_error("Unrecognised option '#{switch}'")
     end
 
+    def find_subcommand(name)
+      self.class.find_subcommand(name) || 
+      signal_usage_error("No such sub-command '#{name}'")
+    end
+
+    def find_subcommand_class(name)
+      subcommand = find_subcommand(name)
+      subcommand.subcommand_class if subcommand
+    end
+    
     def signal_usage_error(message)
       e = UsageError.new(message, self)
       e.set_backtrace(caller)
@@ -98,17 +124,34 @@ module Clamp
         options.find { |o| o.handles?(switch) }
       end
 
-      def usage(usage)
-        @usages ||= []
-        @usages << usage
-      end
-
       def arguments
         @arguments ||= []
       end
       
       def argument(name, description)
         arguments << Argument.new(name, description)
+      end
+
+      def subcommands
+        @subcommands ||= []
+      end
+      
+      def subcommand(name, &block)
+        subcommand_class = Class.new(Command, &block)
+        subcommands << Subcommand.new(name, subcommand_class)
+      end
+
+      def has_subcommands?
+        !subcommands.empty?
+      end
+
+      def find_subcommand(name)
+        subcommands.find { |sc| sc.name == name }
+      end
+      
+      def usage(usage)
+        @usages ||= []
+        @usages << usage
       end
 
       def derived_usage
