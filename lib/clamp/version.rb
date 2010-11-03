@@ -1,3 +1,3 @@
 module Clamp
-  VERSION = "0.0.2-dev".freeze
+  VERSION = "0.0.2".freeze
 end
