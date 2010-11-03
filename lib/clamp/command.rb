@@ -151,7 +151,9 @@ module Clamp
         reader_name = option.attribute_name
         reader_name += "?" if option.flag?
         define_method(reader_name) do
-          instance_variable_get("@#{option.attribute_name}") || option.default_value
+          value = instance_variable_get("@#{option.attribute_name}")
+          value = option.default_value if value.nil?
+          value
         end
       end
 
