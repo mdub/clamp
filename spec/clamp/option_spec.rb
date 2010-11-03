@@ -33,6 +33,19 @@ describe Clamp::Option do
 
     end
 
+    describe "#default_value" do
+
+      it "defaults to nil" do
+        @option.default_value.should == nil
+      end
+
+      it "can be overridden" do
+        @option = Clamp::Option.new("-n", "N", "iterations", :default => 1)
+        @option.default_value.should == 1
+      end
+
+    end
+
     describe "#help" do
 
       it "combines switch, argument_type and description" do

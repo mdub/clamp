@@ -6,10 +6,15 @@ module Clamp
       @switches = Array(switches)
       @argument_type = argument_type
       @description = description
-      @attribute_name = options[:attribute_name].to_s if options.has_key?(:attribute_name)
+      if options.has_key?(:attribute_name)
+        @attribute_name = options[:attribute_name].to_s 
+      end
+      if options.has_key?(:default)
+        @default_value = options[:default]
+      end
     end
 
-    attr_reader :switches, :argument_type, :description
+    attr_reader :switches, :argument_type, :description, :default_value
 
     def attribute_name
       @attribute_name ||= long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')

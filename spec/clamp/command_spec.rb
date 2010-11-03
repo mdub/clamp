@@ -81,34 +81,43 @@ describe Clamp::Command do
 
   describe ".option" do
 
-    before do
-      @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
-    end
-
     it "declares option argument accessors" do
+      @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
       @command.flavour.should == nil
       @command.flavour = "chocolate"
       @command.flavour.should == "chocolate"
     end
 
-  end
+    describe "with explicit :attribute_name" do
 
-  describe ".option", "with explicit :attribute_name" do
+      before do
+        @command.class.option "--foo", "FOO", "A foo", :attribute_name => :bar
+      end
 
-    before do
-      @command.class.option "--foo", "FOO", "A foo", :attribute_name => :bar
+      it "uses the specified attribute_name name to name accessors" do
+        @command.bar = "chocolate"
+        @command.bar.should == "chocolate"
+      end
+
+      it "does not attempt to create the default accessors" do
+        @command.should_not respond_to(:foo)
+        @command.should_not respond_to(:foo=)
+      end
+
     end
 
-    it "uses the specified attribute_name name to name accessors" do
-      @command.bar = "chocolate"
-      @command.bar.should == "chocolate"
+    describe "with :default value" do
+
+      given_command("cmd") do
+        option "--nodes", "N", "number of nodes", :default => 2
+      end
+
+      it "sets the specified default value" do
+        @command.nodes.should == 2
+      end
+
     end
 
-    it "does not attempt to create the default accessors" do
-      @command.should_not respond_to(:foo)
-      @command.should_not respond_to(:foo=)
-    end
-    
   end
 
   describe "with options declared" do

@@ -150,11 +150,9 @@ module Clamp
       def declare_option_reader(option)
         reader_name = option.attribute_name
         reader_name += "?" if option.flag?
-        class_eval <<-RUBY
-        def #{reader_name}
-          @#{option.attribute_name}
+        define_method(reader_name) do
+          instance_variable_get("@#{option.attribute_name}") || option.default_value
         end
-        RUBY
       end
 
       def declare_option_writer(option, &block)
