@@ -108,3 +108,8 @@ All Clamp commands support a "`--help`" option, which outputs brief usage docume
         --loud                        say it loud
         -n, --iterations N            say it N times
         --help                        print help
+
+Contributing to Clamp
+---------------------
+
+Source-code for Clamp is [on Github](https://github.com/mdub/clamp).  
