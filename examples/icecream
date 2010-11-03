@@ -1,0 +1,15 @@
+#! /usr/bin/env ruby
+
+require "clamp"
+
+class Icecream < Clamp::Command
+
+  option "--flavour", "FLAVOUR", "ice-cream flavour"
+
+  def execute
+    puts "You chose #{flavour}.  Excellent choice!"
+  end
+  
+end
+
+Icecream.run
