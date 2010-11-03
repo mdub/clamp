@@ -78,6 +78,12 @@ If you don't like the inferred attribute name, you can override it:
     option "--type", "TYPE", "type of widget", :attribute_name => :widget_type
                                                # to avoid clobbering Object#type
 
+### Short/long option switches
+
+The first argument to `option` can be an array, rather than a single string, in which case all the switches are treated as aliases:
+
+    option ["-s", "--subject"], "SUBJECT", "email subject line"
+
 ### Flag options
 
 Some options are just boolean flags.  Pass "`:flag`" as the second parameter to tell Clamp not to expect an option argument:
@@ -91,6 +97,29 @@ Negatable flags are easy to generate, too:
     option "--[no-]force", :flag, "be forceful (or not)"
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
+
+### Validation and conversion of option arguments
+
+If a block is passed to `option`, it will be called with the raw string option argument, and is expected to coerce that String to the correct type, e.g.
+
+    option "--port", "PORT", "port to listen on" do |s|
+      Integer(s)
+    end
+
+If the block raises an ArgumentError, Clamp will catch it, and report that the option value was bad:
+
+    !!!plain
+    ERROR: option '--port': invalid value for Integer: "blah"
+
+Declaring arguments
+-------------------
+
+The `argument` method is used to declare command arguments:
+
+    argument "FILE ...", "source files"
+    argument "DIR", "target directory"
+
+Use of `argument` is entirely for documentation purposes.  Whether or not you declare and describe your expected arguments, the actual arguments that remain after option parsing will be available as `arguments` when your `#execute` method is called.
 
 Getting help
 ------------
