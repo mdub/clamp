@@ -23,12 +23,10 @@ describe Clamp::Command, "with subcommands" do
 
     end
 
-    @command = @command_class.new("flipflop")
-
-    @command.run("flip")
+    @command_class.run("flipflop", ["flip"])
     stdout.should =~ /FLIPPED/
 
-    @command.run("flop")
+    @command_class.run("flipflop", ["flop"])
     stdout.should =~ /FLOPPED/
 
   end
@@ -49,8 +47,7 @@ describe Clamp::Command, "with subcommands" do
 
     end
 
-    @command_class.new("go").run(["--direction", "north", "walk"])
-
+    @command_class.run("go", ["--direction", "north", "walk"])
     stdout.should =~ /walking north/
 
   end
