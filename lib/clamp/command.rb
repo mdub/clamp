@@ -13,6 +13,8 @@ module Clamp
     attr_reader :name
     attr_reader :arguments
 
+    attr_accessor :parent_command
+
     def parse(arguments)
       while arguments.first =~ /^-/
         case (switch = arguments.shift)
@@ -63,6 +65,7 @@ module Clamp
       subcommand_name, *subcommand_args = arguments
       subcommand_class = find_subcommand_class(subcommand_name)
       subcommand = subcommand_class.new("#{name} #{subcommand_name}")
+      subcommand.parent_command = self
       subcommand.run(subcommand_args)
     end
     
