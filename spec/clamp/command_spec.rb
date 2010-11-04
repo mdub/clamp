@@ -322,6 +322,20 @@ describe Clamp::Command do
       stdout.should == @xyz.inspect
     end
 
+    describe "invoked with a context hash" do
+      
+      it "makes the context available within the command" do
+        @command.class.class_eval do
+          def execute
+            print context[:foo]
+          end
+        end
+        @command.class.run("xyz", [], :foo => "bar")
+        stdout.should == "bar"        
+      end
+      
+    end
+    
     describe "when there's a UsageError" do
 
       before do

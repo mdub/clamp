@@ -6,13 +6,15 @@ module Clamp
   
   class Command
     
-    def initialize(name)
+    def initialize(name, context = {})
       @name = name
+      @context = context
     end
     
     attr_reader :name
     attr_reader :arguments
 
+    attr_accessor :context
     attr_accessor :parent_command
 
     def parse(arguments)
@@ -199,9 +201,9 @@ module Clamp
         help.string
       end
       
-      def run(name = $0, args = ARGV)
+      def run(name = $0, args = ARGV, context = {})
         begin 
-          new(name).run(args)
+          new(name, context).run(args)
         rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
