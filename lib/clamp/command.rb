@@ -66,7 +66,7 @@ module Clamp
       signal_usage_error "no subcommand specified" if arguments.empty?
       subcommand_name, *subcommand_args = arguments
       subcommand_class = find_subcommand_class(subcommand_name)
-      subcommand = subcommand_class.new("#{name} #{subcommand_name}")
+      subcommand = subcommand_class.new("#{name} #{subcommand_name}", context)
       subcommand.parent_command = self
       subcommand.run(subcommand_args)
     end

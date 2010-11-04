@@ -31,25 +31,48 @@ describe Clamp::Command, "with subcommands" do
 
   end
 
-  it "has access to parent command state" do
+  describe "each subcommand" do
+    
+    it "has access to parent command state" do
 
-    @command_class = Class.new(Clamp::Command) do
+      @command_class = Class.new(Clamp::Command) do
 
-      option "--direction", "DIR", "which way"
+        option "--direction", "DIR", "which way"
 
-      subcommand "walk", "step carefully in the appointed direction" do
-        
-        def execute
-          puts "walking #{parent_command.direction}"
+        subcommand "walk", "step carefully in the appointed direction" do
+
+          def execute
+            puts "walking #{parent_command.direction}"
+          end
+
         end
-        
+
       end
+
+      @command_class.run("go", ["--direction", "north", "walk"])
+      stdout.should =~ /walking north/
 
     end
 
-    @command_class.run("go", ["--direction", "north", "walk"])
-    stdout.should =~ /walking north/
+    it "has access to parent context" do
+      
+      @command_class = Class.new(Clamp::Command) do
 
+        subcommand "walk", "step carefully in the configured direction" do
+
+          def execute
+            puts "walking #{context[:direction]}"
+          end
+
+        end
+
+      end
+
+      @command_class.run("go", ["walk"], :direction => "south")
+      stdout.should =~ /walking south/
+
+    end
+    
   end
 
 end
