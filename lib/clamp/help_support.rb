@@ -27,8 +27,8 @@ module Clamp
 
     def derived_usage_description
       parts = declared_arguments.map { |a| a.name }
-      parts.unshift("[OPTIONS]") if has_options?
       parts.unshift("SUBCOMMAND") if has_subcommands?
+      parts.unshift("[OPTIONS]") if has_options?
       parts.join(" ")
     end
 

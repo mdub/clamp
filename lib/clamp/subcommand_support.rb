@@ -14,13 +14,10 @@ module Clamp
       @recognised_subcommands ||= []
     end
 
-    def subcommand(name, description, subcommand_class = nil, &block)
+    def subcommand(name, description, subcommand_class = self, &block)
       if block
-        if subcommand_class
-          raise "no sense providing a subcommand_class AND a block"
-        else
-          subcommand_class = Class.new(Command, &block)
-        end
+        # generate a anonymous sub-class
+        subcommand_class = Class.new(subcommand_class, &block)
       end
       recognised_subcommands << Subcommand.new(name, description, subcommand_class)
     end

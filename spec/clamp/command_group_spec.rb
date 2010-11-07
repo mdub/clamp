@@ -36,22 +36,21 @@ describe Clamp::Command do
     end
 
     describe "#help" do
-      
+
       it "lists subcommands" do
         @help = @command_class.new("flipflop").help
         @help.should =~ /Subcommands:/
         @help.should =~ /flip +flip it/
         @help.should =~ /flop +flop it/
       end
-      
+
     end
-    
+
   end
 
   describe "each subcommand" do
 
-    it "has access to parent command state" do
-
+    before do
       @command_class = Class.new(Clamp::Command) do
 
         option "--direction", "DIR", "which way"
@@ -59,30 +58,25 @@ describe Clamp::Command do
         subcommand "walk", "step carefully in the appointed direction" do
 
           def execute
-            puts "walking #{parent_command.direction}"
+            puts "walking #{direction}"
           end
 
         end
 
       end
-
-      @command_class.run("go", ["--direction", "north", "walk"])
-      stdout.should =~ /walking north/
-
     end
 
-    it "has access to parent context" do
+    it "accepts parent's options (specified after the subcommand)" do
+      @command_class.run("go", ["walk", "--direction", "north"])
+      stdout.should =~ /walking north/
+    end
 
-      @command_class = Class.new(Clamp::Command) do
+    it "has access to command context" do
 
-        subcommand "walk", "step carefully in the configured direction" do
-
-          def execute
-            puts "walking #{context[:direction]}"
-          end
-
+      @command_class.class_eval do
+        def execute
+          puts "walking #{context[:direction]}"
         end
-
       end
 
       @command_class.run("go", ["walk"], :direction => "south")
