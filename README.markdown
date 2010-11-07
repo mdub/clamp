@@ -126,24 +126,6 @@ Sub-commands
 
 The `subcommand` method declares sub-commands:
 
-    class InitCommand < Clamp::Command
-
-      def execute
-        # ...
-      end
-
-    end
-    
-    class MainCommand < Clamp::Command
-
-      subcommand "init", "Initialize the repository", InitCommand
-      
-    end
-
-When sub-commands are declared, Clamp will attempt to delegate to a sub-command based on the first command-line argument (after options are parsed).  Remaining arguments will be passed on to the sub-command.
-
-Sub-commands can also be specified inline, by providing a block to `subcommand`, rather than a sub-command class:
-
     class MainCommand < Clamp::Command
 
       subcommand "init", "Initialize the repository" do
@@ -156,8 +138,26 @@ Sub-commands can also be specified inline, by providing a block to `subcommand`,
       
     end
 
-Used this way, Clamp will generate an anonymous subclass of `Clamp::Command` to represent the sub-command.
+Clamp generates an anonymous sub-class of the current class, to represent the sub-command.  Additional options may be declared within subcommand blocks, but all options declared on the parent class are also accepted.
+
+Alternatively, you can provide an explicit sub-command class, rather than a block:
     
+    class MainCommand < Clamp::Command
+
+      subcommand "init", "Initialize the repository", InitCommand
+      
+    end
+
+    class InitCommand < Clamp::Command
+
+      def execute
+        # ...
+      end
+
+    end
+
+When a command has sub-commands, Clamp will attempt to delegate based on the first command-line argument, before options are parsed.  Remaining arguments will be passed on to the sub-command.
+
 Getting help
 ------------
 
