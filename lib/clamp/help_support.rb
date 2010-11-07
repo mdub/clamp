@@ -51,7 +51,7 @@ module Clamp
       end
       unless recognised_subcommands.empty?
         help.puts "\nSubcommands:"
-        subcommands.each do |subcommand|
+        recognised_subcommands.each do |subcommand|
           help.puts detail_format % subcommand.help
         end
       end

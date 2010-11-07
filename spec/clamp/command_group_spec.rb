@@ -1,38 +1,55 @@
 require 'spec_helper'
 require 'stringio'
 
-describe Clamp::Command, "with subcommands" do
+describe Clamp::Command do
 
   include OutputCapture
 
-  it "delegates to sub-commands" do
+  describe "with subcommands" do
 
-    @command_class = Class.new(Clamp::Command) do
+    before do
+      @command_class = Class.new(Clamp::Command) do
 
-      subcommand "flip", "flip it" do
-        def execute
-          puts "FLIPPED"
+        subcommand "flip", "flip it" do
+          def execute
+            puts "FLIPPED"
+          end
         end
-      end
 
-      subcommand "flop", "flop it" do
-        def execute
-          puts "FLOPPED"
+        subcommand "flop", "flop it" do
+          def execute
+            puts "FLOPPED"
+          end
         end
+
       end
+    end
+
+    it "delegates to sub-commands" do
+
+      @command_class.run("flipflop", ["flip"])
+      stdout.should =~ /FLIPPED/
+
+      @command_class.run("flipflop", ["flop"])
+      stdout.should =~ /FLOPPED/
 
     end
 
-    @command_class.run("flipflop", ["flip"])
-    stdout.should =~ /FLIPPED/
-
-    @command_class.run("flipflop", ["flop"])
-    stdout.should =~ /FLOPPED/
-
+    describe "#help" do
+      
+      it "lists subcommands" do
+        @help = @command_class.new("flipflop").help
+        @help.should =~ /Subcommands:/
+        @help.should =~ /flip +flip it/
+        @help.should =~ /flop +flop it/
+      end
+      
+    end
+    
   end
 
   describe "each subcommand" do
-    
+
     it "has access to parent command state" do
 
       @command_class = Class.new(Clamp::Command) do
@@ -55,7 +72,7 @@ describe Clamp::Command, "with subcommands" do
     end
 
     it "has access to parent context" do
-      
+
       @command_class = Class.new(Clamp::Command) do
 
         subcommand "walk", "step carefully in the configured direction" do
@@ -72,7 +89,7 @@ describe Clamp::Command, "with subcommands" do
       stdout.should =~ /walking south/
 
     end
-    
+
   end
 
 end
