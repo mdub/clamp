@@ -57,7 +57,7 @@ module Clamp
     end
 
     def help
-      self.class.help.gsub("__COMMAND__", name)
+      self.class.help(name)
     end
     
     protected
@@ -172,12 +172,12 @@ module Clamp
         parts.join(" ")
       end
       
-      def help
+      def help(command_name)
         help = StringIO.new
         help.puts "Usage:"
         usages = @declared_usages || [derived_usage]
         usages.each_with_index do |usage, i|
-          help.puts "    __COMMAND__ #{usage}".rstrip
+          help.puts "    #{command_name} #{usage}".rstrip
         end
         detail_format = "    %-29s %s"
         unless declared_arguments.empty?
