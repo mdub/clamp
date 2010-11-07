@@ -5,52 +5,57 @@ describe Clamp::Command do
 
   include OutputCapture
 
+  def self.given_command(name, &block)
+    before do
+      @command = Class.new(Clamp::Command, &block).new(name)
+    end
+  end
+
   describe "with subcommands" do
 
-    before do
-      @command_class = Class.new(Clamp::Command) do
+    given_command "flipflop" do
 
-        subcommand "flip", "flip it" do
-          def execute
-            puts "FLIPPED"
-          end
+      subcommand "flip", "flip it" do
+        def execute
+          puts "FLIPPED"
         end
-
-        subcommand "flop", "flop it" do
-          def execute
-            puts "FLOPPED"
-          end
-        end
-
       end
+
+      subcommand "flop", "flop it" do
+        def execute
+          puts "FLOPPED"
+        end
+      end
+
     end
 
     it "delegates to sub-commands" do
 
-      @command_class.run("flipflop", ["flip"])
+      @command.run(["flip"])
       stdout.should =~ /FLIPPED/
 
-      @command_class.run("flipflop", ["flop"])
+      @command.run(["flop"])
       stdout.should =~ /FLOPPED/
 
     end
 
     describe "#help" do
-
+      
       it "lists subcommands" do
-        @help = @command_class.new("flipflop").help
+        @help = @command.help
         @help.should =~ /Subcommands:/
         @help.should =~ /flip +flip it/
         @help.should =~ /flop +flop it/
       end
-
+      
     end
-
+    
   end
 
   describe "each subcommand" do
 
     before do
+
       @command_class = Class.new(Clamp::Command) do
 
         option "--direction", "DIR", "which way"
@@ -58,30 +63,29 @@ describe Clamp::Command do
         subcommand "walk", "step carefully in the appointed direction" do
 
           def execute
-            puts "walking #{direction}"
+            if direction
+              puts "walking #{direction}"
+            else
+              puts "wandering #{context[:default_direction]} by default"
+            end
           end
 
         end
 
       end
+
+      @command = @command_class.new("go", :default_direction => "south")
+
     end
 
-    it "accepts parent's options (specified after the subcommand)" do
-      @command_class.run("go", ["walk", "--direction", "north"])
+    it "accepts parents options (specified after the subcommand)" do
+      @command.run(["walk", "--direction", "north"])
       stdout.should =~ /walking north/
     end
 
     it "has access to command context" do
-
-      @command_class.class_eval do
-        def execute
-          puts "walking #{context[:direction]}"
-        end
-      end
-
-      @command_class.run("go", ["walk"], :direction => "south")
-      stdout.should =~ /walking south/
-
+      @command.run(["walk"])
+      stdout.should =~ /wandering south by default/
     end
 
   end

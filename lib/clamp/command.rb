@@ -44,34 +44,32 @@ module Clamp
 
     # default implementation
     def execute
-      if self.class.has_subcommands?
-        execute_subcommand
-      else
-        raise "you need to define #execute"
-      end
+      raise "you need to define #execute"
     end
 
     def run(arguments)
-      parse(arguments)
-      execute
+      if self.class.has_subcommands?
+        execute_subcommand(arguments)
+      else
+        parse(arguments)
+        execute
+      end
     end
 
     def help
       self.class.help(name)
     end
 
-    protected
+    private
 
-    def execute_subcommand
+    def execute_subcommand(arguments)
       signal_usage_error "no subcommand specified" if arguments.empty?
-      subcommand_name, *subcommand_args = arguments
+      subcommand_name = arguments.shift
       subcommand_class = find_subcommand_class(subcommand_name)
       subcommand = subcommand_class.new("#{name} #{subcommand_name}", context)
       subcommand.parent_command = self
-      subcommand.run(subcommand_args)
+      subcommand.run(arguments)
     end
-
-    private
 
     def find_option(switch)
       self.class.find_option(switch) || 
