@@ -380,4 +380,23 @@ describe Clamp::Command do
 
   end
 
+  describe "subclass" do
+    
+    before do
+      @parent_command_class = Class.new(Clamp::Command) do
+        option "--verbose", :flag, "be louder"
+      end
+      @derived_command_class = Class.new(@parent_command_class) do
+        option "--iterations", "N", "number of times to go around"
+      end
+      @command = @derived_command_class.new("cmd")
+    end
+    
+    it "inherits options from it's superclass" do
+      @command.parse(["--verbose"])
+      @command.should be_verbose
+    end
+
+  end
+  
 end

@@ -98,33 +98,25 @@ module Clamp
 
     class << self
 
-      def declared_options
-        @declared_options ||= []
-      end
-
       def option(switches, argument_type, description, opts = {}, &block)
         option = Clamp::Option.new(switches, argument_type, description, opts)
-        declared_options << option
-        declare_option_reader(option)
-        declare_option_writer(option, &block)
+        declare_option(option, &block)
       end
-
+      
       def has_options?
         !declared_options.empty?
       end
 
-      HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
-
-      def standard_options
-        [HELP_OPTION]
+      def declared_options
+        my_declared_options + inherited_declared_options
       end
 
-      def acceptable_options
+      def recognised_options
         declared_options + standard_options
       end
 
       def find_option(switch)
-        acceptable_options.find { |o| o.handles?(switch) }
+        recognised_options.find { |o| o.handles?(switch) }
       end
 
       def declared_arguments
@@ -197,7 +189,7 @@ module Clamp
         end
         if has_options?
           help.puts "\nOptions:"
-          acceptable_options.each do |option|
+          recognised_options.each do |option|
             help.puts detail_format % option.help
           end
         end
@@ -218,6 +210,30 @@ module Clamp
       end
 
       private
+      
+      def my_declared_options
+        @my_declared_options ||= []
+      end
+
+      def declare_option(option, &block)
+        my_declared_options << option
+        declare_option_reader(option)
+        declare_option_writer(option, &block)
+      end
+
+      def inherited_declared_options
+        if superclass.respond_to?(:declared_options)
+          superclass.declared_options
+        else
+          []
+        end
+      end
+
+      HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
+
+      def standard_options
+        [HELP_OPTION]
+      end
 
       def declare_option_reader(option)
         reader_name = option.attribute_name
