@@ -159,22 +159,27 @@ module Clamp
       end
 
       def usage(usage)
-        @declared_usages ||= []
-        @declared_usages << usage
+        @declared_usage_descriptions ||= []
+        @declared_usage_descriptions << usage
       end
 
-      def derived_usage
+      attr_reader :declared_usage_descriptions
+      
+      def derived_usage_description
         parts = declared_arguments.map { |a| a.name }
         parts.unshift("[OPTIONS]") if has_options?
         parts.unshift("SUBCOMMAND") if has_subcommands?
         parts.join(" ")
       end
+      
+      def usage_descriptions
+        declared_usage_descriptions || [derived_usage_description]
+      end
 
       def help(command_name)
         help = StringIO.new
         help.puts "Usage:"
-        usages = @declared_usages || [derived_usage]
-        usages.each_with_index do |usage, i|
+        usage_descriptions.each_with_index do |usage, i|
           help.puts "    #{command_name} #{usage}".rstrip
         end
         detail_format = "    %-29s %s"
