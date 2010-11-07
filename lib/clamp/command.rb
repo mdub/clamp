@@ -1,16 +1,14 @@
-require 'clamp/argument'
 require 'clamp/option'
-require 'clamp/subcommand'
 
 module Clamp
-  
+
   class Command
-    
+
     def initialize(name, context = {})
       @name = name
       @context = context
     end
-    
+
     attr_reader :name
     attr_reader :arguments
 
@@ -36,7 +34,7 @@ module Clamp
           rescue ArgumentError => e
             signal_usage_error "option '#{switch}': #{e.message}"
           end
-          
+
         end
       end
       @arguments = arguments
@@ -59,7 +57,7 @@ module Clamp
     def help
       self.class.help(name)
     end
-    
+
     protected
 
     def execute_subcommand
@@ -70,7 +68,7 @@ module Clamp
       subcommand.parent_command = self
       subcommand.run(subcommand_args)
     end
-    
+
     private
 
     def find_option(switch)
@@ -87,23 +85,23 @@ module Clamp
       subcommand = find_subcommand(name)
       subcommand.subcommand_class if subcommand
     end
-    
+
     def signal_usage_error(message)
       e = UsageError.new(message, self)
       e.set_backtrace(caller)
       raise e
     end
-    
+
     def help_requested=(value)
       raise Clamp::HelpWanted.new(self)
     end
-    
+
     class << self
-    
+
       def declared_options
         @declared_options ||= []
       end
-      
+
       def option(switches, argument_type, description, opts = {}, &block)
         option = Clamp::Option.new(switches, argument_type, description, opts)
         declared_options << option
@@ -120,11 +118,11 @@ module Clamp
       def standard_options
         [HELP_OPTION]
       end
-        
+
       def acceptable_options
         declared_options + standard_options
       end
-      
+
       def find_option(switch)
         acceptable_options.find { |o| o.handles?(switch) }
       end
@@ -132,7 +130,7 @@ module Clamp
       def declared_arguments
         @declared_arguments ||= []
       end
-      
+
       def argument(name, description)
         declared_arguments << Argument.new(name, description)
       end
@@ -140,7 +138,7 @@ module Clamp
       def recognised_subcommands
         @recognised_subcommands ||= []
       end
-      
+
       def subcommand(name, description, subcommand_class = nil, &block)
         if block
           if subcommand_class
@@ -159,7 +157,7 @@ module Clamp
       def find_subcommand(name)
         recognised_subcommands.find { |sc| sc.name == name }
       end
-      
+
       def usage(usage)
         @declared_usages ||= []
         @declared_usages << usage
@@ -171,7 +169,7 @@ module Clamp
         parts.unshift("SUBCOMMAND") if has_subcommands?
         parts.join(" ")
       end
-      
+
       def help(command_name)
         help = StringIO.new
         help.puts "Usage:"
@@ -200,7 +198,7 @@ module Clamp
         end
         help.string
       end
-      
+
       def run(name = $0, args = ARGV, context = {})
         begin 
           new(name, context).run(args)
@@ -215,7 +213,7 @@ module Clamp
       end
 
       private
-      
+
       def declare_option_reader(option)
         reader_name = option.attribute_name
         reader_name += "?" if option.flag?
@@ -234,32 +232,48 @@ module Clamp
           instance_variable_set("@#{option.attribute_name}", value)
         end
       end
-      
+
     end
-        
+
   end
-  
+
+  class Argument < Struct.new(:name, :description)
+
+    def help
+      [name, description]
+    end
+
+  end
+
+  class Subcommand < Struct.new(:name, :description, :subcommand_class)
+
+    def help
+      [name, description]
+    end
+
+  end
+
   class Error < StandardError
-    
+
     def initialize(message, command)
       super(message)
       @command = command
     end
 
     attr_reader :command
-    
+
   end
 
   # raise to signal incorrect command usage
   class UsageError < Error; end
-  
+
   # raise to request usage help
   class HelpWanted < Error
-    
+
     def initialize(command)
       super("I need help", command)
     end
-    
+
   end
-  
+
 end
