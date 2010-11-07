@@ -1,4 +1,6 @@
-require 'clamp/option'
+require 'clamp/help_support'
+require 'clamp/option_support'
+require 'clamp/subcommand_support'
 
 module Clamp
 
@@ -98,103 +100,10 @@ module Clamp
 
     class << self
 
-      def option(switches, argument_type, description, opts = {}, &block)
-        option = Clamp::Option.new(switches, argument_type, description, opts)
-        declare_option(option, &block)
-      end
+      include OptionSupport
+      include SubcommandSupport
+      include HelpSupport
       
-      def has_options?
-        !declared_options.empty?
-      end
-
-      def declared_options
-        my_declared_options + inherited_declared_options
-      end
-
-      def recognised_options
-        declared_options + standard_options
-      end
-
-      def find_option(switch)
-        recognised_options.find { |o| o.handles?(switch) }
-      end
-
-      def declared_arguments
-        @declared_arguments ||= []
-      end
-
-      def argument(name, description)
-        declared_arguments << Argument.new(name, description)
-      end
-
-      def recognised_subcommands
-        @recognised_subcommands ||= []
-      end
-
-      def subcommand(name, description, subcommand_class = nil, &block)
-        if block
-          if subcommand_class
-            raise "no sense providing a subcommand_class AND an block"
-          else
-            subcommand_class = Class.new(Command, &block)
-          end
-        end
-        recognised_subcommands << Subcommand.new(name, description, subcommand_class)
-      end
-
-      def has_subcommands?
-        !recognised_subcommands.empty?
-      end
-
-      def find_subcommand(name)
-        recognised_subcommands.find { |sc| sc.name == name }
-      end
-
-      def usage(usage)
-        @declared_usage_descriptions ||= []
-        @declared_usage_descriptions << usage
-      end
-
-      attr_reader :declared_usage_descriptions
-      
-      def derived_usage_description
-        parts = declared_arguments.map { |a| a.name }
-        parts.unshift("[OPTIONS]") if has_options?
-        parts.unshift("SUBCOMMAND") if has_subcommands?
-        parts.join(" ")
-      end
-      
-      def usage_descriptions
-        declared_usage_descriptions || [derived_usage_description]
-      end
-
-      def help(command_name)
-        help = StringIO.new
-        help.puts "Usage:"
-        usage_descriptions.each_with_index do |usage, i|
-          help.puts "    #{command_name} #{usage}".rstrip
-        end
-        detail_format = "    %-29s %s"
-        unless declared_arguments.empty?
-          help.puts "\nArguments:"
-          declared_arguments.each do |argument|
-            help.puts detail_format % argument.help
-          end
-        end
-        unless recognised_subcommands.empty?
-          help.puts "\nSubcommands:"
-          subcommands.each do |subcommand|
-            help.puts detail_format % subcommand.help
-          end
-        end
-        if has_options?
-          help.puts "\nOptions:"
-          recognised_options.each do |option|
-            help.puts detail_format % option.help
-          end
-        end
-        help.string
-      end
 
       def run(name = $0, args = ARGV, context = {})
         begin 
@@ -209,67 +118,6 @@ module Clamp
         end
       end
 
-      private
-      
-      def my_declared_options
-        @my_declared_options ||= []
-      end
-
-      def declare_option(option, &block)
-        my_declared_options << option
-        declare_option_reader(option)
-        declare_option_writer(option, &block)
-      end
-
-      def inherited_declared_options
-        if superclass.respond_to?(:declared_options)
-          superclass.declared_options
-        else
-          []
-        end
-      end
-
-      HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
-
-      def standard_options
-        [HELP_OPTION]
-      end
-
-      def declare_option_reader(option)
-        reader_name = option.attribute_name
-        reader_name += "?" if option.flag?
-        define_method(reader_name) do
-          value = instance_variable_get("@#{option.attribute_name}")
-          value = option.default_value if value.nil?
-          value
-        end
-      end
-
-      def declare_option_writer(option, &block)
-        define_method("#{option.attribute_name}=") do |value|
-          if block
-            value = instance_exec(value, &block)
-          end
-          instance_variable_set("@#{option.attribute_name}", value)
-        end
-      end
-
-    end
-
-  end
-
-  class Argument < Struct.new(:name, :description)
-
-    def help
-      [name, description]
-    end
-
-  end
-
-  class Subcommand < Struct.new(:name, :description, :subcommand_class)
-
-    def help
-      [name, description]
     end
 
   end
