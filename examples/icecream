@@ -7,6 +7,7 @@ class Icecream < Clamp::Command
   option "--flavour", "FLAVOUR", "ice-cream flavour"
 
   def execute
+    signal_usage_error "what flavour?" unless flavour
     puts "You chose #{flavour}.  Excellent choice!"
   end
   
