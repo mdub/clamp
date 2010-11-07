@@ -44,16 +44,16 @@ module Clamp
 
     # default implementation
     def execute
-      raise "you need to define #execute"
+      if self.class.has_subcommands?
+        execute_subcommand
+      else
+        raise "you need to define #execute"
+      end
     end
 
     def run(arguments)
-      if self.class.has_subcommands?
-        execute_subcommand(arguments)
-      else
-        parse(arguments)
-        execute
-      end
+      parse(arguments)
+      execute
     end
 
     def help
@@ -62,7 +62,7 @@ module Clamp
 
     private
 
-    def execute_subcommand(arguments)
+    def execute_subcommand
       signal_usage_error "no subcommand specified" if arguments.empty?
       subcommand_name = arguments.shift
       subcommand_class = find_subcommand_class(subcommand_name)
@@ -101,7 +101,6 @@ module Clamp
       include OptionSupport
       include SubcommandSupport
       include HelpSupport
-      
 
       def run(name = $0, args = ARGV, context = {})
         begin 
@@ -109,7 +108,7 @@ module Clamp
         rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
-          $stderr.puts e.command.help
+          $stderr.puts "See: '#{name} --help'"
           exit(1)
         rescue Clamp::HelpWanted => e
           puts e.command.help

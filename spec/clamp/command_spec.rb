@@ -359,7 +359,7 @@ describe Clamp::Command do
       end
 
       it "outputs help" do
-        stderr.should include "Usage:"
+        stderr.should include "See: 'cmd --help'"
       end
 
       it "exits with a non-zero status" do
