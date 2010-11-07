@@ -111,8 +111,8 @@ module Clamp
         declare_option_writer(option, &block)
       end
 
-      def options
-        declared_options + standard_options
+      def has_options?
+        !declared_options.empty?
       end
 
       HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
@@ -121,24 +121,24 @@ module Clamp
         [HELP_OPTION]
       end
         
-      def has_options?
-        !declared_options.empty?
+      def acceptable_options
+        declared_options + standard_options
       end
       
       def find_option(switch)
-        options.find { |o| o.handles?(switch) }
+        acceptable_options.find { |o| o.handles?(switch) }
       end
 
-      def arguments
-        @arguments ||= []
+      def declared_arguments
+        @declared_arguments ||= []
       end
       
       def argument(name, description)
-        arguments << Argument.new(name, description)
+        declared_arguments << Argument.new(name, description)
       end
 
-      def subcommands
-        @subcommands ||= []
+      def recognised_subcommands
+        @recognised_subcommands ||= []
       end
       
       def subcommand(name, description, subcommand_class = nil, &block)
@@ -149,24 +149,24 @@ module Clamp
             subcommand_class = Class.new(Command, &block)
           end
         end
-        subcommands << Subcommand.new(name, description, subcommand_class)
+        recognised_subcommands << Subcommand.new(name, description, subcommand_class)
       end
 
       def has_subcommands?
-        !subcommands.empty?
+        !recognised_subcommands.empty?
       end
 
       def find_subcommand(name)
-        subcommands.find { |sc| sc.name == name }
+        recognised_subcommands.find { |sc| sc.name == name }
       end
       
       def usage(usage)
-        @usages ||= []
-        @usages << usage
+        @declared_usages ||= []
+        @declared_usages << usage
       end
 
       def derived_usage
-        parts = arguments.map { |a| a.name }
+        parts = declared_arguments.map { |a| a.name }
         parts.unshift("[OPTIONS]") if has_options?
         parts.unshift("SUBCOMMAND") if has_subcommands?
         parts.join(" ")
@@ -175,26 +175,26 @@ module Clamp
       def help
         help = StringIO.new
         help.puts "Usage:"
-        usages = @usages || [derived_usage]
+        usages = @declared_usages || [derived_usage]
         usages.each_with_index do |usage, i|
           help.puts "    __COMMAND__ #{usage}".rstrip
         end
         detail_format = "    %-29s %s"
-        unless arguments.empty?
+        unless declared_arguments.empty?
           help.puts "\nArguments:"
-          arguments.each do |argument|
-            help.puts detail_format % [argument.name, argument.description]
+          declared_arguments.each do |argument|
+            help.puts detail_format % argument.help
           end
         end
-        unless subcommands.empty?
+        unless recognised_subcommands.empty?
           help.puts "\nSubcommands:"
           subcommands.each do |subcommand|
             help.puts detail_format % subcommand.help
           end
         end
-        unless options.empty?
+        if has_options?
           help.puts "\nOptions:"
-          options.each do |option|
+          acceptable_options.each do |option|
             help.puts detail_format % option.help
           end
         end
