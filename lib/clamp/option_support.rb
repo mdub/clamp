@@ -54,10 +54,15 @@ module Clamp
     def declare_option_reader(option)
       reader_name = option.attribute_name
       reader_name += "?" if option.flag?
+      ivar_name = "@#{option.attribute_name}"
       define_method(reader_name) do
-        value = instance_variable_get("@#{option.attribute_name}")
-        value = option.default_value if value.nil?
-        value
+        if instance_variable_defined?(ivar_name)
+          instance_variable_get(ivar_name)
+        elsif parent_command && parent_command.respond_to?(reader_name)
+          parent_command.send(reader_name)
+        else
+          option.default_value
+        end
       end
     end
 

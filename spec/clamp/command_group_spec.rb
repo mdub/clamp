@@ -83,6 +83,11 @@ describe Clamp::Command do
       stdout.should =~ /walking north/
     end
 
+    it "accepts parents options (specified before the subcommand)" do
+      @command.run(["--direction", "north", "walk"])
+      stdout.should =~ /walking north/
+    end
+
     it "has access to command context" do
       @command.run(["walk"])
       stdout.should =~ /wandering south by default/
