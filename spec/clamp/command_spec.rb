@@ -27,25 +27,6 @@ describe Clamp::Command do
 
   end
 
-  describe "#parse" do
-
-    it "sets arguments" do
-      @command.parse(%w(a b c))
-      @command.arguments.should == %w(a b c)
-    end
-
-    describe "with an unrecognised option" do
-
-      it "raises a UsageError" do
-        lambda do
-          @command.parse(%w(--foo bar))
-        end.should raise_error(Clamp::UsageError)
-      end
-
-    end
-
-  end
-
   describe "#run" do
 
     before do
@@ -72,6 +53,19 @@ describe Clamp::Command do
       @command.flavour.should == "chocolate"
     end
 
+    describe "with type :flag" do
+
+      before do
+        @command.class.option "--verbose", :flag, "Be heartier"
+      end
+
+      it "declares a predicate-style reader" do
+        @command.should respond_to(:verbose?)
+        @command.should_not respond_to(:verbose)
+      end
+
+    end
+    
     describe "with explicit :attribute_name" do
 
       before do
@@ -102,6 +96,24 @@ describe Clamp::Command do
 
     end
 
+    describe "with a block" do
+
+      before do
+        @command.class.option "--port", "PORT", "Port to listen on" do |port|
+          Integer(port)
+        end
+      end
+
+      it "uses the block to validate and convert the option argument" do
+        lambda do
+          @command.port = "blah"
+        end.should raise_error(ArgumentError)
+        @command.port = "1234"
+        @command.port.should == 1234
+      end
+
+    end
+
   end
 
   describe "with options declared" do
@@ -109,19 +121,31 @@ describe Clamp::Command do
     before do
       @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
       @command.class.option "--color", "COLOR", "Preferred hue"
+      @command.class.option "--[no-]nuts", :flag, "Nuts (or not)"
     end
 
     describe "#parse" do
 
+      describe "with an unrecognised option" do
+
+        it "raises a UsageError" do
+          lambda do
+            @command.parse(%w(--foo bar))
+          end.should raise_error(Clamp::UsageError)
+        end
+
+      end
+
       describe "with options" do
 
         before do
-          @command.parse(%w(--flavour strawberry --color blue a b c))
+          @command.parse(%w(--flavour strawberry --nuts --color blue a b c))
         end
 
         it "extracts the option values" do
           @command.flavour.should == "strawberry"
           @command.color.should == "blue"
+          @command.nuts?.should == true
         end
 
         it "retains unconsumed arguments" do
@@ -148,6 +172,53 @@ describe Clamp::Command do
 
       end
 
+      describe "with --flag" do
+
+        before do
+          @command.parse(%w(--nuts))
+        end
+
+        it "sets the flag" do
+          @command.nuts?.should be_true
+        end
+
+      end
+
+      describe "with --no-flag" do
+
+        before do
+          @command.nuts = true
+          @command.parse(%w(--no-nuts))
+        end
+
+        it "clears the flag" do
+          @command.nuts?.should be_false
+        end
+
+      end
+
+      describe "when option-writer raises an ArgumentError" do
+        
+        before do
+          @command.class.class_eval do
+            
+            def color=(c)
+              unless c == "black"
+                raise ArgumentError, "sorry, we're out of #{c}"
+              end
+            end
+            
+          end
+        end
+          
+        it "re-raises it as a UsageError" do
+          lambda do
+            @command.parse(%w(--color red))
+          end.should raise_error(Clamp::UsageError, /^option '--color': sorry, we're out of red/)
+        end
+
+      end
+
     end
 
     describe "#help" do
@@ -159,117 +230,6 @@ describe Clamp::Command do
       it "includes option details" do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
         @command.help.should =~ %r(--color COLOR +Preferred hue)
-      end
-
-    end
-
-  end
-
-  describe "with a flag option declared" do
-
-    before do
-      @command.class.option "--verbose", :flag, "Be heartier"
-    end
-
-    it "declares a predicate-style reader" do
-      @command.should respond_to(:verbose?)
-      @command.should_not respond_to(:verbose)
-    end
-
-    describe "#parse" do
-
-      describe "with option" do
-
-        before do
-          @command.parse(%w(--verbose foo))
-        end
-
-        it "sets the flag" do
-          @command.should be_verbose
-        end
-
-        it "does not consume an argument" do
-          @command.arguments.should == %w(foo)
-        end
-
-      end
-
-    end
-
-  end
-
-  describe "with a negatable flag option declared" do
-
-    before do
-      @command.class.option "--[no-]sync", :flag, "Synchronise"
-    end
-
-    describe "#parse" do
-
-      describe "with --flag" do
-
-        before do
-          @command.parse(%w(--sync))
-        end
-
-        it "sets the flag" do
-          @command.sync?.should be_true
-        end
-
-      end
-
-      describe "with --no-flag" do
-
-        before do
-          @command.sync = true
-          @command.parse(%w(--no-sync))
-        end
-
-        it "clears the flag" do
-          @command.sync?.should be_false
-        end
-
-      end
-
-    end
-
-  end
-
-  describe ".option, with a block" do
-
-    before do
-      @command.class.option "--port", "PORT", "Port to listen on" do |port|
-        Integer(port)
-      end
-    end
-
-    it "uses the block to validate and convert the option argument" do
-      lambda do
-        @command.port = "blah"
-      end.should raise_error(ArgumentError)
-      @command.port = "1234"
-      @command.port.should == 1234
-    end
-
-    describe "#parse" do
-
-      describe "with a valid option argument" do
-
-        it "stores the converted value" do
-          @command.parse(%w(--port 4321))
-          @command.port.should == 4321
-        end
-
-      end
-
-      describe "with an invalid option argument" do
-
-        it "raises a UsageError" do
-          lambda do
-            @command.parse(%w(--port blah))
-          end.should raise_error(Clamp::UsageError, /^option '--port': invalid value/)
-        end
-
       end
 
     end
