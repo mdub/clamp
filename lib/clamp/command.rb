@@ -19,28 +19,8 @@ module Clamp
     attr_accessor :parent_command
 
     def parse(arguments)
-      while arguments.first =~ /^-/
-        case (switch = arguments.shift)
-
-        when /\A--\z/
-          break
-
-        else
-          option = find_option(switch)
-          value = if option.flag?
-            option.flag_value(switch)
-          else
-            arguments.shift
-          end
-          begin
-            send("#{option.attribute_name}=", value)
-          rescue ArgumentError => e
-            signal_usage_error "option '#{switch}': #{e.message}"
-          end
-
-        end
-      end
-      @arguments = arguments
+      @arguments = arguments.dup
+      parse_options
     end
 
     # default implementation
@@ -63,6 +43,28 @@ module Clamp
 
     private
 
+    def parse_options
+      while arguments.first =~ /^-/
+
+        switch = arguments.shift
+        break if switch == "--"
+
+        option = find_option(switch)
+        value = if option.flag?
+          option.flag_value(switch)
+        else
+          arguments.shift
+        end
+
+        begin
+          send("#{option.attribute_name}=", value)
+        rescue ArgumentError => e
+          signal_usage_error "option '#{switch}': #{e.message}"
+        end
+
+      end
+    end
+    
     def execute_subcommand
       signal_usage_error "no subcommand specified" if arguments.empty?
       subcommand_name = arguments.shift
