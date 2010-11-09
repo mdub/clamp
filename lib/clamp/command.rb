@@ -21,7 +21,7 @@ module Clamp
     def parse(arguments)
       @arguments = arguments.dup
       parse_options
-      parse_arguments
+      parse_positional_arguments
     end
 
     # default implementation
@@ -66,8 +66,11 @@ module Clamp
       end
     end
     
-    def parse_arguments
+    def parse_positional_arguments
       self.class.declared_arguments.each do |argument|
+        if arguments.empty?
+          signal_usage_error "no value provided for #{argument.name}"
+        end
         value = arguments.shift
         begin
           send("#{argument.attribute_name}=", value)
@@ -75,6 +78,9 @@ module Clamp
           signal_usage_error "option '#{argument.name}': #{e.message}"
         end
       end
+      # unless arguments.empty?
+      #   signal_usage_error "too many arguments"
+      # end
     end
     
     def execute_subcommand

@@ -277,13 +277,34 @@ describe Clamp::Command do
       describe "with all arguments" do
 
         it "maps argument values onto the command object" do
-          @command.parse(["bang", "wallop"])
-          @command.x.should == "bang"
-          @command.y.should == "wallop"
+          @command.parse(["crash", "bang"])
+          @command.x.should == "crash"
+          @command.y.should == "bang"
         end
 
       end
 
+      describe "with insufficient arguments" do
+        
+        it "raises a UsageError" do
+          lambda do
+            @command.parse(["crash"])
+          end.should raise_error(Clamp::UsageError, "no value provided for Y")
+        end
+        
+      end
+
+      describe "with too many arguments" do
+        
+        it "raises a UsageError" do
+          pending
+          lambda do
+            @command.parse(["crash", "bang", "wallop"])
+          end.should raise_error(Clamp::UsageError, "too many arguments")
+        end
+        
+      end
+      
     end
     
   end
