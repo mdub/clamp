@@ -297,7 +297,6 @@ describe Clamp::Command do
       describe "with too many arguments" do
         
         it "raises a UsageError" do
-          pending
           lambda do
             @command.parse(["crash", "bang", "wallop"])
           end.should raise_error(Clamp::UsageError, "too many arguments")

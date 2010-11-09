@@ -67,6 +67,7 @@ module Clamp
     end
     
     def parse_positional_arguments
+      return false if self.class.declared_arguments.empty?
       self.class.declared_arguments.each do |argument|
         if arguments.empty?
           signal_usage_error "no value provided for #{argument.name}"
@@ -78,9 +79,9 @@ module Clamp
           signal_usage_error "option '#{argument.name}': #{e.message}"
         end
       end
-      # unless arguments.empty?
-      #   signal_usage_error "too many arguments"
-      # end
+      unless arguments.empty?
+        signal_usage_error "too many arguments"
+      end
     end
     
     def execute_subcommand
