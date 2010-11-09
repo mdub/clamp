@@ -245,6 +245,24 @@ describe Clamp::Command do
       @command.flavour.should == "chocolate"
     end
 
+    describe "with a block" do
+
+      before do
+        @command.class.argument "PORT", "port to listen on" do |port|
+          Integer(port)
+        end
+      end
+
+      it "uses the block to validate and convert the argument" do
+        lambda do
+          @command.port = "blah"
+        end.should raise_error(ArgumentError)
+        @command.port = "1234"
+        @command.port.should == 1234
+      end
+
+    end
+
   end
 
   describe "with arguments declared" do

@@ -11,10 +11,10 @@ module Clamp
       @declared_arguments ||= []
     end
 
-    def argument(name, description)
+    def argument(name, description, &block)
       argument = Argument.new(name, description)
       declared_arguments << argument
-      define_accessors_for(argument)
+      define_accessors_for(argument, &block)
     end
   
   end
