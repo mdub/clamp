@@ -21,6 +21,7 @@ module Clamp
     def parse(arguments)
       @arguments = arguments.dup
       parse_options
+      parse_arguments
     end
 
     # default implementation
@@ -62,6 +63,17 @@ module Clamp
           signal_usage_error "option '#{switch}': #{e.message}"
         end
 
+      end
+    end
+    
+    def parse_arguments
+      self.class.declared_arguments.each do |argument|
+        value = arguments.shift
+        begin
+          send("#{argument.attribute_name}=", value)
+        rescue ArgumentError => e
+          signal_usage_error "option '#{argument.name}': #{e.message}"
+        end
       end
     end
     

@@ -115,17 +115,6 @@ describe Clamp::Command do
     end
 
   end
-
-  describe ".argument" do
-
-    it "declares option argument accessors" do
-      @command.class.argument "FLAVOUR", "flavour of the month"
-      @command.flavour.should == nil
-      @command.flavour = "chocolate"
-      @command.flavour.should == "chocolate"
-    end
-
-  end
   
   describe "with options declared" do
 
@@ -153,7 +142,7 @@ describe Clamp::Command do
           @command.parse(%w(--flavour strawberry --nuts --color blue a b c))
         end
 
-        it "extracts the option values" do
+        it "maps the option values onto the command object" do
           @command.flavour.should == "strawberry"
           @command.color.should == "blue"
           @command.nuts?.should == true
@@ -247,6 +236,40 @@ describe Clamp::Command do
 
   end
 
+  describe ".argument" do
+
+    it "declares option argument accessors" do
+      @command.class.argument "FLAVOUR", "flavour of the month"
+      @command.flavour.should == nil
+      @command.flavour = "chocolate"
+      @command.flavour.should == "chocolate"
+    end
+
+  end
+
+  describe "with arguments declared" do
+    
+    before do
+      @command.class.argument "X", "x"
+      @command.class.argument "Y", "y"
+    end
+
+    describe "#parse" do
+      
+      describe "with all arguments" do
+
+        it "maps argument values onto the command object" do
+          @command.parse(["bang", "wallop"])
+          @command.x.should == "bang"
+          @command.y.should == "wallop"
+        end
+
+      end
+
+    end
+    
+  end
+  
   describe "with explicit usage" do
 
     given_command("blah") do
