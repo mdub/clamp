@@ -1,3 +1,4 @@
+require 'clamp/argument_support'
 require 'clamp/help_support'
 require 'clamp/option_support'
 require 'clamp/subcommand_support'
@@ -99,6 +100,7 @@ module Clamp
     class << self
 
       include OptionSupport
+      include ArgumentSupport
       include SubcommandSupport
       include HelpSupport
 

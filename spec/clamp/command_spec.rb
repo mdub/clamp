@@ -116,6 +116,17 @@ describe Clamp::Command do
 
   end
 
+  describe ".argument" do
+
+    it "declares option argument accessors" do
+      @command.class.argument "FLAVOUR", "flavour of the month"
+      @command.flavour.should == nil
+      @command.flavour = "chocolate"
+      @command.flavour.should == "chocolate"
+    end
+
+  end
+  
   describe "with options declared" do
 
     before do

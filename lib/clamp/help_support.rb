@@ -1,22 +1,6 @@
 module Clamp
 
-  class Argument < Struct.new(:name, :description)
-
-    def help
-      [name, description]
-    end
-
-  end
-
   module HelpSupport
-
-    def declared_arguments
-      @declared_arguments ||= []
-    end
-
-    def argument(name, description)
-      declared_arguments << Argument.new(name, description)
-    end
 
     def usage(usage)
       @declared_usage_descriptions ||= []
