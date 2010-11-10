@@ -1,5 +1,7 @@
 #! /usr/bin/env ruby
 
+# A simple Clamp command, with options and parameters
+
 require "clamp"
 
 class SpeakCommand < Clamp::Command
@@ -9,12 +11,11 @@ class SpeakCommand < Clamp::Command
     Integer(s)
   end
 
-  parameter "WORDS ...", "the thing to say"
+  parameter "WORDS ...", "the thing to say", :attribute_name => :words
 
   def execute
 
-    signal_usage_error "I have nothing to say" if arguments.empty?
-    the_truth = arguments.join(" ")
+    the_truth = words.join(" ")
     the_truth.upcase! if loud?
 
     iterations.times do

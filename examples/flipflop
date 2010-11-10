@@ -1,5 +1,7 @@
 #! /usr/bin/env ruby
 
+# An example of subcommands
+
 require "clamp"
 
 class FlipFlop < Clamp::Command
