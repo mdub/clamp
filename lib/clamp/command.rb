@@ -1,9 +1,8 @@
+require 'clamp/command/declaration'
+require 'clamp/errors'
 require 'clamp/help'
-require 'clamp/option/declaration'
 require 'clamp/option/parsing'
-require 'clamp/positional_argument/declaration'
 require 'clamp/positional_argument/parsing'
-require 'clamp/subcommand/declaration'
 require 'clamp/subcommand/execution'
 
 module Clamp
@@ -63,9 +62,7 @@ module Clamp
 
     class << self
 
-      include Option::Declaration
-      include PositionalArgument::Declaration
-      include Subcommand::Declaration
+      include Command::Declaration
       include Help
 
       def run(name = $0, args = ARGV, context = {})
@@ -81,29 +78,6 @@ module Clamp
         end
       end
 
-    end
-
-  end
-
-  class Error < StandardError
-
-    def initialize(message, command)
-      super(message)
-      @command = command
-    end
-
-    attr_reader :command
-
-  end
-
-  # raise to signal incorrect command usage
-  class UsageError < Error; end
-
-  # raise to request usage help
-  class HelpWanted < Error
-
-    def initialize(command)
-      super("I need help", command)
     end
 
   end
