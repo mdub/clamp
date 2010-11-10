@@ -5,34 +5,57 @@ module Clamp
     def initialize(name, description, options = {})
       @name = name
       @description = description
+      infer_attribute_name_and_multiplicity
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s 
       end
     end
 
-    attr_reader :name, :description, :required
+    attr_reader :name, :description, :attribute_name
     
     def help
       [name, description]
-    end
-
-    OPTIONAL_NAME_PATTERN = /^\[(.*)\]$/
-    
-    def attribute_name
-      @attribute_name ||= name.sub(OPTIONAL_NAME_PATTERN) { $1 }.downcase.tr('-', '_')
     end
 
     def consume(arguments)
       if required? && arguments.empty?
         raise ArgumentError, "no value provided"
       end
-      arguments.shift
+      if multivalued?
+        arguments.shift(arguments.length)
+      else
+        arguments.shift
+      end
     end
     
     private
+
+    def infer_attribute_name_and_multiplicity
+      case @name
+      when /^\[(\S+)\]$/
+        @attribute_name = $1
+      when /^\[(\S+)\] ...$/
+        @attribute_name = "#{$1}_list"
+        @multivalued = true
+      when /^(\S+) ...$/
+        @attribute_name = "#{$1}_list"
+        @multivalued = true
+        @required = true
+      when /^\S+$/
+        @attribute_name = @name
+        @required = true
+      else
+        raise "invalid parameter name: '#{name}'"
+      end
+      @attribute_name = @attribute_name.downcase.tr('-', '_')
+    end
     
+    def multivalued?
+      @multivalued
+    end
+
     def required?
-      name !~ OPTIONAL_NAME_PATTERN
+      @required
     end
     
   end
