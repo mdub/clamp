@@ -2,7 +2,6 @@ require 'clamp/attribute_declaration'
 require 'clamp/option'
 
 module Clamp
-
   class Option
 
     module Declaration
@@ -54,5 +53,4 @@ module Clamp
     end
 
   end
-
 end
