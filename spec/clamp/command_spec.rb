@@ -265,6 +265,19 @@ describe Clamp::Command do
 
   end
 
+  describe "with no arguments declared" do
+
+    describe "#parse" do
+    
+      it "retains arguments for handling by #execute" do
+        @command.parse(["crash", "bang", "wallop"])
+        @command.arguments.should == ["crash", "bang", "wallop"]
+      end
+      
+    end
+    
+  end
+
   describe "with arguments declared" do
     
     before do
@@ -276,14 +289,21 @@ describe Clamp::Command do
     describe "#parse" do
       
       describe "with all arguments" do
+        
+        before do
+          @command.parse(["crash", "bang", "wallop"])
+        end
 
         it "maps argument values onto the command object" do
-          @command.parse(["crash", "bang", "wallop"])
           @command.x.should == "crash"
           @command.y.should == "bang"
           @command.z.should == "wallop"
         end
 
+        it "consumes all the arguments" do
+          @command.arguments.should == []
+        end
+        
       end
 
       describe "with insufficient arguments" do
