@@ -6,9 +6,9 @@ module Clamp
   class Command
     
     module Declaration
-      include Option::Declaration
-      include Parameter::Declaration
-      include Subcommand::Declaration
+      include Clamp::Option::Declaration
+      include Clamp::Parameter::Declaration
+      include Clamp::Subcommand::Declaration
     end
 
   end

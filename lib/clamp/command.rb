@@ -44,9 +44,9 @@ module Clamp
       self.class.help(name)
     end
 
-    include Option::Parsing
-    include Parameter::Parsing
-    include Subcommand::Execution
+    include Clamp::Option::Parsing
+    include Clamp::Parameter::Parsing
+    include Clamp::Subcommand::Execution
     
     private
 
@@ -62,7 +62,7 @@ module Clamp
 
     class << self
 
-      include Command::Declaration
+      include Clamp::Command::Declaration
       include Help
 
       def run(name = $0, args = ARGV, context = {})

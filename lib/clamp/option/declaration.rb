@@ -6,7 +6,7 @@ module Clamp
 
     module Declaration
 
-      include AttributeDeclaration
+      include Clamp::AttributeDeclaration
 
       def option(switches, type, description, opts = {}, &block)
         option = Clamp::Option.new(switches, type, description, opts)

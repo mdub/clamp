@@ -6,7 +6,7 @@ module Clamp
 
     module Declaration
 
-      include AttributeDeclaration
+      include Clamp::AttributeDeclaration
 
       def parameters
         @parameters ||= []
