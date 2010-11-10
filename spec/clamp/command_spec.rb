@@ -270,6 +270,7 @@ describe Clamp::Command do
     before do
       @command.class.argument "X", "x"
       @command.class.argument "Y", "y"
+      @command.class.argument "[Z]", "z"
     end
 
     describe "#parse" do
@@ -277,9 +278,10 @@ describe Clamp::Command do
       describe "with all arguments" do
 
         it "maps argument values onto the command object" do
-          @command.parse(["crash", "bang"])
+          @command.parse(["crash", "bang", "wallop"])
           @command.x.should == "crash"
           @command.y.should == "bang"
+          @command.z.should == "wallop"
         end
 
       end
@@ -294,11 +296,22 @@ describe Clamp::Command do
         
       end
 
+      describe "with optional argument omitted" do
+
+        it "defaults the optional argument to nil" do
+          @command.parse(["crash", "bang"])
+          @command.x.should == "crash"
+          @command.y.should == "bang"
+          @command.z.should == nil
+        end
+        
+      end
+
       describe "with too many arguments" do
         
         it "raises a UsageError" do
           lambda do
-            @command.parse(["crash", "bang", "wallop"])
+            @command.parse(["crash", "bang", "wallop", "kapow"])
           end.should raise_error(Clamp::UsageError, "too many arguments")
         end
         

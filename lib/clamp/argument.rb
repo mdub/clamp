@@ -10,22 +10,20 @@ module Clamp
       end
     end
 
-    attr_reader :name, :description
+    attr_reader :name, :description, :required
     
     def help
       [name, description]
     end
 
+    OPTIONAL_NAME_PATTERN = /^\[(.*)\]$/
+    
     def attribute_name
-      @attribute_name ||= name.downcase.tr('-', '_')
+      @attribute_name ||= name.sub(OPTIONAL_NAME_PATTERN) { $1 }.downcase.tr('-', '_')
     end
-
-    def default_value
-      nil
-    end
-
-    def flag?
-      false
+    
+    def required?
+      name !~ OPTIONAL_NAME_PATTERN
     end
 
   end

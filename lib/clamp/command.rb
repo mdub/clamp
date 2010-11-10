@@ -65,7 +65,7 @@ module Clamp
     def parse_positional_arguments
       return false if self.class.positional_arguments.empty?
       self.class.positional_arguments.each do |argument|
-        if arguments.empty?
+        if arguments.empty? && argument.required?
           signal_usage_error "no value provided for #{argument.name}"
         end
         value = arguments.shift

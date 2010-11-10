@@ -15,6 +15,10 @@ describe Clamp::Argument do
     it "has a description" do
       @argument.description.should == "hue of choice"
     end
+
+    it "is required" do
+      @argument.should be_required
+    end
     
     describe "#attribute_name" do
       
@@ -27,6 +31,26 @@ describe Clamp::Argument do
         @argument.attribute_name.should == "hue"
       end
       
+    end
+    
+  end
+
+  describe "with name in square brackets" do
+    
+    before do
+      @argument = Clamp::Argument.new("[COLOR]", "hue of choice")
+    end
+
+    it "is optional" do
+      @argument.should_not be_required
+    end
+
+    describe "#attribute_name" do
+      
+      it "omits the brackets" do
+        @argument.attribute_name.should == "color"
+      end
+
     end
     
   end
