@@ -10,7 +10,7 @@ module Clamp
     attr_reader :declared_usage_descriptions
 
     def derived_usage_description
-      parts = declared_arguments.map { |a| a.name }
+      parts = positional_arguments.map { |a| a.name }
       parts.unshift("SUBCOMMAND") if has_subcommands?
       parts.unshift("[OPTIONS]") if has_options?
       parts.join(" ")
@@ -27,9 +27,9 @@ module Clamp
         help.puts "    #{command_name} #{usage}".rstrip
       end
       detail_format = "    %-29s %s"
-      unless declared_arguments.empty?
+      unless positional_arguments.empty?
         help.puts "\nArguments:"
-        declared_arguments.each do |argument|
+        positional_arguments.each do |argument|
           help.puts detail_format % argument.help
         end
       end

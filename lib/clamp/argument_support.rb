@@ -7,13 +7,13 @@ module Clamp
 
     include AttributeDeclaration
     
-    def declared_arguments
-      @declared_arguments ||= []
+    def positional_arguments
+      @positional_arguments ||= []
     end
 
     def argument(name, description, &block)
       argument = Argument.new(name, description)
-      declared_arguments << argument
+      positional_arguments << argument
       define_accessors_for(argument, &block)
     end
   
