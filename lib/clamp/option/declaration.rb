@@ -18,19 +18,21 @@ module Clamp
         !declared_options.empty?
       end
 
-      def declared_options
-        my_declared_options + inherited_declared_options
-      end
-
-      def recognised_options
-        declared_options + standard_options
-      end
-
       def find_option(switch)
         recognised_options.find { |o| o.handles?(switch) }
       end
 
+      protected 
+
+      def declared_options
+        my_declared_options + inherited_declared_options
+      end
+
       private
+
+      def recognised_options
+        declared_options + standard_options
+      end
 
       def my_declared_options
         @my_declared_options ||= []
