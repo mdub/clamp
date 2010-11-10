@@ -30,18 +30,20 @@ module Clamp
     
     private
 
+    NAME_PATTERN = "([A-Za-z0-9_-]+)"
+    
     def infer_attribute_name_and_multiplicity
       case @name
-      when /^\[(\S+)\]$/
+      when /^\[#{NAME_PATTERN}\]$/
         @attribute_name = $1
-      when /^\[(\S+)\] ...$/
+      when /^\[#{NAME_PATTERN}\] ...$/
         @attribute_name = "#{$1}_list"
         @multivalued = true
-      when /^(\S+) ...$/
+      when /^#{NAME_PATTERN} ...$/
         @attribute_name = "#{$1}_list"
         @multivalued = true
         @required = true
-      when /^\S+$/
+      when /^#{NAME_PATTERN}$/
         @attribute_name = @name
         @required = true
       else
