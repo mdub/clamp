@@ -11,14 +11,14 @@ module Clamp
     
     def define_reader_for(attribute)
       reader_name = attribute.attribute_name
-      reader_name += "?" if attribute.flag?
+      reader_name += "?" if attribute.respond_to?(:flag?) && attribute.flag?
       ivar_name = "@#{attribute.attribute_name}"
       define_method(reader_name) do
         if instance_variable_defined?(ivar_name)
           instance_variable_get(ivar_name)
         elsif parent_command && parent_command.respond_to?(reader_name)
           parent_command.send(reader_name)
-        else
+        elsif attribute.respond_to?(:default_value)
           attribute.default_value
         end
       end

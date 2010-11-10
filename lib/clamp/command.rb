@@ -51,11 +51,7 @@ module Clamp
         break if switch == "--"
 
         option = find_option(switch)
-        value = if option.flag?
-          option.flag_value(switch)
-        else
-          arguments.shift
-        end
+        value = option.extract_value(switch, arguments)
 
         begin
           send("#{option.attribute_name}=", value)

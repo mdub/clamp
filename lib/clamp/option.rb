@@ -36,6 +36,14 @@ module Clamp
       !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{$1}"))
     end
     
+    def extract_value(switch, arguments)
+      if flag?
+        flag_value(switch)
+      else
+        arguments.shift
+      end
+    end
+    
     def help
       lhs = switches.join(", ")
       lhs += " " + argument_type unless flag?
@@ -43,7 +51,7 @@ module Clamp
     end
 
     private
-    
+
     def recognised_switches
       switches.map do |switch|
         if switch =~ /^--\[no-\](.*)/
