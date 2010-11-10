@@ -1,6 +1,6 @@
 module Clamp
 
-  class PositionalArgument
+  class Parameter
 
     def initialize(name, description, options = {})
       @name = name

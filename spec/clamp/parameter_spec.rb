@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Clamp::PositionalArgument do
+describe Clamp::Parameter do
 
   describe "normal" do
     
     before do
-      @argument = Clamp::PositionalArgument.new("COLOR", "hue of choice")
+      @argument = Clamp::Parameter.new("COLOR", "hue of choice")
     end
 
     it "has a name" do
@@ -27,7 +27,7 @@ describe Clamp::PositionalArgument do
       end
 
       it "can be overridden" do
-        @argument = Clamp::PositionalArgument.new("COLOR", "hue of choice", :attribute_name => "hue")
+        @argument = Clamp::Parameter.new("COLOR", "hue of choice", :attribute_name => "hue")
         @argument.attribute_name.should == "hue"
       end
       
@@ -38,7 +38,7 @@ describe Clamp::PositionalArgument do
   describe "with name in square brackets" do
     
     before do
-      @argument = Clamp::PositionalArgument.new("[COLOR]", "hue of choice")
+      @argument = Clamp::Parameter.new("[COLOR]", "hue of choice")
     end
 
     it "is optional" do

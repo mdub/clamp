@@ -236,10 +236,10 @@ describe Clamp::Command do
 
   end
 
-  describe ".argument" do
+  describe ".parameter" do
 
     it "declares option argument accessors" do
-      @command.class.argument "FLAVOUR", "flavour of the month"
+      @command.class.parameter "FLAVOUR", "flavour of the month"
       @command.flavour.should == nil
       @command.flavour = "chocolate"
       @command.flavour.should == "chocolate"
@@ -248,7 +248,7 @@ describe Clamp::Command do
     describe "with a block" do
 
       before do
-        @command.class.argument "PORT", "port to listen on" do |port|
+        @command.class.parameter "PORT", "port to listen on" do |port|
           Integer(port)
         end
       end
@@ -265,7 +265,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with no arguments declared" do
+  describe "with no parameters declared" do
 
     describe "#parse" do
     
@@ -278,23 +278,23 @@ describe Clamp::Command do
     
   end
 
-  describe "with arguments declared" do
+  describe "with parameters declared" do
     
     before do
-      @command.class.argument "X", "x"
-      @command.class.argument "Y", "y"
-      @command.class.argument "[Z]", "z"
+      @command.class.parameter "X", "x"
+      @command.class.parameter "Y", "y"
+      @command.class.parameter "[Z]", "z"
     end
 
     describe "#parse" do
       
-      describe "with all arguments" do
+      describe "with arguments for all parameters" do
         
         before do
           @command.parse(["crash", "bang", "wallop"])
         end
 
-        it "maps argument values onto the command object" do
+        it "maps arguments onto the command object" do
           @command.x.should == "crash"
           @command.y.should == "bang"
           @command.z.should == "wallop"

@@ -2,7 +2,7 @@ require 'clamp/command/declaration'
 require 'clamp/errors'
 require 'clamp/help'
 require 'clamp/option/parsing'
-require 'clamp/positional_argument/parsing'
+require 'clamp/parameter/parsing'
 require 'clamp/subcommand/execution'
 
 module Clamp
@@ -23,7 +23,7 @@ module Clamp
     def parse(arguments)
       @arguments = arguments.dup
       parse_options
-      parse_positional_arguments
+      parse_parameters
     end
 
     # default implementation
@@ -45,7 +45,7 @@ module Clamp
     end
 
     include Option::Parsing
-    include PositionalArgument::Parsing
+    include Parameter::Parsing
     include Subcommand::Execution
     
     private

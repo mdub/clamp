@@ -26,7 +26,7 @@ Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They lo
         Integer(s)
       end
 
-      argument "WORDS ...", "the thing to say"
+      parameter "WORDS ...", "the thing to say"
       
       def execute
 
@@ -42,7 +42,7 @@ Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They lo
 
     end
 
-Class-level methods (like `option` and `argument`) are available to declare command-line options, and document usage.  
+Class-level methods (like `option` and `parameter`) are available to declare command-line options, and document usage.  
 
 The command can be invoked by instantiating the class, and asking it to run:
 
@@ -111,15 +111,15 @@ If the block raises an ArgumentError, Clamp will catch it, and report that the o
     !!!plain
     ERROR: option '--port': invalid value for Integer: "blah"
 
-Declaring arguments
--------------------
+Declaring parameters
+--------------------
 
-The `argument` method is used to declare command arguments:
+The `parameter` method is used to declare positional command parameters:
 
-    argument "FILE ...", "source files"
-    argument "DIR", "target directory"
+    parameter "FILE ...", "source files"
+    parameter "DIR", "target directory"
 
-Use of `argument` is entirely for documentation purposes.  Whether or not you declare and describe your expected arguments, the actual arguments that remain after option parsing will be available as `arguments` when your `#execute` method is called.
+Use of `parameter` is entirely for documentation purposes.  Whether or not you declare and describe your expected arguments, the actual arguments that remain after option parsing will be available as `arguments` when your `#execute` method is called.
 
 Sub-commands
 ------------
@@ -161,7 +161,7 @@ When a command has sub-commands, Clamp will attempt to delegate based on the fir
 Getting help
 ------------
 
-All Clamp commands support a "`--help`" option, which outputs brief usage documentation, based on those seemingly useless extra parameters that you had to pass to `option` and `argument`.
+All Clamp commands support a "`--help`" option, which outputs brief usage documentation, based on those seemingly useless extra parameters that you had to pass to `option` and `parameter`.
 
     $ speak --help
     Usage:

@@ -1,5 +1,5 @@
 require 'clamp/option/declaration'
-require 'clamp/positional_argument/declaration'
+require 'clamp/parameter/declaration'
 require 'clamp/subcommand/declaration'
 
 module Clamp
@@ -7,7 +7,7 @@ module Clamp
     
     module Declaration
       include Option::Declaration
-      include PositionalArgument::Declaration
+      include Parameter::Declaration
       include Subcommand::Declaration
     end
 

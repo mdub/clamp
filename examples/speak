@@ -9,7 +9,7 @@ class SpeakCommand < Clamp::Command
     Integer(s)
   end
 
-  argument "WORDS ...", "the thing to say"
+  parameter "WORDS ...", "the thing to say"
 
   def execute
 

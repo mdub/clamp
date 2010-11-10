@@ -6,8 +6,8 @@ class Rename < Clamp::Command
 
   usage "[OPTIONS] TRANSFORM FILE ..."
 
-  argument "TRANSFORM", "a Ruby expression"
-  argument "FILE", "a file to rename"
+  parameter "TRANSFORM", "a Ruby expression"
+  parameter "FILE", "a file to rename"
   
   option ["-v", "--verbose"], :flag, "be verbose"
 

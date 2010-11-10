@@ -3,6 +3,8 @@ module Clamp
 
     module Execution
 
+      protected
+      
       def execute_subcommand
         signal_usage_error "no subcommand specified" if arguments.empty?
         subcommand_name = arguments.shift
@@ -11,6 +13,8 @@ module Clamp
         subcommand.parent_command = self
         subcommand.run(arguments)
       end
+
+      private
 
       def find_subcommand(name)
         self.class.find_subcommand(name) || 
