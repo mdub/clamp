@@ -21,16 +21,18 @@ module Clamp
     def attribute_name
       @attribute_name ||= name.sub(OPTIONAL_NAME_PATTERN) { $1 }.downcase.tr('-', '_')
     end
-    
-    def required?
-      name !~ OPTIONAL_NAME_PATTERN
-    end
 
     def consume(arguments)
       if required? && arguments.empty?
         raise ArgumentError, "no value provided"
       end
       arguments.shift
+    end
+    
+    private
+    
+    def required?
+      name !~ OPTIONAL_NAME_PATTERN
     end
     
   end
