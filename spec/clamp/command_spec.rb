@@ -245,6 +245,19 @@ describe Clamp::Command do
       @command.flavour.should == "chocolate"
     end
 
+    describe "with explicit :attribute_name" do
+
+      before do
+        @command.class.parameter "FOO", "a foo", :attribute_name => :bar
+      end
+
+      it "uses the specified attribute_name name to name accessors" do
+        @command.bar = "chocolate"
+        @command.bar.should == "chocolate"
+      end
+
+    end
+
     describe "with a block" do
 
       before do
