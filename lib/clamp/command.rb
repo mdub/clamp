@@ -1,7 +1,7 @@
-require 'clamp/argument_support'
-require 'clamp/help_support'
-require 'clamp/option_support'
-require 'clamp/subcommand_support'
+require 'clamp/positional_arguments'
+require 'clamp/help'
+require 'clamp/options'
+require 'clamp/subcommands'
 
 module Clamp
 
@@ -116,10 +116,10 @@ module Clamp
 
     class << self
 
-      include OptionSupport
-      include ArgumentSupport
-      include SubcommandSupport
-      include HelpSupport
+      include Option::Declaration
+      include PositionalArgument::Declaration
+      include Subcommand::Declaration
+      include Help
 
       def run(name = $0, args = ARGV, context = {})
         begin 

@@ -1,6 +1,6 @@
 module Clamp
 
-  module HelpSupport
+  module Help
 
     def usage(usage)
       @declared_usage_descriptions ||= []
