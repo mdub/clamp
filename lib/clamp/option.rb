@@ -2,9 +2,9 @@ module Clamp
 
   class Option
 
-    def initialize(switches, argument_type, description, options = {})
+    def initialize(switches, type, description, options = {})
       @switches = Array(switches)
-      @argument_type = argument_type
+      @type = type
       @description = description
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s 
@@ -14,7 +14,7 @@ module Clamp
       end
     end
 
-    attr_reader :switches, :argument_type, :description, :default_value
+    attr_reader :switches, :type, :description, :default_value
 
     def attribute_name
       @attribute_name ||= long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
@@ -29,7 +29,7 @@ module Clamp
     end
 
     def flag?
-      @argument_type == :flag
+      @type == :flag
     end
     
     def flag_value(switch)
@@ -46,7 +46,7 @@ module Clamp
     
     def help
       lhs = switches.join(", ")
-      lhs += " " + argument_type unless flag?
+      lhs += " " + type unless flag?
       [lhs, description]
     end
 

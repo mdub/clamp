@@ -8,8 +8,8 @@ module Clamp
 
       include AttributeDeclaration
 
-      def option(switches, argument_type, description, opts = {}, &block)
-        option = Clamp::Option.new(switches, argument_type, description, opts)
+      def option(switches, type, description, opts = {}, &block)
+        option = Clamp::Option.new(switches, type, description, opts)
         my_declared_options << option
         define_accessors_for(option, &block)
       end

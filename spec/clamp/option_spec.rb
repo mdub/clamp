@@ -12,8 +12,8 @@ describe Clamp::Option do
       @option.long_switch.should == "--key-file"
     end
 
-    it "has an argument_type" do
-      @option.argument_type.should == "FILE"
+    it "has a type" do
+      @option.type.should == "FILE"
     end
 
     it "has a description" do
@@ -48,7 +48,7 @@ describe Clamp::Option do
 
     describe "#help" do
 
-      it "combines switch, argument_type and description" do
+      it "combines switch, type and description" do
         @option.help.should == ["--key-file FILE", "SSH identity"]
       end
 
