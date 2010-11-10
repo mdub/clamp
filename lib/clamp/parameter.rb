@@ -26,6 +26,13 @@ module Clamp
       name !~ OPTIONAL_NAME_PATTERN
     end
 
+    def consume(arguments)
+      if required? && arguments.empty?
+        raise ArgumentError, "no value provided"
+      end
+      arguments.shift
+    end
+    
   end
 
 end

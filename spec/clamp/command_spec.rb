@@ -311,7 +311,7 @@ describe Clamp::Command do
         it "raises a UsageError" do
           lambda do
             @command.parse(["crash"])
-          end.should raise_error(Clamp::UsageError, "no value provided for Y")
+          end.should raise_error(Clamp::UsageError, "parameter 'Y': no value provided")
         end
         
       end
