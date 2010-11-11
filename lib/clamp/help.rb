@@ -20,11 +20,11 @@ module Clamp
       declared_usage_descriptions || [derived_usage_description]
     end
 
-    def help(command_name)
+    def help(invocation_path)
       help = StringIO.new
       help.puts "Usage:"
       usage_descriptions.each_with_index do |usage, i|
-        help.puts "    #{command_name} #{usage}".rstrip
+        help.puts "    #{invocation_path} #{usage}".rstrip
       end
       detail_format = "    %-29s %s"
       unless parameters.empty?
