@@ -7,6 +7,13 @@ require 'clamp/subcommand/execution'
 
 module Clamp
 
+  # {Command} models a shell command.  Each command invocation is a new object.
+  # Command options and parameters are represented as attributes. 
+  #
+  # The main entry-point is {#run}, which uses {#parse} to populate attributes based 
+  # on an array of command-line arguments, then calls {#execute} (which you provide)
+  # to make it go.
+  #
   class Command
 
     # Create a command execution.

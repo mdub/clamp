@@ -17,7 +17,7 @@ Yeah, sorry.  There are a bunch of existing command-line parsing libraries out t
 Quick Start
 -----------
 
-Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They look something like this:
+Clamp models a command as a Ruby class; a subclass of {Clamp::Command}.  They look something like this:
 
     class SpeakCommand < Clamp::Command
 
@@ -26,33 +26,23 @@ Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They lo
         Integer(s)
       end
 
-      parameter "WORDS ...", "the thing to say"
-      
+      parameter "WORDS ...", "the thing to say", :attribute_name => :words
+
       def execute
-
-        signal_usage_error "I have nothing to say" if arguments.empty?
-        the_truth = arguments.join(" ")
+        the_truth = words.join(" ")
         the_truth.upcase! if loud?
-
         iterations.times do
           puts the_truth
         end
-
       end
 
     end
 
-Class-level methods (like `option` and `parameter`) are available to declare command-line options, and document usage.  
-
-The command can be invoked by instantiating the class, and asking it to run:
-
-    SpeakCommand.new("speak").run(["--loud", "a", "b", "c"])
-
-but it's more typical to use the class-level "`run`" method:
+Calling {Clamp::Command.run `run`} on a command class creates an instance of it, then invokes it using command-line arguments (from ARGV, by default).
 
     SpeakCommand.run
-    
-which takes arguments from `ARGV`, and includes some handy error-handling.
+
+Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are aso used to generate {Clamp::Command#help `help`} documentation.  
 
 Declaring options
 -----------------
