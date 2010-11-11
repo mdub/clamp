@@ -9,30 +9,55 @@ module Clamp
 
   class Command
 
+    # Create a command execution.
+    #
+    # @param [String] invocation_path the path used to invoke the command
+    # @param [Hash] context  the path used to invoke the command
+    #
     def initialize(invocation_path, context = {})
       @invocation_path = invocation_path
       @context = context
     end
 
-    # Returns the path used to invoke this command.
+    # @return [String] the path used to invoke this command
+    #
     attr_reader :invocation_path
     
-    # Returns unconsumed command-line arguments.
+    # @return [Array<String>] unconsumed command-line arguments
     #
-    # If you have declared positional parameters, this will typically be empty.
     def arguments
       @arguments
     end
-    
-    # attr_reader :arguments
 
+    # Parse command-line arguments.
+    #
+    # @param [Array<String>] arguments command-line arguments
+    # @return [Array<String>] unconsumed arguments
+    #
     def parse(arguments)
       @arguments = arguments.dup
       parse_options
       parse_parameters
+      @arguments
     end
 
-    # default implementation
+    # Run the command, with the specified arguments.
+    #
+    # This calls {#parse} to process the command-line arguments, 
+    # then delegates to {#execute}.
+    # 
+    #
+    # @param [Array<String>] arguments command-line arguments
+    #
+    def run(arguments)
+      parse(arguments)
+      execute
+    end
+
+    # Execute the command, assuming that all options/parameters have been set.
+    # 
+    # This method is designed to be overridden in sub-classes.
+    #
     def execute
       if self.class.has_subcommands?
         execute_subcommand
@@ -41,11 +66,8 @@ module Clamp
       end
     end
 
-    def run(arguments)
-      parse(arguments)
-      execute
-    end
-
+    # @return [String] usage documentation for this command
+    #
     def help
       self.class.help(invocation_path)
     end
