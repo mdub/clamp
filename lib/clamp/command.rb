@@ -1,8 +1,10 @@
-require 'clamp/command/declaration'
 require 'clamp/errors'
 require 'clamp/help'
+require 'clamp/option/declaration'
 require 'clamp/option/parsing'
+require 'clamp/parameter/declaration'
 require 'clamp/parameter/parsing'
+require 'clamp/subcommand/declaration'
 require 'clamp/subcommand/execution'
 
 module Clamp
@@ -102,7 +104,9 @@ module Clamp
 
     class << self
 
-      include Clamp::Command::Declaration
+      include Clamp::Option::Declaration
+      include Clamp::Parameter::Declaration
+      include Clamp::Subcommand::Declaration
       include Help
 
       # Create an instance of this command class, and run it.
