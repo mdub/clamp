@@ -8,7 +8,8 @@ require 'clamp/subcommand/execution'
 module Clamp
 
   # {Command} models a shell command.  Each command invocation is a new object.
-  # Command options and parameters are represented as attributes. 
+  # Command options and parameters are represented as attributes 
+  # (see {Command::Declaration}).
   #
   # The main entry-point is {#run}, which uses {#parse} to populate attributes based 
   # on an array of command-line arguments, then calls {#execute} (which you provide)
@@ -19,7 +20,7 @@ module Clamp
     # Create a command execution.
     #
     # @param [String] invocation_path the path used to invoke the command
-    # @param [Hash] context  the path used to invoke the command
+    # @param [Hash] context additional data the command may need
     #
     def initialize(invocation_path, context = {})
       @invocation_path = invocation_path
@@ -52,7 +53,6 @@ module Clamp
     #
     # This calls {#parse} to process the command-line arguments, 
     # then delegates to {#execute}.
-    # 
     #
     # @param [Array<String>] arguments command-line arguments
     #
@@ -61,7 +61,7 @@ module Clamp
       execute
     end
 
-    # Execute the command, assuming that all options/parameters have been set.
+    # Execute the command (assuming that all options/parameters have been set).
     # 
     # This method is designed to be overridden in sub-classes.
     #
@@ -105,9 +105,15 @@ module Clamp
       include Clamp::Command::Declaration
       include Help
 
-      def run(invocation_path = $0, args = ARGV, context = {})
+      # Create an instance of this command class, and run it.
+      #
+      # @param [String] invocation_path the path used to invoke the command
+      # @param [Array<String>] arguments command-line arguments
+      # @param [Hash] context additional data the command may need
+      # 
+      def run(invocation_path = $0, arguments = ARGV, context = {})
         begin 
-          new(invocation_path, context).run(args)
+          new(invocation_path, context).run(arguments)
         rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
