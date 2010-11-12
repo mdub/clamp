@@ -12,6 +12,10 @@ module Clamp
         @parameters ||= []
       end
 
+      def has_parameters?
+        !parameters.empty?
+      end
+
       def parameter(name, description, options = {}, &block)
         parameter = Parameter.new(name, description, options)
         parameters << parameter

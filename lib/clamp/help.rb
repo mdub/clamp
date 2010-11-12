@@ -27,13 +27,13 @@ module Clamp
         help.puts "    #{invocation_path} #{usage}".rstrip
       end
       detail_format = "    %-29s %s"
-      unless parameters.empty?
+      if has_parameters?
         help.puts "\nParameters:"
         parameters.each do |parameter|
           help.puts detail_format % parameter.help
         end
       end
-      unless recognised_subcommands.empty?
+      if has_subcommands?
         help.puts "\nSubcommands:"
         recognised_subcommands.each do |subcommand|
           help.puts detail_format % subcommand.help
