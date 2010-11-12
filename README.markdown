@@ -47,7 +47,7 @@ Class-level methods like `option` and `parameter` declare attributes (in a simil
 Declaring options
 -----------------
 
-Options are declared using the [`option`](../Clamp/Command.option) method.  The three required arguments are:
+Options are declared using the {Clamp::Option::Declaration.option `option`} method.  The three required arguments are:
 
   1. the option switch (or switches),
   2. a short description of the option argument type, and
@@ -88,28 +88,34 @@ Negatable flags are easy to generate, too:
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
 
-### Validation and conversion of option arguments
+Declaring parameters
+--------------------
 
-If a block is passed to `option`, it will be called with the raw string option argument, and is expected to coerce that String to the correct type, e.g.
+Positional parameters can be declared using the {Clamp::Parameter::Declaration.parameter `parameter`} method.
+
+    parameter "SRC", "source file"
+    parameter "DIR", "target directory"
+
+Like options, parameters are implemented as attributes of the command.
+
+If parameters are declared, Clamp will verify that all are present.  Otherwise, arguments
+that remain after option parsing will be made available using
+{Clamp::Command#arguments `#arguments`}.
+
+## Validation and conversion of option arguments and parameters
+
+Both `option` and `parameter` accept an optional block.  If present, the block will be 
+called with the raw string option argument, and is expected to coerce that String to 
+the correct type, e.g.
 
     option "--port", "PORT", "port to listen on" do |s|
       Integer(s)
     end
 
-If the block raises an ArgumentError, Clamp will catch it, and report that the option value was bad:
+If the block raises an ArgumentError, Clamp will catch it, and report that the value was bad:
 
     !!!plain
     ERROR: option '--port': invalid value for Integer: "blah"
-
-Declaring parameters
---------------------
-
-The `parameter` method is used to declare positional command parameters:
-
-    parameter "FILE ...", "source files"
-    parameter "DIR", "target directory"
-
-Use of `parameter` is entirely for documentation purposes.  Whether or not you declare and describe your expected arguments, the actual arguments that remain after option parsing will be available as `arguments` when your `#execute` method is called.
 
 Sub-commands
 ------------
@@ -146,7 +152,10 @@ Alternatively, you can provide an explicit sub-command class, rather than a bloc
 
     end
 
-When a command has sub-commands, Clamp will attempt to delegate based on the first command-line argument, before options are parsed.  Remaining arguments will be passed on to the sub-command.
+When a command has sub-commands, Clamp will attempt to delegate to the appropriate
+one, based on the first command-line argument (after options are parsed).
+
+If a sub-command accepts options or parameters of it's own, they must be specified after the sub-command name.
 
 Getting help
 ------------
