@@ -17,7 +17,7 @@ Yeah, sorry.  There are a bunch of existing command-line parsing libraries out t
 Quick Start
 -----------
 
-Clamp models a command as a Ruby class; a subclass of {Clamp::Command}.  They look something like this:
+Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They look something like this:
 
     class SpeakCommand < Clamp::Command
 
@@ -38,16 +38,16 @@ Clamp models a command as a Ruby class; a subclass of {Clamp::Command}.  They lo
 
     end
 
-Calling {Clamp::Command.run `run`} on a command class creates an instance of it, then invokes it using command-line arguments (from ARGV, by default).
+Calling `run` on a command class creates an instance of it, then invokes it using command-line arguments (from ARGV, by default).
 
     SpeakCommand.run
 
-Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are aso used to generate {Clamp::Command#help `help`} documentation.  
+Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are aso used to generate `help` documentation.  
 
 Declaring options
 -----------------
 
-Options are declared using the {Clamp::Option::Declaration.option `option`} method.  The three required arguments are:
+Options are declared using the `option` method.  The three required arguments are:
 
   1. the option switch (or switches),
   2. a short description of the option argument type, and
@@ -91,7 +91,7 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 Declaring parameters
 --------------------
 
-Positional parameters can be declared using the {Clamp::Parameter::Declaration.parameter `parameter`} method.
+Positional parameters can be declared using `parameter`.
 
     parameter "SRC", "source file"
     parameter "DIR", "target directory"
@@ -99,8 +99,7 @@ Positional parameters can be declared using the {Clamp::Parameter::Declaration.p
 Like options, parameters are implemented as attributes of the command.
 
 If parameters are declared, Clamp will verify that all are present.  Otherwise, arguments
-that remain after option parsing will be made available using
-{Clamp::Command#arguments `#arguments`}.
+that remain after option parsing will be made available via `#arguments`.
 
 ## Validation and conversion of option arguments and parameters
 
