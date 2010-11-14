@@ -50,8 +50,8 @@ Declaring options
 Options are declared using the `option` method.  The three required arguments are:
 
   1. the option switch (or switches),
-  2. a short description of the option argument type, and
-  3. a description of the option itself
+  2. an option argument name
+  3. a short description
 
 For example:
 
@@ -80,7 +80,7 @@ Some options are just boolean flags.  Pass "`:flag`" as the second parameter to 
 
     option "--verbose", :flag, "be chatty"
 
-For flag options, Clamp appends "`?`" to the generated reader method; ie. you get a method called "`verbose?`", rather than just "`verbose`".
+For flag options, Clamp appends "`?`" to the generated reader method; ie. you get a method called "`#verbose?`", rather than just "`#verbose`".
 
 Negatable flags are easy to generate, too: 
 
@@ -91,20 +91,42 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 Declaring parameters
 --------------------
 
-Positional parameters can be declared using `parameter`.
+Positional parameters can be declared using `parameter`, specifying
+
+  1. the parameter name, and
+  2. a short description
+
+For example:
 
     parameter "SRC", "source file"
-    parameter "DIR", "target directory"
 
-Like options, parameters are implemented as attributes of the command.
+Like options, parameters are implemented as attributes of the command, with the default attribute name derived from the parameter name (in this case, "`src`"). By convention, parameter names are specified in uppercase, to make them obvious in usage help.
 
-If parameters are declared, Clamp will verify that all are present.  Otherwise, arguments
-that remain after option parsing will be made available via `#arguments`.
+### Optional parameters
 
-## Validation and conversion of option arguments and parameters
+Wrapping a parameter name in square brackets indicates that it's optional, e.g.
+
+    parameter "[TARGET_DIR]", "target directory"
+
+### Greedy parameters
+
+Three dots at the end of a parameter name makes it "greedy" - it will consume all remaining command-line arguments.  For example:
+
+    parameter "FILE ...", "input files"
+
+The suffix "`_list`" is appended to the default attribute name for greedy parameters; in this case, an attribute called "`file_list`" would be generated.
+
+Parsing and validation of options and parameters
+------------------------------------------------
+
+When you `#run` a command, it will first attempt to `#parse` command-line arguments, and map them onto the declared options and parameters, before invoking your `#execute` method.
+
+If parameters are declared, Clamp will verify that all required (ie. non-optional) parameters are present, and signal a error if they aren't. Otherwise, arguments that remain after option parsing will be made available via `#arguments`.
+
+### Validation block
 
 Both `option` and `parameter` accept an optional block.  If present, the block will be 
-called with the raw string option argument, and is expected to coerce that String to 
+called with the raw string option argument, and is expected to coerce it to 
 the correct type, e.g.
 
     option "--port", "PORT", "port to listen on" do |s|
@@ -116,10 +138,22 @@ If the block raises an ArgumentError, Clamp will catch it, and report that the v
     !!!plain
     ERROR: option '--port': invalid value for Integer: "blah"
 
-Sub-commands
-------------
+### Advanced option/parameter handling
 
-The `subcommand` method declares sub-commands:
+While Clamp provides an attribute-writer method for each declared option or parameter, you always have the option of overriding it to provide custom argument-handling logic, e.g.
+
+    parameter "SERVER", "location of server"
+    
+    def server=(server)
+      @server_address, @server_port = server.split(":")
+    end
+
+Declaring Subcommands
+---------------------
+
+Subcommand support helps you wrap a number of related commands into a single script (ala tools like "`git`").  Clamp will inspect the first command-line argument (after options are parsed), and delegate to the named subcommand.
+
+Unsuprisingly, subcommands are declared using the `subcommand` method. e.g.
 
     class MainCommand < Clamp::Command
 
@@ -133,9 +167,7 @@ The `subcommand` method declares sub-commands:
       
     end
 
-Clamp generates an anonymous sub-class of the current class, to represent the sub-command.  Additional options may be declared within subcommand blocks, but all options declared on the parent class are also accepted.
-
-Alternatively, you can provide an explicit sub-command class, rather than a block:
+Clamp generates an anonymous subclass of the current class, to represent the subcommand.  Alternatively, you can provide an explicit subcommand class:
     
     class MainCommand < Clamp::Command
 
@@ -151,10 +183,11 @@ Alternatively, you can provide an explicit sub-command class, rather than a bloc
 
     end
 
-When a command has sub-commands, Clamp will attempt to delegate to the appropriate
-one, based on the first command-line argument (after options are parsed).
+### Subcommand options and parameters
 
-If a sub-command accepts options or parameters of it's own, they must be specified after the sub-command name.
+Options are inheritable, so any options declared for a parent command are supported for it's subcommands.  Parameters, on the other hand, are not inherited - each subcommand must declare it's own parameter list.
+
+Note that, if a subcommand accepts options, they must be specified on the command-line _after_ the subcommand name.  
 
 Getting help
 ------------
