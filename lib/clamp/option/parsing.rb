@@ -6,13 +6,13 @@ module Clamp
       protected
 
       def parse_options
-        while arguments.first =~ /^-/
+        while remaining_arguments.first =~ /^-/
 
-          switch = arguments.shift
+          switch = remaining_arguments.shift
           break if switch == "--"
 
           option = find_option(switch)
-          value = option.extract_value(switch, arguments)
+          value = option.extract_value(switch, remaining_arguments)
 
           begin
             send("#{option.attribute_name}=", value)

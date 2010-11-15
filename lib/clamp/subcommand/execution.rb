@@ -6,12 +6,11 @@ module Clamp
       protected
       
       def execute_subcommand
-        signal_usage_error "no subcommand specified" if arguments.empty?
-        subcommand_name = arguments.shift
+        signal_usage_error "no subcommand specified" unless subcommand_name
         subcommand_class = find_subcommand_class(subcommand_name)
         subcommand = subcommand_class.new("#{invocation_path} #{subcommand_name}", context)
         subcommand.parent_command = self
-        subcommand.run(arguments)
+        subcommand.run(subcommand_arguments)
       end
 
       private

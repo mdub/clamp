@@ -14,7 +14,7 @@ describe Clamp::Command do
   given_command("cmd") do
 
     def execute
-      print arguments.inspect
+      puts "Hello, world"
     end
 
   end
@@ -30,16 +30,11 @@ describe Clamp::Command do
   describe "#run" do
 
     before do
-      @abc = %w(a b c)
-      @command.run(@abc)
+      @command.run([])
     end
 
     it "executes the #execute method" do
       stdout.should_not be_empty
-    end
-
-    it "provides access to the argument list" do
-      stdout.should == @abc.inspect
     end
 
   end
@@ -122,6 +117,7 @@ describe Clamp::Command do
       @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
       @command.class.option "--color", "COLOR", "Preferred hue"
       @command.class.option "--[no-]nuts", :flag, "Nuts (or not)"
+      @command.class.parameter "[ARG] ...", "extra arguments", :attribute_name => :arguments
     end
 
     describe "#parse" do
@@ -139,17 +135,13 @@ describe Clamp::Command do
       describe "with options" do
 
         before do
-          @command.parse(%w(--flavour strawberry --nuts --color blue a b c))
+          @command.parse(%w(--flavour strawberry --nuts --color blue))
         end
 
         it "maps the option values onto the command object" do
           @command.flavour.should == "strawberry"
           @command.color.should == "blue"
           @command.nuts?.should == true
-        end
-
-        it "retains unconsumed arguments" do
-          @command.arguments.should == %w(a b c)
         end
 
       end
@@ -282,9 +274,14 @@ describe Clamp::Command do
 
     describe "#parse" do
     
-      it "retains arguments for handling by #execute" do
-        @command.parse(["crash", "bang", "wallop"])
-        @command.arguments.should == ["crash", "bang", "wallop"]
+      describe "with arguments" do
+        
+        it "raises a UsageError" do
+          lambda do
+            @command.parse(["crash"])
+          end.should raise_error(Clamp::UsageError, "too many arguments")
+        end
+        
       end
       
     end
@@ -313,10 +310,6 @@ describe Clamp::Command do
           @command.z.should == "wallop"
         end
 
-        it "consumes all the arguments" do
-          @command.arguments.should == []
-        end
-        
       end
 
       describe "with insufficient arguments" do
@@ -395,6 +388,12 @@ describe Clamp::Command do
   describe ".run" do
 
     it "creates a new Command instance and runs it" do
+      @command.class.class_eval do
+        parameter "WORD ...", "words"
+        def execute
+          print word_list.inspect
+        end
+      end
       @xyz = %w(x y z)
       @command.class.run("cmd", @xyz)
       stdout.should == @xyz.inspect

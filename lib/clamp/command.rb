@@ -35,8 +35,8 @@ module Clamp
     
     # @return [Array<String>] unconsumed command-line arguments
     #
-    def arguments
-      @arguments
+    def remaining_arguments
+      @remaining_arguments
     end
 
     # Parse command-line arguments.
@@ -45,10 +45,10 @@ module Clamp
     # @return [Array<String>] unconsumed arguments
     #
     def parse(arguments)
-      @arguments = arguments.dup
+      @remaining_arguments = arguments.dup
       parse_options
       parse_parameters
-      @arguments
+      @remaining_arguments
     end
 
     # Run the command, with the specified arguments.
