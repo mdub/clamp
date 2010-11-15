@@ -1,3 +1,5 @@
+require 'stringio'
+
 module Clamp
 
   module Help
