@@ -121,7 +121,7 @@ Parsing and validation of options and parameters
 
 When you `#run` a command, it will first attempt to `#parse` command-line arguments, and map them onto the declared options and parameters, before invoking your `#execute` method.
 
-If parameters are declared, Clamp will verify that all required (ie. non-optional) parameters are present, and signal a error if they aren't. Otherwise, arguments that remain after option parsing will be made available via `#arguments`.
+Clamp will verify that all required (ie. non-optional) parameters are present, and signal a error if they aren't.
 
 ### Validation block
 
