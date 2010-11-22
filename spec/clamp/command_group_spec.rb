@@ -52,6 +52,29 @@ describe Clamp::Command do
     
   end
 
+  describe "with nested subcommands" do
+
+    given_command "fubar" do
+
+      subcommand "foo", "Foo!" do
+
+        subcommand "bar", "Baaaa!" do
+          def execute
+            puts "FUBAR"
+          end
+        end
+
+      end
+
+    end
+
+    it "delegates multiple levels" do
+      @command.run(["foo", "bar"])
+      stdout.should =~ /FUBAR/
+    end
+
+  end
+  
   describe "each subcommand" do
 
     before do

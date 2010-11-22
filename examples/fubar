@@ -1,0 +1,23 @@
+#! /usr/bin/env ruby
+
+# An example of subcommands
+
+require "clamp"
+
+class Fubar < Clamp::Command
+
+  subcommand "foo", "Foo!" do
+
+    subcommand "bar", "Baaaa!" do
+
+      def execute
+        puts "FUBAR"
+      end
+
+    end
+
+  end
+
+end
+
+Fubar.run

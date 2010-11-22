@@ -30,9 +30,10 @@ module Clamp
       end
       
       def has_subcommands!
-        unless method_defined?(:subcommand_name)
+        unless @has_subcommands
           parameter "SUBCOMMAND", "subcommand name", :attribute_name => :subcommand_name
           parameter "[ARGS] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
+          @has_subcommands = true
         end
       end
 
