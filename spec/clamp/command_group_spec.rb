@@ -68,13 +68,22 @@ describe Clamp::Command do
       
     end
     
-    it "responds to both subcommand names" do
+    it "responds to both aliases" do
 
       @command.run(["say", "boo"])
       stdout.should =~ /boo/
 
       @command.run(["talk", "jive"])
       stdout.should =~ /jive/
+
+    end
+    
+    describe "#help" do 
+
+      it "lists all aliases" do
+        @help = @command.help
+        @help.should =~ /say, talk .* Say something/
+      end
 
     end
     
