@@ -115,13 +115,13 @@ module Clamp
       # @param [Array<String>] arguments command-line arguments
       # @param [Hash] context additional data the command may need
       # 
-      def run(invocation_path = $0, arguments = ARGV, context = {})
+      def run(invocation_path = File.basename($0), arguments = ARGV, context = {})
         begin 
           new(invocation_path, context).run(arguments)
         rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
-          $stderr.puts "See: '#{invocation_path} --help'"
+          $stderr.puts "See: '#{e.command.invocation_path} --help'"
           exit(1)
         rescue Clamp::HelpWanted => e
           puts e.command.help
