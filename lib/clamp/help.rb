@@ -11,6 +11,17 @@ module Clamp
 
     attr_reader :declared_usage_descriptions
 
+    def description=(description)
+      @description = description.dup
+      if @description =~ /^\A\n*( +)/
+        indent = $1
+        @description.gsub!(/^#{indent}/, '')
+      end
+      @description.strip!
+    end
+    
+    attr_reader :description
+    
     def derived_usage_description
       parts = parameters.map { |a| a.name }
       parts.unshift("[OPTIONS]") if has_options?
@@ -26,6 +37,10 @@ module Clamp
       help.puts "Usage:"
       usage_descriptions.each_with_index do |usage, i|
         help.puts "    #{invocation_path} #{usage}".rstrip
+      end
+      if description
+        help.puts ""
+        help.puts description.gsub(/^/, "  ")
       end
       detail_format = "    %-29s %s"
       if has_parameters?

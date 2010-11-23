@@ -6,6 +6,10 @@ require "clamp"
 
 class SpeakCommand < Clamp::Command
 
+  self.description = %{
+    Say something.
+  }
+
   option "--loud", :flag, "say it loud"
   option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
     Integer(s)
