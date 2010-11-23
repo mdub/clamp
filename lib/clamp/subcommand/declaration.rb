@@ -1,10 +1,7 @@
+require 'clamp/subcommand'
+
 module Clamp
-
-  class Subcommand < Struct.new(:name, :description, :subcommand_class)
-
-    def help
-      [name, description]
-    end
+  class Subcommand
 
     module Declaration
 
@@ -26,7 +23,7 @@ module Clamp
       end
 
       def find_subcommand(name)
-        recognised_subcommands.find { |sc| sc.name == name }
+        recognised_subcommands.find { |sc| sc.is_called?(name) }
       end
       
       def has_subcommands!
@@ -40,5 +37,4 @@ module Clamp
     end
 
   end
-
 end

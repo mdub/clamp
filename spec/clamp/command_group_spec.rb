@@ -52,6 +52,34 @@ describe Clamp::Command do
     
   end
 
+  describe "with an aliased subcommand" do
+    
+    given_command "blah" do
+
+      subcommand ["say", "talk"], "Say something" do
+        
+        parameter "WORD ...", "stuff to say"
+        
+        def execute
+          puts word_list
+        end
+        
+      end
+      
+    end
+    
+    it "responds to both subcommand names" do
+
+      @command.run(["say", "boo"])
+      stdout.should =~ /boo/
+
+      @command.run(["talk", "jive"])
+      stdout.should =~ /jive/
+
+    end
+    
+  end
+  
   describe "with nested subcommands" do
 
     given_command "fubar" do
