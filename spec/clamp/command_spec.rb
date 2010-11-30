@@ -89,6 +89,14 @@ describe Clamp::Command do
         @command.nodes.should == 2
       end
 
+      describe "#help" do
+        
+        it "describes the default value" do
+          @command.help.should include("number of nodes (default: 2)")
+        end
+        
+      end
+      
     end
 
     describe "with a block" do
