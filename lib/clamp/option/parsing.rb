@@ -11,6 +11,11 @@ module Clamp
           switch = remaining_arguments.shift
           break if switch == "--"
 
+          if switch =~ /^(-[a-z])(.+)$/ # combined short options
+            switch = $1
+            remaining_arguments.unshift("-#{$2}")
+          end
+            
           option = find_option(switch)
           value = option.extract_value(switch, remaining_arguments)
 

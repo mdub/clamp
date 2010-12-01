@@ -122,9 +122,9 @@ describe Clamp::Command do
   describe "with options declared" do
 
     before do
-      @command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
-      @command.class.option "--color", "COLOR", "Preferred hue"
-      @command.class.option "--[no-]nuts", :flag, "Nuts (or not)"
+      @command.class.option ["-f", "--flavour"], "FLAVOUR", "Flavour of the month"
+      @command.class.option ["-c", "--color"], "COLOR", "Preferred hue"
+      @command.class.option ["-n", "--[no-]nuts"], :flag, "Nuts (or not)"
       @command.class.parameter "[ARG] ...", "extra arguments", :attribute_name => :arguments
     end
 
@@ -154,6 +154,32 @@ describe Clamp::Command do
 
       end
 
+      describe "with short options" do
+
+        before do
+          @command.parse(%w(-f strawberry -c blue))
+        end
+
+        it "recognises short options as aliases" do
+          @command.flavour.should == "strawberry"
+          @command.color.should == "blue"
+        end
+        
+      end
+
+      describe "with combined short options" do
+
+        before do
+          @command.parse(%w(-nf strawberry))
+        end
+
+        it "works as though the options were separate" do
+          @command.flavour.should == "strawberry"
+          @command.nuts?.should == true
+        end
+        
+      end
+      
       describe "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
