@@ -203,7 +203,7 @@ All Clamp commands support a "`--help`" option, which outputs brief usage docume
 
     Options:
         --loud                        say it loud
-        -n, --iterations N            say it N times
+        -n, --iterations N            say it N times (default: 1)
         --help                        print help
 
 Contributing to Clamp
