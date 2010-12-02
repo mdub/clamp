@@ -11,9 +11,13 @@ module Clamp
           switch = remaining_arguments.shift
           break if switch == "--"
 
-          if switch =~ /^(-[a-z])(.+)$/ # combined short options
+          case switch
+          when /^(-\w)(.+)$/ # combined short options
             switch = $1
             remaining_arguments.unshift("-#{$2}")
+          when /^(--[^=]+)=(.*)/
+            switch = $1
+            remaining_arguments.unshift($2)
           end
             
           option = find_option(switch)

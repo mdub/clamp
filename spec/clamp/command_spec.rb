@@ -180,6 +180,19 @@ describe Clamp::Command do
         
       end
       
+      describe "with option arguments attached using equals sign" do
+
+        before do
+          @command.parse(%w(--flavour=strawberry --color=blue))
+        end
+
+        it "works as though the option arguments were separate" do
+          @command.flavour.should == "strawberry"
+          @command.color.should == "blue"
+        end
+      
+      end
+      
       describe "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
