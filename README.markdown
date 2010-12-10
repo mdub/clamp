@@ -42,7 +42,7 @@ Calling `run` on a command class creates an instance of it, then invokes it usin
 
     SpeakCommand.run
 
-Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are aso used to generate `help` documentation.  
+Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.  
 
 Declaring options
 -----------------
