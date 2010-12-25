@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.summary       = %q{a minimal framework for command-line utilities}
   s.description   = <<EOF
-Clamp makes provides an object-model for command-line utilities.  
+Clamp provides an object-model for command-line utilities.  
 It handles parsing of command-line options, and generation of usage help.
 EOF
 
