@@ -81,8 +81,8 @@ describe Clamp::Command do
 
     describe "with :default value" do
 
-      given_command("cmd") do
-        option "--nodes", "N", "number of nodes", :default => 2
+      before do
+        @command.class.option "--nodes", "N", "number of nodes", :default => 2
       end
 
       it "sets the specified default value" do
