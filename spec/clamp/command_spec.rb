@@ -297,6 +297,26 @@ describe Clamp::Command do
 
     end
 
+    describe "with :default value" do
+
+      before do
+        @command.class.parameter "[FLAVOUR]", "flavour of the month", :default => "chocolate"
+      end
+
+      it "sets the specified default value" do
+        @command.flavour.should == "chocolate"
+      end
+
+      describe "#help" do
+        
+        it "describes the default value" do
+          @command.help.should include("flavour of the month (default: \"chocolate\")")
+        end
+        
+      end
+      
+    end
+
     describe "with a block" do
 
       before do

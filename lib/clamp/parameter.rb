@@ -9,12 +9,19 @@ module Clamp
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s 
       end
+      if options.has_key?(:default)
+        @default_value = options[:default]
+      end
     end
 
-    attr_reader :name, :description, :attribute_name
+    attr_reader :name, :description, :attribute_name, :default_value
     
     def help
-      [name, description]
+      rhs = description
+      if defined?(@default_value)
+        rhs += " (default: #{@default_value.inspect})"
+      end
+      [name, rhs]
     end
 
     def consume(arguments)
