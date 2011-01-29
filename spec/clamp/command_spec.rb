@@ -79,20 +79,37 @@ describe Clamp::Command do
 
     end
 
-    describe "with :default value" do
+    describe "with default method" do
 
       before do
-        @command.class.option "--nodes", "N", "number of nodes", :default => 2
+        @command.class.option "--port", "PORT", "port"
+        @command.class.class_eval do
+          def default_port
+            4321
+          end
+        end
       end
 
       it "sets the specified default value" do
-        @command.nodes.should == 2
+        @command.port.should == 4321
+      end
+      
+    end
+
+    describe "with :default value" do
+
+      before do
+        @command.class.option "--port", "PORT", "port to listen on", :default => 4321
+      end
+
+      it "declares default method" do
+        @command.default_port.should == 4321
       end
 
       describe "#help" do
         
         it "describes the default value" do
-          @command.help.should include("number of nodes (default: 2)")
+          @command.help.should include("port to listen on (default: 4321)")
         end
         
       end
