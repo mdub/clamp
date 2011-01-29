@@ -148,6 +148,26 @@ While Clamp provides an attribute-writer method for each declared option or para
       @server_address, @server_port = server.split(":")
     end
 
+### Default values
+
+Default values can be specified for options:
+
+    option "--flavour", "FLAVOUR", "ice-cream flavour", :default => "chocolate"
+
+and also for optional parameters
+
+    parameter "[HOST]", "server host", :default => "localhost"
+
+For more advanced cases, you can also specify default values by defining a method called "`default_#{attribute_name}`":
+
+    option "--http-port", "PORT", "web-server port", :default => 9000
+
+    option "--admin-port", "PORT", "admin port"
+
+    def default_admin_port
+       http_port + 1
+    end
+
 Declaring Subcommands
 ---------------------
 
