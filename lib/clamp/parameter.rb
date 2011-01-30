@@ -1,6 +1,8 @@
+require 'clamp/attribute'
+
 module Clamp
 
-  class Parameter
+  class Parameter < Attribute
 
     def initialize(name, description, options = {})
       @name = name
@@ -14,7 +16,7 @@ module Clamp
       end
     end
 
-    attr_reader :name, :description, :attribute_name, :default_value
+    attr_reader :name, :attribute_name
     
     def help
       rhs = description

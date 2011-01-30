@@ -1,6 +1,8 @@
+require 'clamp/attribute'
+
 module Clamp
 
-  class Option
+  class Option < Attribute
 
     def initialize(switches, type, description, options = {})
       @switches = Array(switches)
@@ -14,7 +16,7 @@ module Clamp
       end
     end
 
-    attr_reader :switches, :type, :description, :default_value
+    attr_reader :switches, :type
 
     def attribute_name
       @attribute_name ||= long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
