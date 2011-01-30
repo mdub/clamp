@@ -14,8 +14,6 @@ module Clamp
       define_method(attribute.read_method) do
         if instance_variable_defined?(attribute.ivar_name)
           instance_variable_get(attribute.ivar_name)
-        elsif parent_command && parent_command.respond_to?(attribute.read_method)
-          parent_command.send(attribute.read_method)
         elsif respond_to?(attribute.default_method)
           send(attribute.default_method)
         end

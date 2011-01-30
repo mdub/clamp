@@ -22,8 +22,6 @@ module Clamp
         recognised_options.find { |o| o.handles?(switch) }
       end
 
-      protected 
-
       def declared_options
         my_declared_options + inherited_declared_options
       end

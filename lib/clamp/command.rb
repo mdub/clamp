@@ -88,7 +88,6 @@ module Clamp
     protected
     
     attr_accessor :context
-    attr_accessor :parent_command
 
     private
 
