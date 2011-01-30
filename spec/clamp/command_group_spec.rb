@@ -118,39 +118,37 @@ describe Clamp::Command do
 
       @command_class = Class.new(Clamp::Command) do
 
-        option "--direction", "DIR", "which way"
+        option "--direction", "DIR", "which way", :default => "home"
 
-        subcommand "walk", "step carefully in the appointed direction" do
+        subcommand "move", "move in the appointed direction" do
 
           def execute
-            if direction
-              puts "walking #{direction}"
-            else
-              puts "wandering #{context[:default_direction]} by default"
-            end
+            motion = context[:motion] || "walking"
+            puts "#{motion} #{direction}"
           end
 
         end
 
       end
 
-      @command = @command_class.new("go", :default_direction => "south")
+      @command = @command_class.new("go")
 
     end
 
     it "accepts parents options (specified after the subcommand)" do
-      @command.run(["walk", "--direction", "north"])
+      @command.run(["move", "--direction", "north"])
       stdout.should =~ /walking north/
     end
 
     it "accepts parents options (specified before the subcommand)" do
-      @command.run(["--direction", "north", "walk"])
+      @command.run(["--direction", "north", "move"])
       stdout.should =~ /walking north/
     end
 
     it "has access to command context" do
-      @command.run(["walk"])
-      stdout.should =~ /wandering south by default/
+      @command = @command_class.new("go", :motion => "wandering")
+      @command.run(["move"])
+      stdout.should =~ /wandering home/
     end
 
   end
