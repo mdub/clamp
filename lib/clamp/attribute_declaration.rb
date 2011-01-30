@@ -21,10 +21,8 @@ module Clamp
     end
 
     def define_default_for(attribute)
-      if attribute.respond_to?(:default_value)
-        define_method(attribute.default_method) do
-          attribute.default_value
-        end
+      define_method(attribute.default_method) do
+        attribute.default_value
       end
     end
 
