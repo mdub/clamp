@@ -37,6 +37,14 @@ module Clamp
     def flag_value(switch)
       !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{$1}"))
     end
+
+    def read_method
+      if flag?
+        super + "?"
+      else
+        super
+      end
+    end
     
     def extract_value(switch, arguments)
       if flag?
