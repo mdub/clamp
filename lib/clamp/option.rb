@@ -46,14 +46,10 @@ module Clamp
       end
     end
     
-    def help
+    def help_lhs
       lhs = switches.join(", ")
       lhs += " " + type unless flag?
-      rhs = description
-      if defined?(@default_value)
-        rhs += " (default: #{@default_value.inspect})"
-      end
-      [lhs, rhs]
+      lhs
     end
 
     private

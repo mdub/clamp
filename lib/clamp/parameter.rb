@@ -18,12 +18,8 @@ module Clamp
 
     attr_reader :name, :attribute_name
     
-    def help
-      rhs = description
-      if defined?(@default_value)
-        rhs += " (default: #{@default_value.inspect})"
-      end
-      [name, rhs]
+    def help_lhs
+      name
     end
 
     def consume(arguments)
