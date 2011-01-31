@@ -317,17 +317,17 @@ describe Clamp::Command do
     describe "with :default value" do
 
       before do
-        @command.class.parameter "[FLAVOUR]", "flavour of the month", :default => "chocolate"
+        @command.class.parameter "[ORIENTATION]", "direction", :default => "west"
       end
 
       it "sets the specified default value" do
-        @command.flavour.should == "chocolate"
+        @command.orientation.should == "west"
       end
 
       describe "#help" do
         
         it "describes the default value" do
-          @command.help.should include("flavour of the month (default: \"chocolate\")")
+          @command.help.should include("direction (default: \"west\")")
         end
         
       end
@@ -377,7 +377,7 @@ describe Clamp::Command do
     before do
       @command.class.parameter "X", "x"
       @command.class.parameter "Y", "y"
-      @command.class.parameter "[Z]", "z"
+      @command.class.parameter "[Z]", "z", :default => "ZZZ"
     end
 
     describe "#parse" do
@@ -408,11 +408,11 @@ describe Clamp::Command do
 
       describe "with optional argument omitted" do
 
-        it "defaults the optional argument to nil" do
+        it "defaults the optional argument" do
           @command.parse(["crash", "bang"])
           @command.x.should == "crash"
           @command.y.should == "bang"
-          @command.z.should == nil
+          @command.z.should == "ZZZ"
         end
         
       end
