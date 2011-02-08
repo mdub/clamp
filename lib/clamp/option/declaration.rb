@@ -38,7 +38,7 @@ module Clamp
 
       def inherited_declared_options
         ancestors.inject([]) do |options, ancestor| 
-          if ancestor.respond_to?(:declared_options)
+          if ancestor.kind_of?(Clamp::Option::Declaration)
             options + ancestor.declared_options
           else
             options
