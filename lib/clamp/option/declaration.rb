@@ -10,12 +10,12 @@ module Clamp
 
       def option(switches, type, description, opts = {}, &block)
         option = Clamp::Option.new(switches, type, description, opts)
-        my_declared_options << option
+        declared_options << option
         define_accessors_for(option, &block)
       end
 
       def has_options?
-        !declared_options.empty?
+        !documented_options.empty?
       end
 
       def find_option(switch)
@@ -23,24 +23,26 @@ module Clamp
       end
 
       def declared_options
-        my_declared_options + inherited_declared_options
+        @declared_options ||= []
+      end
+
+      def documented_options
+        declared_options + inherited_declared_options
+      end
+
+      def recognised_options
+        documented_options + standard_options
       end
 
       private
 
-      def recognised_options
-        declared_options + standard_options
-      end
-
-      def my_declared_options
-        @my_declared_options ||= []
-      end
-
       def inherited_declared_options
-        if superclass.respond_to?(:declared_options)
-          superclass.declared_options
-        else
-          []
+        ancestors.inject([]) do |options, ancestor| 
+          if ancestor.respond_to?(:declared_options)
+            options + ancestor.declared_options
+          else
+            options
+          end
         end
       end
 

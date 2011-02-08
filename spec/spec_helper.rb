@@ -1,5 +1,6 @@
 require "rspec"
 require "clamp"
+require 'stringio'
 
 Rspec.configure do |config|
   
