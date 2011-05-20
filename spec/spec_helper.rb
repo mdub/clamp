@@ -33,3 +33,13 @@ module OutputCapture
   end
 
 end
+
+module CommandFactory
+  
+  def given_command(name, &block)
+    before do
+      @command = Class.new(Clamp::Command, &block).new(name)
+    end
+  end
+
+end

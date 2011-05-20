@@ -2,13 +2,8 @@ require 'spec_helper'
 
 describe Clamp::Command do
 
+  extend CommandFactory
   include OutputCapture
-
-  def self.given_command(name, &block)
-    before do
-      @command = Class.new(Clamp::Command, &block).new(name)
-    end
-  end
 
   describe "with subcommands" do
 
