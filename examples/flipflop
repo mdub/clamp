@@ -5,6 +5,14 @@
 require "clamp"
 
 class FlipFlop < Clamp::Command
+	
+	option ["-v", "--version"], :flag, "print version"
+	
+	def execute
+		if version?
+			puts "VERSION!"
+		end
+	end
 
   subcommand "flip", "flip it" do
     def execute

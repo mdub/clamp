@@ -61,6 +61,7 @@ module Clamp
     def run(arguments)
       parse(arguments)
       execute
+			execute_subcommands
     end
 
     # Execute the command (assuming that all options/parameters have been set).
@@ -68,12 +69,14 @@ module Clamp
     # This method is designed to be overridden in sub-classes.
     #
     def execute
-      if self.class.has_subcommands?
-        execute_subcommand
-      else
-        raise "you need to define #execute"
-      end
+    	raise "you need to define #execute"
     end
+
+		def execute_subcommands
+			if self.class.has_subcommands?
+        execute_subcommand
+			end
+		end
 
     # @return [String] usage documentation for this command
     #
