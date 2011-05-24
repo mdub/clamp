@@ -203,6 +203,22 @@ Clamp generates an anonymous subclass of the current class, to represent the sub
 
     end
 
+### Default subcommand
+
+You can mark a subcommand as "default" by using `default_subcommand` to declare it, rather than `subcommand`.  Usually the SUBCOMMAND paramater is mandatory, but if a default subcommand is declared, it becomes optional.
+
+    class MainCommand < Clamp::Command
+
+      default_subcommand "status", "Display current status" do
+
+        def execute
+          # ...
+        end
+
+      end
+      
+    end
+
 ### Subcommand options and parameters
 
 Options are inheritable, so any options declared for a parent command are supported for it's subcommands.  Parameters, on the other hand, are not inherited - each subcommand must declare it's own parameter list.

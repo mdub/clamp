@@ -12,7 +12,7 @@ class FlipFlop < Clamp::Command
     exit(0)
   end
 
-  subcommand "flip", "flip it" do
+  default_subcommand "flip", "flip it" do
     def execute
       puts "FLIPPED"
     end
