@@ -28,7 +28,11 @@ module Clamp
       end
       
       def has_subcommands!(default = nil)
-        unless @has_subcommands
+        if @has_subcommands
+          if default
+            raise "You must declare the default_subcommand before any other subcommands"
+          end
+        else
           if default
             parameter "[SUBCOMMAND]", "subcommand name", :attribute_name => :subcommand_name, :default => default
           else
