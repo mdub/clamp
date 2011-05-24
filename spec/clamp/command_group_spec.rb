@@ -106,6 +106,27 @@ describe Clamp::Command do
 
   end
   
+  describe "with a default subcommand" do
+    
+    given_command "admin" do
+
+      default_subcommand "status", "Show status" do
+
+        def execute
+          puts "All good!"
+        end
+
+      end
+
+    end
+
+    it "delegates multiple levels" do
+      @command.run([])
+      stdout.should =~ /All good/
+    end
+    
+  end
+  
   describe "each subcommand" do
 
     before do

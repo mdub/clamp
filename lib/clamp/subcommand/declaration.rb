@@ -11,27 +11,42 @@ module Clamp
 
       def subcommand(name, description, subcommand_class = self, &block)
         has_subcommands!
-        if block
-          # generate a anonymous sub-class
-          subcommand_class = Class.new(subcommand_class, &block)
-        end
-        recognised_subcommands << Subcommand.new(name, description, subcommand_class)
+        declare_subcommand(name, description, subcommand_class, &block)
+      end
+
+      def default_subcommand(name, description, subcommand_class = self, &block)
+        has_subcommands!(name)
+        declare_subcommand(name, description, subcommand_class, &block)
       end
 
       def has_subcommands?
-        !recognised_subcommands.empty?
+        @has_subcommands
       end
 
       def find_subcommand(name)
         recognised_subcommands.find { |sc| sc.is_called?(name) }
       end
       
-      def has_subcommands!
+      def has_subcommands!(default = nil)
         unless @has_subcommands
-          parameter "SUBCOMMAND", "subcommand name", :attribute_name => :subcommand_name
+          if default
+            parameter "[SUBCOMMAND]", "subcommand name", :attribute_name => :subcommand_name, :default => default
+          else
+            parameter "SUBCOMMAND", "subcommand name", :attribute_name => :subcommand_name
+          end
           parameter "[ARGS] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
           @has_subcommands = true
         end
+      end
+      
+      private
+      
+      def declare_subcommand(name, description, subcommand_class = self, &block)
+        if block
+          # generate a anonymous sub-class
+          subcommand_class = Class.new(subcommand_class, &block)
+        end
+        recognised_subcommands << Subcommand.new(name, description, subcommand_class)
       end
 
     end
