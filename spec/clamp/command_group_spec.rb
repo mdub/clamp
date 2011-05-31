@@ -131,15 +131,22 @@ describe Clamp::Command do
 
     before do
 
+      speed_options = Module.new do
+        extend Clamp::Option::Declaration
+        option "--speed", "SPEED", "how fast", :default => "slowly"
+      end
+
       @command_class = Class.new(Clamp::Command) do
 
         option "--direction", "DIR", "which way", :default => "home"
 
+        include speed_options
+        
         subcommand "move", "move in the appointed direction" do
 
           def execute
             motion = context[:motion] || "walking"
-            puts "#{motion} #{direction}"
+            puts "#{motion} #{direction} #{speed}"
           end
 
         end
@@ -158,6 +165,11 @@ describe Clamp::Command do
     it "accepts options defined in superclass (specified before the subcommand)" do
       @command.run(["--direction", "north", "move"])
       stdout.should =~ /walking north/
+    end
+
+    it "accepts options defined in included modules" do
+      @command.run(["move", "--speed", "very quickly"])
+      stdout.should =~ /walking home very quickly/
     end
 
     it "has access to command context" do
