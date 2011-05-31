@@ -34,34 +34,34 @@ describe Clamp::Command do
     end
 
     describe "#help" do
-      
+
       it "lists subcommands" do
         @help = @command.help
         @help.should =~ /Subcommands:/
         @help.should =~ /flip +flip it/
         @help.should =~ /flop +flop it/
       end
-      
+
     end
-    
+
   end
 
   describe "with an aliased subcommand" do
-    
+
     given_command "blah" do
 
       subcommand ["say", "talk"], "Say something" do
-        
+
         parameter "WORD ...", "stuff to say"
-        
+
         def execute
           puts word_list
         end
-        
+
       end
-      
+
     end
-    
+
     it "responds to both aliases" do
 
       @command.run(["say", "boo"])
@@ -71,8 +71,8 @@ describe Clamp::Command do
       stdout.should =~ /jive/
 
     end
-    
-    describe "#help" do 
+
+    describe "#help" do
 
       it "lists all aliases" do
         @help = @command.help
@@ -80,9 +80,9 @@ describe Clamp::Command do
       end
 
     end
-    
+
   end
-  
+
   describe "with nested subcommands" do
 
     given_command "fubar" do
@@ -105,9 +105,9 @@ describe Clamp::Command do
     end
 
   end
-  
+
   describe "with a default subcommand" do
-    
+
     given_command "admin" do
 
       default_subcommand "status", "Show status" do
@@ -124,9 +124,9 @@ describe Clamp::Command do
       @command.run([])
       stdout.should =~ /All good/
     end
-    
+
   end
-  
+
   describe "each subcommand" do
 
     before do
@@ -180,4 +180,71 @@ describe Clamp::Command do
 
   end
 
+  describe "subcommands with parent options" do
+
+    shared_examples_for "all subcommands with parent options" do
+      it "accepts subcommands" do
+        @command.run(["init"])
+        stdout.should =~ /RUNNING INIT SUBCOMMAND/
+      end
+
+      it "accepts parents options (specified after the subcommand)" do
+        @command.run(["init", "--quiet"])
+        stdout.should =~ /running init subcommand/
+      end
+
+      it "accepts parents options (specified before the subcommand)" do
+        @command.run(["--quiet", "init"])
+        stdout.should =~ /running init subcommand/
+      end
+    end
+
+    context "when the subcommand is an anonymous subclass of the current class" do
+      before do
+        class MainCommand0 < Clamp::Command
+
+          option "--quiet", :flag, "Don't print in upper case.", :default => false
+
+          subcommand "init", "Initialize the repository" do
+            def execute
+              msg = "running init subcommand"
+              msg = msg.upcase unless quiet?
+              puts msg
+            end
+          end
+        end
+
+        @command = MainCommand0.new("git")
+      end
+
+      it_should_behave_like "all subcommands with parent options"
+    end
+
+
+    context "when the subcommand is an explicit subcommand" do
+      before do
+        class InitCommand1 < Clamp::Command
+
+          def execute
+            msg = "running init subcommand"
+            msg = msg.upcase unless quiet?
+            puts msg
+          end
+
+        end
+
+        class MainCommand1 < Clamp::Command
+
+          option "--quiet", :flag, "Don't print in upper case.", :default => false
+
+          subcommand "init", "Initialize the repository", InitCommand1
+
+        end
+
+        @command = MainCommand1.new("git")
+      end
+
+      it_should_behave_like "all subcommands with parent options"
+    end
+  end
 end
