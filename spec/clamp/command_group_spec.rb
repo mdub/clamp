@@ -150,12 +150,12 @@ describe Clamp::Command do
 
     end
 
-    it "accepts parents options (specified after the subcommand)" do
+    it "accepts options defined in superclass (specified after the subcommand)" do
       @command.run(["move", "--direction", "north"])
       stdout.should =~ /walking north/
     end
 
-    it "accepts parents options (specified before the subcommand)" do
+    it "accepts options defined in superclass (specified before the subcommand)" do
       @command.run(["--direction", "north", "move"])
       stdout.should =~ /walking north/
     end

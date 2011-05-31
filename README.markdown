@@ -221,7 +221,7 @@ You can mark a subcommand as "default" by using `default_subcommand` to declare 
 
 ### Subcommand options and parameters
 
-Options are inheritable, so any options declared for a parent command are supported for it's subcommands.  Parameters, on the other hand, are not inherited - each subcommand must declare it's own parameter list.
+Options are inheritable, so any options declared for a command are supported for it's sub-classes (e.g. those created using `subcommand`).  Parameters, on the other hand, are not inherited - each subcommand must declare it's own parameter list.
 
 Note that, if a subcommand accepts options, they must be specified on the command-line _after_ the subcommand name.  
 
