@@ -168,44 +168,71 @@ describe Clamp::Command do
 
   end
 
-  describe "each explicit subcommand" do
+  describe "subcommands with parent options" do
 
-    before do
-      class InitCommand < Clamp::Command
+    shared_examples_for "all subcommands with parent options" do
+      it "accepts subcommands" do
+        @command.run(["init"])
+        stdout.should =~ /RUNNING INIT SUBCOMMAND/
+      end
 
-        def execute
-          msg = "running init subcommand"
-          msg = msg.upcase unless quiet?
-          puts msg
+      it "accepts parents options (specified after the subcommand)" do
+        @command.run(["init", "--quiet"])
+        stdout.should =~ /running init subcommand/
+      end
+
+      it "accepts parents options (specified before the subcommand)" do
+        @command.run(["--quiet", "init"])
+        stdout.should =~ /running init subcommand/
+      end
+    end
+
+    context "when the subcommand is an anonymous subclass of the current class" do
+      before do
+        class MainCommand0 < Clamp::Command
+
+          option "--quiet", :flag, "Don't print in upper case.", :default => false
+
+          subcommand "init", "Initialize the repository" do
+            def execute
+              msg = "running init subcommand"
+              msg = msg.upcase unless quiet?
+              puts msg
+            end
+          end
         end
 
+        @command = MainCommand0.new("git")
       end
 
-      class MainCommand < Clamp::Command
+      it_should_behave_like "all subcommands with parent options"
+    end
 
-        option "--quiet", :flag, "Don't print in upper case.", :default => false
 
-        subcommand "init", "Initialize the repository", InitCommand
+    context "when the subcommand is an explicit subcommand" do
+      before do
+        class InitCommand1 < Clamp::Command
 
+          def execute
+            msg = "running init subcommand"
+            msg = msg.upcase unless quiet?
+            puts msg
+          end
+
+        end
+
+        class MainCommand1 < Clamp::Command
+
+          option "--quiet", :flag, "Don't print in upper case.", :default => false
+
+          subcommand "init", "Initialize the repository", InitCommand1
+
+        end
+
+        @command = MainCommand1.new("git")
       end
 
-      @command = MainCommand.new("git")
+      it_should_behave_like "all subcommands with parent options"
     end
-
-    it "accepts subcommands" do
-      @command.run(["init"])
-      stdout.should =~ /RUNNING INIT SUBCOMMAND/
-    end
-
-    it "accepts parents options (specified after the subcommand)" do
-      @command.run(["init", "--quiet"])
-      stdout.should =~ /running init subcommand/
-    end
-
-    it "accepts parents options (specified before the subcommand)" do
-      @command.run(["--quiet", "init"])
-      stdout.should =~ /running init subcommand/
-    end
-
   end
 end
