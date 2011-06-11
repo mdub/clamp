@@ -122,5 +122,28 @@ describe Clamp::Option do
     end
 
   end
+
+  describe "in subcommand" do
+    before do
+
+      @command = Class.new(Clamp::Command) do
+        subcommand "foo", "FOO!" do
+          option "--bar", "BAR", "Bars foo."
+        end
+      end
+
+    end
+
+    describe "Command#help" do
+
+      it "includes help for each option exactly once" do
+        subcommand = @command.new("").send(:find_subcommand, 'foo')
+        subcommand_help = subcommand.subcommand_class.help("")
+        subcommand_help.lines.grep(/--bar BAR/).count.should == 1
+      end
+
+    end
+
+  end
   
 end
