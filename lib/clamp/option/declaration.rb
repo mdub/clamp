@@ -27,27 +27,17 @@ module Clamp
       end
 
       def documented_options
-        declared_options + inherited_declared_options
-      end
-
-      def recognised_options
-        documented_options + standard_options
-      end
-
-      private
-
-      def ancestors_without_self
-        ancestors.drop(1)
-      end
-
-      def inherited_declared_options
-        ancestors_without_self.inject([]) do |options, ancestor| 
+        ancestors.inject([]) do |options, ancestor| 
           if ancestor.kind_of?(Clamp::Option::Declaration)
             options + ancestor.declared_options
           else
             options
           end
         end
+      end
+
+      def recognised_options
+        documented_options + standard_options
       end
 
       HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
