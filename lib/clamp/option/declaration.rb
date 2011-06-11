@@ -36,8 +36,12 @@ module Clamp
 
       private
 
+      def ancestors_without_self
+        ancestors.drop(1)
+      end
+
       def inherited_declared_options
-        ancestors.inject([]) do |options, ancestor| 
+        ancestors_without_self.inject([]) do |options, ancestor| 
           if ancestor.kind_of?(Clamp::Option::Declaration)
             options + ancestor.declared_options
           else
