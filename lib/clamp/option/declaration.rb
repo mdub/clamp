@@ -40,7 +40,7 @@ module Clamp
         documented_options + standard_options
       end
 
-      HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
+      HELP_OPTION = Clamp::Option.new([ "-h", "--help" ], :flag, "print help", :attribute_name => :help_requested)
 
       def standard_options
         [HELP_OPTION]
