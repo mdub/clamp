@@ -16,7 +16,7 @@ describe Clamp::Command do
   describe "#help" do
 
     it "describes usage" do
-      @command.help.should include("Usage:\n    cmd\n")
+      @command.help.should =~ /^Usage:\n    cmd.*\n/
     end
 
   end
@@ -54,7 +54,7 @@ describe Clamp::Command do
       end
 
     end
-    
+
     describe "with explicit :attribute_name" do
 
       before do
@@ -87,7 +87,7 @@ describe Clamp::Command do
       it "sets the specified default value" do
         @command.port.should == 4321
       end
-      
+
     end
 
     describe "with :default value" do
@@ -101,13 +101,13 @@ describe Clamp::Command do
       end
 
       describe "#help" do
-        
+
         it "describes the default value" do
           @command.help.should include("port to listen on (default: 4321)")
         end
-        
+
       end
-      
+
     end
 
     describe "with a block" do
@@ -129,7 +129,7 @@ describe Clamp::Command do
     end
 
   end
-  
+
   describe "with options declared" do
 
     before do
@@ -175,7 +175,7 @@ describe Clamp::Command do
           @command.flavour.should == "strawberry"
           @command.color.should == "blue"
         end
-        
+
       end
 
       describe "with combined short options" do
@@ -188,9 +188,9 @@ describe Clamp::Command do
           @command.flavour.should == "strawberry"
           @command.nuts?.should == true
         end
-        
+
       end
-      
+
       describe "with option arguments attached using equals sign" do
 
         before do
@@ -201,9 +201,9 @@ describe Clamp::Command do
           @command.flavour.should == "strawberry"
           @command.color.should == "blue"
         end
-      
+
       end
-      
+
       describe "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
@@ -248,19 +248,19 @@ describe Clamp::Command do
       end
 
       describe "when option-writer raises an ArgumentError" do
-        
+
         before do
           @command.class.class_eval do
-            
+
             def color=(c)
               unless c == "black"
                 raise ArgumentError, "sorry, we're out of #{c}"
               end
             end
-            
+
           end
         end
-          
+
         it "re-raises it as a UsageError" do
           lambda do
             @command.parse(%w(--color red))
@@ -319,13 +319,13 @@ describe Clamp::Command do
       end
 
       describe "#help" do
-        
+
         it "describes the default value" do
           @command.help.should include("direction (default: \"west\")")
         end
-        
+
       end
-      
+
     end
 
     describe "with a block" do
@@ -351,23 +351,23 @@ describe Clamp::Command do
   describe "with no parameters declared" do
 
     describe "#parse" do
-    
+
       describe "with arguments" do
-        
+
         it "raises a UsageError" do
           lambda do
             @command.parse(["crash"])
           end.should raise_error(Clamp::UsageError, "too many arguments")
         end
-        
+
       end
-      
+
     end
-    
+
   end
 
   describe "with parameters declared" do
-    
+
     before do
       @command.class.parameter "X", "x"
       @command.class.parameter "Y", "y"
@@ -375,9 +375,9 @@ describe Clamp::Command do
     end
 
     describe "#parse" do
-      
+
       describe "with arguments for all parameters" do
-        
+
         before do
           @command.parse(["crash", "bang", "wallop"])
         end
@@ -391,13 +391,13 @@ describe Clamp::Command do
       end
 
       describe "with insufficient arguments" do
-        
+
         it "raises a UsageError" do
           lambda do
             @command.parse(["crash"])
           end.should raise_error(Clamp::UsageError, "parameter 'Y': no value provided")
         end
-        
+
       end
 
       describe "with optional argument omitted" do
@@ -408,23 +408,23 @@ describe Clamp::Command do
           @command.y.should == "bang"
           @command.z.should == "ZZZ"
         end
-        
+
       end
 
       describe "with too many arguments" do
-        
+
         it "raises a UsageError" do
           lambda do
             @command.parse(["crash", "bang", "wallop", "kapow"])
           end.should raise_error(Clamp::UsageError, "too many arguments")
         end
-        
+
       end
-      
+
     end
-    
+
   end
-  
+
   describe "with explicit usage" do
 
     given_command("blah") do
@@ -469,11 +469,11 @@ describe Clamp::Command do
 
       self.description = <<-EOF
         Punt is an example command.  It doesn't do much, really.
-        
+
         The prefix at the beginning of this description should be normalised
         to two spaces.
       EOF
-      
+
     end
 
     describe "#help" do
@@ -501,7 +501,7 @@ describe Clamp::Command do
     end
 
     describe "invoked with a context hash" do
-      
+
       it "makes the context available within the command" do
         @command.class.class_eval do
           def execute
@@ -509,11 +509,11 @@ describe Clamp::Command do
           end
         end
         @command.class.run("xyz", [], :foo => "bar")
-        stdout.should == "bar"        
+        stdout.should == "bar"
       end
-      
+
     end
-    
+
     describe "when there's a UsageError" do
 
       before do
@@ -524,7 +524,7 @@ describe Clamp::Command do
           end
         end
 
-        begin 
+        begin
           @command.class.run("cmd", [])
         rescue SystemExit => e
           @system_exit = e
@@ -559,7 +559,7 @@ describe Clamp::Command do
   end
 
   describe "subclass" do
-    
+
     before do
       @parent_command_class = Class.new(Clamp::Command) do
         option "--verbose", :flag, "be louder"
@@ -569,12 +569,12 @@ describe Clamp::Command do
       end
       @command = @derived_command_class.new("cmd")
     end
-    
+
     it "inherits options from it's superclass" do
       @command.parse(["--verbose"])
       @command.should be_verbose
     end
 
   end
-  
+
 end

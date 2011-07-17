@@ -19,12 +19,12 @@ module Clamp
       end
       @description.strip!
     end
-    
+
     attr_reader :description
-    
+
     def derived_usage_description
       parts = parameters.map { |a| a.name }
-      parts.unshift("[OPTIONS]") if has_options?
+      parts.unshift("[OPTIONS]")
       parts.join(" ")
     end
 
@@ -55,11 +55,9 @@ module Clamp
           help.puts detail_format % subcommand.help
         end
       end
-      if has_options?
-        help.puts "\nOptions:"
-        recognised_options.each do |option|
-          help.puts detail_format % option.help
-        end
+      help.puts "\nOptions:"
+      recognised_options.each do |option|
+        help.puts detail_format % option.help
       end
       help.string
     end

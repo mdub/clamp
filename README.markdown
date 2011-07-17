@@ -205,7 +205,7 @@ Clamp generates an anonymous subclass of the current class, to represent the sub
 
 ### Default subcommand
 
-You can mark a subcommand as "default" by using `default_subcommand` to declare it, rather than `subcommand`.  Usually the SUBCOMMAND paramater is mandatory, but if a default subcommand is declared, it becomes optional.
+You can mark a subcommand as "default" by using `default_subcommand` to declare it, rather than `subcommand`.  Usually the SUBCOMMAND parameter is mandatory, but if a default subcommand is declared, it becomes optional.
 
     class MainCommand < Clamp::Command
 

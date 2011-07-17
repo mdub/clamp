@@ -14,10 +14,6 @@ module Clamp
         define_accessors_for(option, &block)
       end
 
-      def has_options?
-        !documented_options.empty?
-      end
-
       def find_option(switch)
         recognised_options.find { |o| o.handles?(switch) }
       end
@@ -27,7 +23,7 @@ module Clamp
       end
 
       def documented_options
-        ancestors.inject([]) do |options, ancestor| 
+        ancestors.inject([]) do |options, ancestor|
           if ancestor.kind_of?(Clamp::Option::Declaration)
             options + ancestor.declared_options
           else
