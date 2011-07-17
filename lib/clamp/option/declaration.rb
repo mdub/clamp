@@ -22,7 +22,24 @@ module Clamp
         @declared_options ||= []
       end
 
-      def documented_options
+      def recognised_options
+        declare_implicit_options
+        effective_options
+      end
+
+      private
+
+      def declare_implicit_options
+        return nil if @implicit_options_declared
+        unless effective_options.find { |o| o.handles?("--help") }
+          option "--help", :flag, "print help" do
+            raise Clamp::HelpWanted.new(self)
+          end
+        end
+        @implicit_options_declared = true
+      end
+
+      def effective_options
         ancestors.inject([]) do |options, ancestor|
           if ancestor.kind_of?(Clamp::Option::Declaration)
             options + ancestor.declared_options
@@ -30,16 +47,6 @@ module Clamp
             options
           end
         end
-      end
-
-      def recognised_options
-        documented_options + standard_options
-      end
-
-      HELP_OPTION = Clamp::Option.new("--help", :flag, "print help", :attribute_name => :help_requested)
-
-      def standard_options
-        [HELP_OPTION]
       end
 
     end
