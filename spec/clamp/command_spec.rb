@@ -247,6 +247,26 @@ describe Clamp::Command do
 
       end
 
+      describe "with --help" do
+
+        it "requests help" do
+          lambda do
+            @command.parse(%w(--help))
+          end.should raise_error(Clamp::HelpWanted)
+        end
+
+      end
+
+      describe "with -h" do
+
+        it "requests help" do
+          lambda do
+            @command.parse(%w(-h))
+          end.should raise_error(Clamp::HelpWanted)
+        end
+
+      end
+
       describe "when option-writer raises an ArgumentError" do
 
         before do
@@ -282,6 +302,47 @@ describe Clamp::Command do
         @command.help.should =~ %r(--color COLOR +Preferred hue)
       end
 
+    end
+
+  end
+
+  describe "with an explicit --help option declared" do
+
+    before do
+      @command.class.option ["--help"], :flag, "help wanted"
+    end
+
+    it "does not generate implicit help option" do
+      lambda do
+        @command.parse(%w(--help))
+      end.should_not raise_error
+      @command.help.should be_true
+    end
+
+    it "does not recognise -h" do
+      lambda do
+        @command.parse(%w(-h))
+      end.should raise_error(Clamp::UsageError)
+    end
+
+  end
+
+  describe "with an explicit -h option declared" do
+
+    before do
+      @command.class.option ["-h", "--humidity"], "PERCENT", "relative humidity" do |n|
+        Integer(n)
+      end
+    end
+
+    it "does not map -h to help" do
+      @command.help.should_not =~ %r( -h[, ].*help)
+    end
+
+    it "still recognises --help" do
+      lambda do
+        @command.parse(%w(--help))
+      end.should raise_error(Clamp::HelpWanted)
     end
 
   end
@@ -486,6 +547,7 @@ describe Clamp::Command do
     end
 
   end
+
   describe ".run" do
 
     it "creates a new Command instance and runs it" do

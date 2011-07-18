@@ -32,7 +32,9 @@ module Clamp
       def declare_implicit_options
         return nil if @implicit_options_declared
         unless effective_options.find { |o| o.handles?("--help") }
-          option "--help", :flag, "print help" do
+          help_switches = ["--help"]
+          help_switches.unshift("-h") unless effective_options.find { |o| o.handles?("-h") }
+          option help_switches, :flag, "print help" do
             raise Clamp::HelpWanted.new(self)
           end
         end
