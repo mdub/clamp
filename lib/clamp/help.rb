@@ -42,24 +42,35 @@ module Clamp
         help.puts ""
         help.puts description.gsub(/^/, "  ")
       end
-      detail_format = "    %-29s %s"
       if has_parameters?
         help.puts "\nParameters:"
         parameters.each do |parameter|
-          help.puts detail_format % parameter.help
+          render_help(help, parameter)
         end
       end
       if has_subcommands?
         help.puts "\nSubcommands:"
         recognised_subcommands.each do |subcommand|
-          help.puts detail_format % subcommand.help
+          render_help(help, subcommand)
         end
       end
       help.puts "\nOptions:"
       recognised_options.each do |option|
-        help.puts detail_format % option.help
+        render_help(help, option)
       end
       help.string
+    end
+    
+    private
+    def render_help(help_io, help_source)
+      detail_format = "    %-29s %s"
+      title, description = help_source.help
+      description.each_line do |line|
+        help_io.puts detail_format % [title, line]
+        # should just display the extra description lines indented with no title
+        # do this by setting title to an empty string for subsequent lines after 1st
+        title = ''
+      end
     end
 
   end
