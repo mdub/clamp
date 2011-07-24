@@ -15,7 +15,7 @@ describe Clamp::Command do
         end
       end
 
-      subcommand "flop", "flop it" do
+      subcommand "flop", "flop it\nfor extra flop" do
         def execute
           puts "FLOPPED"
         end
@@ -40,6 +40,11 @@ describe Clamp::Command do
         @help.should =~ /Subcommands:/
         @help.should =~ /flip +flip it/
         @help.should =~ /flop +flop it/
+      end
+      
+      it "handles new lines in subcommand descriptions" do
+        @help = @command.help        
+        @help.should =~ /flop +flop it\n +for extra flop/
       end
       
     end

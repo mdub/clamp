@@ -135,7 +135,7 @@ describe Clamp::Command do
     before do
       @command.class.option ["-f", "--flavour"], "FLAVOUR", "Flavour of the month"
       @command.class.option ["-c", "--color"], "COLOR", "Preferred hue"
-      @command.class.option ["-n", "--[no-]nuts"], :flag, "Nuts (or not)"
+      @command.class.option ["-n", "--[no-]nuts"], :flag, "Nuts (or not)\nMay include nuts"
       @command.class.parameter "[ARG] ...", "extra arguments", :attribute_name => :arguments
     end
 
@@ -301,6 +301,10 @@ describe Clamp::Command do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
         @command.help.should =~ %r(--color COLOR +Preferred hue)
       end
+      
+      it "handles new lines in option descriptions" do
+        @command.help.should =~ %r(--\[no-\]nuts +Nuts \(or not\)\n +May include nuts)
+      end
 
     end
 
@@ -430,7 +434,7 @@ describe Clamp::Command do
   describe "with parameters declared" do
 
     before do
-      @command.class.parameter "X", "x"
+      @command.class.parameter "X", "x\nxx"
       @command.class.parameter "Y", "y"
       @command.class.parameter "[Z]", "z", :default => "ZZZ"
     end
@@ -483,6 +487,25 @@ describe Clamp::Command do
       end
 
     end
+
+    describe "#help" do
+
+      it "indicates that there are parameters" do
+        @command.help.should include("cmd [OPTIONS] X Y [Z]")
+      end
+
+      it "includes parameter details" do
+        @command.help.should =~ %r(X +x)
+        @command.help.should =~ %r(Y +y)
+        @command.help.should =~ %r(\[Z\] +z \(default: "ZZZ"\))        
+      end
+      
+      it "handles new lines in option descriptions" do
+        @command.help.should =~ %r(X +x\n +xx)
+      end
+
+    end
+
 
   end
 
