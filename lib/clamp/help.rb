@@ -33,44 +33,62 @@ module Clamp
     end
 
     def help(invocation_path)
-      help = StringIO.new
-      help.puts "Usage:"
-      usage_descriptions.each_with_index do |usage, i|
-        help.puts "    #{invocation_path} #{usage}".rstrip
-      end
-      if description
-        help.puts ""
-        help.puts description.gsub(/^/, "  ")
-      end
+      help = Builder.new
+      help.add_usage(invocation_path, usage_descriptions)
+      help.add_description(description)
       if has_parameters?
-        help.puts "\nParameters:"
-        parameters.each do |parameter|
-          render_help(help, parameter)
-        end
+        help.add_list("Parameters", parameters)
       end
       if has_subcommands?
-        help.puts "\nSubcommands:"
-        recognised_subcommands.each do |subcommand|
-          render_help(help, subcommand)
-        end
+        help.add_list("Subcommands", recognised_subcommands)
       end
-      help.puts "\nOptions:"
-      recognised_options.each do |option|
-        render_help(help, option)
-      end
+      help.add_list("Options", recognised_options)
       help.string
     end
-    
-    private
-    def render_help(help_io, help_source)
-      detail_format = "    %-29s %s"
-      title, description = help_source.help
-      description.each_line do |line|
-        help_io.puts detail_format % [title, line]
-        # should just display the extra description lines indented with no title
-        # do this by setting title to an empty string for subsequent lines after 1st
-        title = ''
+
+    class Builder
+
+      def initialize
+        @out = StringIO.new
       end
+
+      def string
+        @out.string
+      end
+
+      def add_usage(invocation_path, usage_descriptions)
+        puts "Usage:"
+        usage_descriptions.each do |usage|
+          puts "    #{invocation_path} #{usage}".rstrip
+        end
+      end
+
+      def add_description(description)
+        if description
+          puts ""
+          puts description.gsub(/^/, "  ")
+        end
+      end
+
+      DETAIL_FORMAT = "    %-29s %s"
+
+      def add_list(heading, items)
+        puts "\n#{heading}:"
+        items.each do |item|
+          label, description = item.help
+          description.each_line do |line|
+            puts DETAIL_FORMAT % [label, line]
+            label = ''
+          end
+        end
+      end
+
+      private
+
+      def puts(*args)
+        @out.puts(*args)
+      end
+
     end
 
   end
