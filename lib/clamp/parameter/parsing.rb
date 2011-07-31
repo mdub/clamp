@@ -6,13 +6,16 @@ module Clamp
       protected
       
       def parse_parameters
-
         self.class.parameters.each do |parameter|
           begin
             value = parameter.consume(remaining_arguments)
             send("#{parameter.attribute_name}=", value) unless value.nil?
           rescue ArgumentError => e
-            signal_usage_error "parameter '#{parameter.name}': #{e.message}"
+            if parameter.name != "SUBCOMMAND"
+              signal_usage_error "parameter '#{parameter.name}': #{e.message}"
+            else
+              signal_usage_error "no subcommand specified", true
+            end
           end
         end
 
