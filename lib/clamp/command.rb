@@ -10,10 +10,10 @@ require 'clamp/subcommand/execution'
 module Clamp
 
   # {Command} models a shell command.  Each command invocation is a new object.
-  # Command options and parameters are represented as attributes 
+  # Command options and parameters are represented as attributes
   # (see {Command::Declaration}).
   #
-  # The main entry-point is {#run}, which uses {#parse} to populate attributes based 
+  # The main entry-point is {#run}, which uses {#parse} to populate attributes based
   # on an array of command-line arguments, then calls {#execute} (which you provide)
   # to make it go.
   #
@@ -32,7 +32,7 @@ module Clamp
     # @return [String] the path used to invoke this command
     #
     attr_reader :invocation_path
-    
+
     # @return [Array<String>] unconsumed command-line arguments
     #
     def remaining_arguments
@@ -53,7 +53,7 @@ module Clamp
 
     # Run the command, with the specified arguments.
     #
-    # This calls {#parse} to process the command-line arguments, 
+    # This calls {#parse} to process the command-line arguments,
     # then delegates to {#execute}.
     #
     # @param [Array<String>] arguments command-line arguments
@@ -64,7 +64,7 @@ module Clamp
     end
 
     # Execute the command (assuming that all options/parameters have been set).
-    # 
+    #
     # This method is designed to be overridden in sub-classes.
     #
     def execute
@@ -86,7 +86,7 @@ module Clamp
     include Clamp::Subcommand::Execution
 
     protected
-    
+
     attr_accessor :context
 
     private
@@ -97,8 +97,8 @@ module Clamp
       raise e
     end
 
-    def help_requested=(value)
-      raise Clamp::HelpWanted.new(self)
+    def request_help
+      raise HelpWanted, self
     end
 
     class << self
@@ -113,9 +113,9 @@ module Clamp
       # @param [String] invocation_path the path used to invoke the command
       # @param [Array<String>] arguments command-line arguments
       # @param [Hash] context additional data the command may need
-      # 
+      #
       def run(invocation_path = File.basename($0), arguments = ARGV, context = {})
-        begin 
+        begin
           new(invocation_path, context).run(arguments)
         rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
