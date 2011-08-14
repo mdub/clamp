@@ -33,40 +33,53 @@ describe Clamp::Command do
 
     end
 
+    context "executed with no subcommand" do
+
+      it "triggers help" do
+        lambda do
+          @command.run([])
+        end.should raise_error(Clamp::HelpWanted)
+      end
+
+    end
+
     describe "#help" do
-      
+
+      it "shows subcommand parameters in usage" do
+        @command.help.should include("flipflop [OPTIONS] SUBCOMMAND [ARGS] ...")
+      end
+
       it "lists subcommands" do
         @help = @command.help
         @help.should =~ /Subcommands:/
         @help.should =~ /flip +flip it/
         @help.should =~ /flop +flop it/
       end
-      
+
       it "handles new lines in subcommand descriptions" do
-        @help = @command.help        
-        @help.should =~ /flop +flop it\n +for extra flop/
+        @command.help.should =~ /flop +flop it\n +for extra flop/
       end
-      
+
     end
-    
+
   end
 
   describe "with an aliased subcommand" do
-    
+
     given_command "blah" do
 
       subcommand ["say", "talk"], "Say something" do
-        
+
         parameter "WORD ...", "stuff to say"
-        
+
         def execute
           puts word_list
         end
-        
+
       end
-      
+
     end
-    
+
     it "responds to both aliases" do
 
       @command.run(["say", "boo"])
@@ -76,8 +89,8 @@ describe Clamp::Command do
       stdout.should =~ /jive/
 
     end
-    
-    describe "#help" do 
+
+    describe "#help" do
 
       it "lists all aliases" do
         @help = @command.help
@@ -85,9 +98,9 @@ describe Clamp::Command do
       end
 
     end
-    
+
   end
-  
+
   describe "with nested subcommands" do
 
     given_command "fubar" do
@@ -110,9 +123,9 @@ describe Clamp::Command do
     end
 
   end
-  
+
   describe "with a default subcommand" do
-    
+
     given_command "admin" do
 
       default_subcommand "status", "Show status" do
@@ -125,13 +138,17 @@ describe Clamp::Command do
 
     end
 
-    it "delegates multiple levels" do
-      @command.run([])
-      stdout.should =~ /All good/
+    context "executed with no subcommand" do
+
+      it "invokes the default subcommand" do
+        @command.run([])
+        stdout.should =~ /All good/
+      end
+
     end
-    
+
   end
-  
+
   describe "each subcommand" do
 
     before do
@@ -146,7 +163,7 @@ describe Clamp::Command do
         option "--direction", "DIR", "which way", :default => "home"
 
         include speed_options
-        
+
         subcommand "move", "move in the appointed direction" do
 
           def execute

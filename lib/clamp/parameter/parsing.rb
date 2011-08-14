@@ -4,7 +4,7 @@ module Clamp
     module Parsing
 
       protected
-      
+
       def parse_parameters
 
         self.class.parameters.each do |parameter|
@@ -16,10 +16,12 @@ module Clamp
           end
         end
 
+      end
+
+      def handle_remaining_arguments
         unless remaining_arguments.empty?
           signal_usage_error "too many arguments"
         end
-
       end
 
     end

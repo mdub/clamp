@@ -4,7 +4,6 @@ module Clamp
     module Execution
 
       def execute
-        signal_usage_error "no subcommand specified" unless subcommand_name
         subcommand_class = find_subcommand_class(subcommand_name)
         subcommand = subcommand_class.new("#{invocation_path} #{subcommand_name}", context)
         self.class.recognised_options.each do |option|
@@ -16,7 +15,24 @@ module Clamp
         subcommand.run(subcommand_arguments)
       end
 
+      protected
+
+      def handle_remaining_arguments
+        @subcommand_arguments = remaining_arguments
+        @subcommand_name = @subcommand_arguments.shift
+      end
+
       private
+
+      def subcommand_name
+        @subcommand_name ||= default_subcommand
+      end
+
+      attr_reader :subcommand_arguments
+
+      def default_subcommand
+        request_help
+      end
 
       def find_subcommand(name)
         self.class.find_subcommand(name) ||

@@ -23,8 +23,12 @@ module Clamp
     attr_reader :description
 
     def derived_usage_description
-      parts = parameters.map { |a| a.name }
-      parts.unshift("[OPTIONS]")
+      parts = ["[OPTIONS]"]
+      parts += parameters.map { |a| a.name }
+      if has_subcommands?
+        parts << "SUBCOMMAND"
+        parts << "[ARGS] ..."
+      end
       parts.join(" ")
     end
 

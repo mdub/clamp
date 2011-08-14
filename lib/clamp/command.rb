@@ -48,7 +48,7 @@ module Clamp
       @remaining_arguments = arguments.dup
       parse_options
       parse_parameters
-      @remaining_arguments
+      handle_remaining_arguments
     end
 
     # Run the command, with the specified arguments.

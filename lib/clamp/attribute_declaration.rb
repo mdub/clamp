@@ -1,15 +1,15 @@
 module Clamp
-  
+
   module AttributeDeclaration
 
     protected
-    
+
     def define_accessors_for(attribute, &block)
       define_reader_for(attribute)
       define_default_for(attribute)
       define_writer_for(attribute, &block)
     end
-    
+
     def define_reader_for(attribute)
       define_method(attribute.read_method) do
         if instance_variable_defined?(attribute.ivar_name)
@@ -36,5 +36,5 @@ module Clamp
     end
 
   end
-  
+
 end

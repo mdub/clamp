@@ -15,8 +15,8 @@ module Clamp
       end
 
       def default_subcommand(name, description, subcommand_class = self, &block)
-        has_subcommands!(name)
-        declare_subcommand(name, description, subcommand_class, &block)
+        subcommand(name, description, subcommand_class, &block)
+        define_default_subcommand(name)
       end
 
       def has_subcommands?
@@ -28,20 +28,8 @@ module Clamp
       end
 
       def has_subcommands!(default = nil)
-        if @has_subcommands
-          if default
-            raise "You must declare the default_subcommand before any other subcommands"
-          end
-        else
-          if default
-            parameter "[SUBCOMMAND]", "subcommand name", :attribute_name => :subcommand_name, :default => default
-          else
-            parameter "SUBCOMMAND", "subcommand name", :attribute_name => :subcommand_name
-          end
-          parameter "[ARGS] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
-          @has_subcommands = true
-          include Clamp::Subcommand::Execution
-        end
+        @has_subcommands = true
+        include Clamp::Subcommand::Execution
       end
 
       private
@@ -52,6 +40,12 @@ module Clamp
           subcommand_class = Class.new(subcommand_class, &block)
         end
         recognised_subcommands << Subcommand.new(name, description, subcommand_class)
+      end
+
+      def define_default_subcommand(name)
+        define_method("default_subcommand") do
+          name
+        end
       end
 
     end
