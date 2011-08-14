@@ -26,7 +26,7 @@ module Clamp
       def find_subcommand(name)
         recognised_subcommands.find { |sc| sc.is_called?(name) }
       end
-      
+
       def has_subcommands!(default = nil)
         if @has_subcommands
           if default
@@ -40,11 +40,12 @@ module Clamp
           end
           parameter "[ARGS] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
           @has_subcommands = true
+          include Clamp::Subcommand::Execution
         end
       end
-      
+
       private
-      
+
       def declare_subcommand(name, description, subcommand_class = self, &block)
         if block
           # generate a anonymous sub-class

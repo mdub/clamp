@@ -68,11 +68,7 @@ module Clamp
     # This method is designed to be overridden in sub-classes.
     #
     def execute
-      if self.class.has_subcommands?
-        execute_subcommand
-      else
-        raise "you need to define #execute"
-      end
+      raise "you need to define #execute"
     end
 
     # @return [String] usage documentation for this command
@@ -83,7 +79,6 @@ module Clamp
 
     include Clamp::Option::Parsing
     include Clamp::Parameter::Parsing
-    include Clamp::Subcommand::Execution
 
     protected
 

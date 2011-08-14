@@ -3,9 +3,7 @@ module Clamp
 
     module Execution
 
-      protected
-      
-      def execute_subcommand
+      def execute
         signal_usage_error "no subcommand specified" unless subcommand_name
         subcommand_class = find_subcommand_class(subcommand_name)
         subcommand = subcommand_class.new("#{invocation_path} #{subcommand_name}", context)
@@ -21,7 +19,7 @@ module Clamp
       private
 
       def find_subcommand(name)
-        self.class.find_subcommand(name) || 
+        self.class.find_subcommand(name) ||
         signal_usage_error("No such sub-command '#{name}'")
       end
 
