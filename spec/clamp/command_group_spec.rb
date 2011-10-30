@@ -128,13 +128,15 @@ describe Clamp::Command do
 
     given_command "admin" do
 
-      default_subcommand "status", "Show status" do
+      subcommand "status", "Show status" do
 
         def execute
           puts "All good!"
         end
 
       end
+
+      self.default_subcommand = "status"
 
     end
 

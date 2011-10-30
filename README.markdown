@@ -205,11 +205,13 @@ Clamp generates an anonymous subclass of the current class, to represent the sub
 
 ### Default subcommand
 
-You can mark a subcommand as "default" by using `default_subcommand` to declare it, rather than `subcommand`.  Usually the SUBCOMMAND parameter is mandatory, but if a default subcommand is declared, it becomes optional.
+You can set a default subcommand, at the class level, as follows:
 
     class MainCommand < Clamp::Command
 
-      default_subcommand "status", "Display current status" do
+      self.default_subcommand = "status"
+      
+      subcommand "status", "Display current status" do
 
         def execute
           # ...
@@ -218,6 +220,8 @@ You can mark a subcommand as "default" by using `default_subcommand` to declare 
       end
       
     end
+
+Then, if when no SUBCOMMAND argument is provided, the default will be selected.
 
 ### Subcommand options and parameters
 

@@ -25,14 +25,11 @@ module Clamp
       private
 
       def subcommand_name
-        @subcommand_name ||= default_subcommand
+        @subcommand_name ||= self.class.default_subcommand
+        @subcommand_name || request_help
       end
 
       attr_reader :subcommand_arguments
-
-      def default_subcommand
-        request_help
-      end
 
       def find_subcommand(name)
         self.class.find_subcommand(name) ||

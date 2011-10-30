@@ -14,10 +14,7 @@ module Clamp
         declare_subcommand(name, description, subcommand_class, &block)
       end
 
-      def default_subcommand(name, description, subcommand_class = self, &block)
-        subcommand(name, description, subcommand_class, &block)
-        define_default_subcommand(name)
-      end
+      attr_accessor :default_subcommand
 
       def has_subcommands?
         @has_subcommands
@@ -40,12 +37,6 @@ module Clamp
           subcommand_class = Class.new(subcommand_class, &block)
         end
         recognised_subcommands << Subcommand.new(name, description, subcommand_class)
-      end
-
-      def define_default_subcommand(name)
-        define_method("default_subcommand") do
-          name
-        end
       end
 
     end
