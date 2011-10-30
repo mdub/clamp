@@ -98,8 +98,12 @@ module Clamp
 
     private
 
-    def signal_usage_error(message)
-      e = UsageError.new(message, self)
+    def signal_usage_error(message, with_help = false)
+      e = if with_help
+            UsageErrorWithHelp.new(message, self)
+          else
+            UsageError.new(message, self)
+          end
       e.set_backtrace(caller)
       raise e
     end
@@ -124,6 +128,10 @@ module Clamp
       def run(invocation_path = File.basename($0), arguments = ARGV, context = {})
         begin
           new(invocation_path, context).run(arguments)
+        rescue Clamp::UsageErrorWithHelp => e
+          $stderr.puts "ERROR: #{e.message}\n\n"
+          puts e.command.help
+          exit(1)
         rescue Clamp::UsageError => e
           $stderr.puts "ERROR: #{e.message}"
           $stderr.puts ""
