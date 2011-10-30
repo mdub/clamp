@@ -27,11 +27,15 @@ module Clamp
 
       attr_writer :default_subcommand
 
-      def default_subcommand(*args)
-        unless args.empty?
-          raise "Sorry, default_subcommand syntax has changed; check the README."
+      def default_subcommand(*args, &block)
+        if args.empty?
+          @default_subcommand
+        else
+          $stderr.puts "WARNING: Clamp default_subcommand syntax has changed; check the README."
+          $stderr.puts "  (from #{caller.first})"
+          subcommand(*args, &block)
+          self.default_subcommand = args.first
         end
-        @default_subcommand
       end
 
     end

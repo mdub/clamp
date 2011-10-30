@@ -165,6 +165,31 @@ describe Clamp::Command do
 
   end
 
+  describe "with a default subcommand, declared the old way" do
+
+    given_command "admin" do
+
+      default_subcommand "status", "Show status" do
+
+        def execute
+          puts "All good!"
+        end
+
+      end
+
+    end
+
+    context "executed with no subcommand" do
+
+      it "invokes the default subcommand" do
+        @command.run([])
+        stdout.should =~ /All good/
+      end
+
+    end
+
+  end
+
   describe "each subcommand" do
 
     before do
