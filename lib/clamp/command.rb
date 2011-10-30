@@ -5,7 +5,7 @@ require 'clamp/option/parsing'
 require 'clamp/parameter/declaration'
 require 'clamp/parameter/parsing'
 require 'clamp/subcommand/declaration'
-require 'clamp/subcommand/execution'
+require 'clamp/subcommand/parsing'
 
 module Clamp
 
@@ -48,6 +48,7 @@ module Clamp
       @remaining_arguments = arguments.dup
       parse_options
       parse_parameters
+      parse_subcommand
       handle_remaining_arguments
     end
 
@@ -68,7 +69,11 @@ module Clamp
     # This method is designed to be overridden in sub-classes.
     #
     def execute
-      raise "you need to define #execute"
+      if @subcommand
+        @subcommand.execute
+      else
+        raise "you need to define #execute"
+      end
     end
 
     # @return [String] usage documentation for this command
@@ -79,10 +84,17 @@ module Clamp
 
     include Clamp::Option::Parsing
     include Clamp::Parameter::Parsing
+    include Clamp::Subcommand::Parsing
 
     protected
 
     attr_accessor :context
+
+    def handle_remaining_arguments
+      unless remaining_arguments.empty?
+        signal_usage_error "too many arguments"
+      end
+    end
 
     private
 

@@ -18,12 +18,6 @@ module Clamp
 
       end
 
-      def handle_remaining_arguments
-        unless remaining_arguments.empty?
-          signal_usage_error "too many arguments"
-        end
-      end
-
     end
 
   end
