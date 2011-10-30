@@ -14,8 +14,6 @@ module Clamp
         declare_subcommand(name, description, subcommand_class, &block)
       end
 
-      attr_accessor :default_subcommand
-
       def has_subcommands?
         @has_subcommands
       end
@@ -27,6 +25,15 @@ module Clamp
       def has_subcommands!(default = nil)
         @has_subcommands = true
         include Clamp::Subcommand::Execution
+      end
+
+      attr_writer :default_subcommand
+
+      def default_subcommand(*args)
+        unless args.empty?
+          raise "Sorry, default_subcommand syntax has changed; check the README."
+        end
+        @default_subcommand
       end
 
       private
