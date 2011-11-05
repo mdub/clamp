@@ -301,7 +301,7 @@ describe Clamp::Command do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
         @command.help.should =~ %r(--color COLOR +Preferred hue)
       end
-      
+
       it "handles new lines in option descriptions" do
         @command.help.should =~ %r(--\[no-\]nuts +Nuts \(or not\)\n +May include nuts)
       end
@@ -387,6 +387,26 @@ describe Clamp::Command do
 
         it "describes the default value" do
           @command.help.should include("direction (default: \"west\")")
+        end
+
+      end
+
+    end
+
+    describe "with :default values for multivalued" do
+
+      before do
+        @command.class.parameter "[ORIENTATIONS] ...", "directions", :default => ["west", "east"]
+      end
+
+      it "sets the specified default values array" do
+        @command.orientation.should == ["west", "east"]
+      end
+
+      describe "#help" do
+
+        it "describes the default values" do
+          @command.help.should include("directions (default: [\"west\", \"east\"])")
         end
 
       end
@@ -497,9 +517,9 @@ describe Clamp::Command do
       it "includes parameter details" do
         @command.help.should =~ %r(X +x)
         @command.help.should =~ %r(Y +y)
-        @command.help.should =~ %r(\[Z\] +z \(default: "ZZZ"\))        
+        @command.help.should =~ %r(\[Z\] +z \(default: "ZZZ"\))
       end
-      
+
       it "handles new lines in option descriptions" do
         @command.help.should =~ %r(X +x\n +xx)
       end
