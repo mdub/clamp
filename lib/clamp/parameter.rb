@@ -9,7 +9,7 @@ module Clamp
       @description = description
       infer_attribute_name_and_multiplicity
       if options.has_key?(:attribute_name)
-        @attribute_name = options[:attribute_name].to_s 
+        @attribute_name = options[:attribute_name].to_s
       end
       if options.has_key?(:default)
         @default_value = options[:default]
@@ -17,7 +17,7 @@ module Clamp
     end
 
     attr_reader :name, :attribute_name
-    
+
     def help_lhs
       name
     end
@@ -27,16 +27,18 @@ module Clamp
         raise ArgumentError, "no value provided"
       end
       if multivalued?
-        arguments.shift(arguments.length)
+        if arguments.length > 0
+          arguments.shift(arguments.length)
+        end
       else
         arguments.shift
       end
     end
-    
+
     private
 
     NAME_PATTERN = "([A-Za-z0-9_-]+)"
-    
+
     def infer_attribute_name_and_multiplicity
       case @name
       when /^\[#{NAME_PATTERN}\]$/
@@ -56,7 +58,7 @@ module Clamp
       end
       @attribute_name = @attribute_name.downcase.tr('-', '_')
     end
-    
+
     def multivalued?
       @multivalued
     end
@@ -64,7 +66,7 @@ module Clamp
     def required?
       @required
     end
-    
+
   end
 
 end
