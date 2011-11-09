@@ -123,4 +123,39 @@ describe Clamp::Parameter do
     end
   end
 
+  describe "optional list with multivalued defaults" do
+
+    before do
+      @parameter = Clamp::Parameter.new("[FILES] ...", "files to process", :default => ["d", "e", "f"])
+    end
+
+    describe "#attribute_name" do
+
+      it "indicates multiplicity" do
+        @parameter.attribute_name.should == "files_list"
+      end
+
+    end
+
+    describe "#consume" do
+
+      it "consumes all the remaining arguments" do
+        @arguments = %w(a b c)
+        @parameter.consume(@arguments).should == %w(a b c)
+        @arguments.should == []
+      end
+
+      describe "with no arguments" do
+
+        it "don't override defaults" do
+          @arguments = []
+          @parameter.consume(@arguments).should == nil
+        end
+
+      end
+
+    end
+
+  end
+
 end
