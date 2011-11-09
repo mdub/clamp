@@ -3,13 +3,13 @@ require "clamp"
 require 'stringio'
 
 Rspec.configure do |config|
-  
+
   config.mock_with :rr
 
 end
 
 module OutputCapture
-  
+
   def self.included(target)
 
     target.before do
@@ -21,7 +21,7 @@ module OutputCapture
       $stdout = STDOUT
       $stderr = STDERR
     end
-    
+
   end
 
   def stdout
@@ -35,7 +35,7 @@ module OutputCapture
 end
 
 module CommandFactory
-  
+
   def given_command(name, &block)
     before do
       @command = Class.new(Clamp::Command, &block).new(name)
