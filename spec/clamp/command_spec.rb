@@ -301,7 +301,7 @@ describe Clamp::Command do
         @command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
         @command.help.should =~ %r(--color COLOR +Preferred hue)
       end
-      
+
       it "handles new lines in option descriptions" do
         @command.help.should =~ %r(--\[no-\]nuts +Nuts \(or not\)\n +May include nuts)
       end
@@ -411,6 +411,33 @@ describe Clamp::Command do
 
     end
 
+    describe "with ellipsis" do
+
+      before do
+        @command.class.parameter "FILE ...", "files"
+      end
+
+      it "accepts multiple arguments" do
+        @command.parse(%w(X Y Z))
+        @command.file_list.should == %w(X Y Z)
+      end
+
+    end
+
+    describe "optional, with ellipsis" do
+
+      before do
+        @command.class.parameter "[FILE] ...", "files"
+      end
+
+      it "default to an empty list" do
+        @command.parse([])
+        @command.default_file_list.should == []
+        @command.file_list.should == []
+      end
+
+    end
+
   end
 
   describe "with no parameters declared" do
@@ -497,9 +524,9 @@ describe Clamp::Command do
       it "includes parameter details" do
         @command.help.should =~ %r(X +x)
         @command.help.should =~ %r(Y +y)
-        @command.help.should =~ %r(\[Z\] +z \(default: "ZZZ"\))        
+        @command.help.should =~ %r(\[Z\] +z \(default: "ZZZ"\))
       end
-      
+
       it "handles new lines in option descriptions" do
         @command.help.should =~ %r(X +x\n +xx)
       end

@@ -35,6 +35,14 @@ module Clamp
       end
     end
 
+    def default_value
+      if defined?(@default_value)
+        @default_value
+      elsif multivalued?
+        []
+      end
+    end
+
     private
 
     NAME_PATTERN = "([A-Za-z0-9_-]+)"

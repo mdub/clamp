@@ -123,10 +123,10 @@ describe Clamp::Parameter do
     end
   end
 
-  describe "optional list with multivalued defaults" do
+  describe "optional list" do
 
     before do
-      @parameter = Clamp::Parameter.new("[FILES] ...", "files to process", :default => ["d", "e", "f"])
+      @parameter = Clamp::Parameter.new("[FILES] ...", "files to process")
     end
 
     describe "#attribute_name" do
@@ -137,19 +137,59 @@ describe Clamp::Parameter do
 
     end
 
-    describe "#consume" do
+    describe "#default_value" do
 
-      it "consumes all the remaining arguments" do
-        @arguments = %w(a b c)
-        @parameter.consume(@arguments).should == %w(a b c)
-        @arguments.should == []
+      it "is an empty list" do
+        @parameter.default_value.should == []
       end
 
-      describe "with no arguments" do
+    end
 
-        it "don't override defaults" do
-          @arguments = []
-          @parameter.consume(@arguments).should == nil
+    describe "#help" do
+
+      it "does not include default" do
+        @parameter.help_rhs.should_not include("default:")
+      end
+
+    end
+
+    describe "with specified default value" do
+
+      before do
+        @parameter = Clamp::Parameter.new("[FILES] ...", "files to process", :default => %w(a b c))
+      end
+
+      describe "#default_value" do
+
+        it "is that specified" do
+          @parameter.default_value.should == %w(a b c)
+        end
+
+      end
+
+      describe "#help" do
+
+        it "includes the default value" do
+          @parameter.help_rhs.should include("default:")
+        end
+
+      end
+
+      describe "#consume" do
+
+        it "consumes all the remaining arguments" do
+          @arguments = %w(a b c)
+          @parameter.consume(@arguments).should == %w(a b c)
+          @arguments.should == []
+        end
+
+        describe "with no arguments" do
+
+          it "don't override defaults" do
+            @arguments = []
+            @parameter.consume(@arguments).should == nil
+          end
+
         end
 
       end

@@ -2,7 +2,7 @@ require "rspec"
 require "clamp"
 require 'stringio'
 
-Rspec.configure do |config|
+RSpec.configure do |config|
 
   config.mock_with :rr
 
