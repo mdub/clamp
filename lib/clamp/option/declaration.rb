@@ -30,7 +30,7 @@ module Clamp
       private
 
       def declare_implicit_options
-        return nil if @implicit_options_declared
+        return nil if defined?(@implicit_options_declared)
         unless effective_options.find { |o| o.handles?("--help") }
           help_switches = ["--help"]
           help_switches.unshift("-h") unless effective_options.find { |o| o.handles?("-h") }
