@@ -29,8 +29,8 @@ module Clamp
         subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
         self.class.recognised_options.each do |option|
           option_set = instance_variable_defined?(option.ivar_name)
-          if option_set && subcommand.respond_to?(option.write_method)
-            subcommand.send(option.write_method, self.send(option.read_method))
+          if option_set
+            subcommand.instance_variable_set(option.ivar_name, self.send(option.read_method))
           end
         end
         subcommand
