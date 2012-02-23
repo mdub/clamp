@@ -243,4 +243,25 @@ describe Clamp::Command do
 
   end
 
+  describe "with a subcommand, with options" do
+
+    given_command 'weeheehee' do
+      option '--json', 'JSON', 'a json blob' do |option|
+        print "parsing!"
+        option
+      end
+
+      subcommand 'woohoohoo', 'like weeheehee but with more o' do
+        def execute
+        end
+      end
+    end
+
+    it "only parses options once" do
+      @command.run(['--json', '{"a":"b"}', 'woohoohoo'])
+      stdout.should == 'parsing!'
+    end
+
+  end
+
 end
