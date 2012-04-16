@@ -110,6 +110,80 @@ describe Clamp::Command do
 
     end
 
+    describe "with :env value" do
+
+      before do
+        @command.class.option "--port", "PORT", "port to listen on", :default => 4321, :env => "PORT" do |value|
+          value.to_i
+        end
+      end
+
+      it "should use the default if neither flag nor env var are present" do
+        @command.parse([])
+        @command.port.should == 4321
+      end
+
+      it "should use the env value if present (instead of default)" do
+        ENV["PORT"] = rand(10000).to_s
+        @command.parse([])
+        @command.port.should == ENV["PORT"].to_i
+      end
+
+      it "should use the the flag value if present (instead of env)" do
+        ENV["PORT"] = "12345"
+        @command.parse(%w(--port 1500))
+        @command.port.should == 1500
+      end
+
+      describe "#help" do
+
+        it "describes the default value and env usage" do
+          @command.help.should include("port to listen on (default: 4321) (env: \"PORT\")")
+        end
+
+      end
+
+    end
+
+    describe "with :env value on a :flag option" do
+
+      before do
+        @command.class.option "--[no-]enable", :flag, "enable?", :default => false, :env => "ENABLE"
+      end
+
+      it "should use the default if neither flag nor env var are present" do
+        @command.parse([])
+        @command.enable?.should == false
+      end
+
+      it "should use an env value of '1' to mean truth" do
+        ENV["ENABLE"] = "1"
+        @command.parse([])
+        @command.enable?.should == true
+      end
+
+      it "should use an env value other than '1' to mean false" do
+        ENV["ENABLE"] = "0"
+        @command.parse([])
+        @command.enable?.should == false
+      end
+
+      it "should use the the flag value if present (instead of env)" do
+        ENV["ENABLE"] = "1"
+        @command.parse(%w(--no-enable))
+        @command.enable?.should == false
+      end
+
+      describe "#help" do
+
+        it "describes the default value and env usage" do
+          @command.help.should include("enable? (default: false) (env: \"ENABLE\")")
+        end
+
+      end
+
+    end
+
     describe "with a block" do
 
       before do
