@@ -15,17 +15,22 @@ module GitDown
       exit(0)
     end
 
+    def say(message)
+      message = message.upcase if verbose?
+      puts message
+    end
+
   end
 
   class CloneCommand < AbstractCommand
-    
+
     parameter "REPOSITORY", "repository to clone"
     parameter "[DIR]", "working directory", :default => "."
 
     def execute
-      raise NotImplementedError
+      say "cloning to #{dir}"
     end
-    
+
   end
 
   class PullCommand < AbstractCommand
@@ -33,23 +38,27 @@ module GitDown
     option "--[no-]commit", :flag, "Perform the merge and commit the result."
 
     def execute
-      raise NotImplementedError
+      say "pulling"
     end
-    
+
   end
 
   class StatusCommand < AbstractCommand
-    
+
     option ["-s", "--short"], :flag, "Give the output in the short-format."
 
     def execute
-      raise NotImplementedError
+      if short?
+        say "good"
+      else
+        say "it's all good ..."
+      end
     end
-    
+
   end
 
   class MainCommand < AbstractCommand
-    
+
     subcommand "clone", "Clone a remote repository.", CloneCommand
     subcommand "pull", "Fetch and merge updates.", PullCommand
     subcommand "status", "Display status of local repository.", StatusCommand
