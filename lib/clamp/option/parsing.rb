@@ -14,12 +14,16 @@ module Clamp
           case switch
           when /^(-\w)(.+)$/ # combined short options
             switch = $1
-            remaining_arguments.unshift("-#{$2}")
+            if find_option(switch).flag?
+              remaining_arguments.unshift("-" + $2)
+            else
+              remaining_arguments.unshift($2)
+            end
           when /^(--[^=]+)=(.*)/
             switch = $1
             remaining_arguments.unshift($2)
           end
-            
+
           option = find_option(switch)
           value = option.extract_value(switch, remaining_arguments)
 
@@ -35,7 +39,7 @@ module Clamp
       private
 
       def find_option(switch)
-        self.class.find_option(switch) || 
+        self.class.find_option(switch) ||
         signal_usage_error("Unrecognised option '#{switch}'")
       end
 

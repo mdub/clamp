@@ -178,6 +178,18 @@ describe Clamp::Command do
 
       end
 
+      describe "with a value appended to a short option" do
+
+        before do
+          @command.parse(%w(-fstrawberry))
+        end
+
+        it "works as though the value were separated" do
+          @command.flavour.should == "strawberry"
+        end
+
+      end
+
       describe "with combined short options" do
 
         before do
