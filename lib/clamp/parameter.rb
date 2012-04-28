@@ -14,6 +14,9 @@ module Clamp
       if options.has_key?(:default)
         @default_value = options[:default]
       end
+      if options.has_key?(:env)
+        @environment_variable = options[:env]
+      end
     end
 
     attr_reader :name, :attribute_name

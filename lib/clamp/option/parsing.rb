@@ -50,7 +50,7 @@ module Clamp
         end
       end
 
-      def parse_environment
+      def parse_environment_options
         self.class.recognised_options.each do |option|
           next if option.environment_variable.nil?
           next unless ENV.has_key?(option.environment_variable)
