@@ -2,15 +2,15 @@ module Clamp
 
   class Attribute
 
-    attr_reader :description, :attribute_name, :default_value, :env_var
+    attr_reader :description, :attribute_name, :default_value, :environment_variable
 
     def help_rhs
       rhs = description
       if defined?(@default_value)
         rhs += " (default: #{@default_value.inspect})"
       end
-      if defined?(@env_var)
-        rhs += " (env: #{@env_var.inspect})"
+      if defined?(@environment_variable)
+        rhs += " (env: #{@environment_variable.inspect})"
       end
       rhs
     end

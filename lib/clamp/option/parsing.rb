@@ -34,9 +34,9 @@ module Clamp
 
       def parse_environment
         self.class.recognised_options.each do |option|
-          next if option.env_var.nil?
-          next unless ENV.has_key?(option.env_var)
-          value = ENV[option.env_var]
+          next if option.environment_variable.nil?
+          next unless ENV.has_key?(option.environment_variable)
+          value = ENV[option.environment_variable]
           if option.flag?
             # Set true if the env var is "1" false otherwise.
             send("#{option.attribute_name}=", value == "1")
