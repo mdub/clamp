@@ -156,10 +156,19 @@ describe Clamp::Command do
         @command.enable?.should == false
       end
 
-      it "should use an env value of '1' to mean truth" do
-        ENV["ENABLE"] = "1"
-        @command.parse([])
-        @command.enable?.should == true
+      Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.each do |value|
+        it "should use environment value '#{value}' to mean true" do
+          ENV["ENABLE"] = value
+          @command.parse([])
+          @command.enable?.should == true
+        end
+      end
+
+      # Make sure tests fail if ever the TRUTHY_ENVIRONMENT_VALUES loses a
+      # value. This is just a safety check to make sure maintainers update
+      # any relevant docs and aware that they could be breaking compatibility.
+      it "should accept only these values as 'truthy' environment values: 1, yes, enable, on, true" do
+        Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.should == %w(1 yes enable on true)
       end
 
       it "should use an env value other than '1' to mean false" do
