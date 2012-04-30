@@ -88,6 +88,20 @@ Negatable flags are easy to generate, too:
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
 
+### Values from the environment
+
+Sometimes you'll want to pass in option values from the environment:
+
+    option "--port", "PORT", "the port to listen on", :env => "PORT" do |val|
+      val.to_i
+    end
+
+The above means that in the absence of '--port' on the command line, Clamp will
+check for `PORT` in the environment. This lets you do:
+
+    % export PORT=8080 
+    % ./mycommand
+
 Declaring parameters
 --------------------
 
@@ -115,6 +129,18 @@ Three dots at the end of a parameter name makes it "greedy" - it will consume al
     parameter "FILE ...", "input files"
 
 The suffix "`_list`" is appended to the default attribute name for greedy parameters; in this case, an attribute called "`file_list`" would be generated.
+
+### Parameters from the environment
+
+Optional parameters can have values given from the environment the same way options can.
+
+    parameter "[EXAMPLE]", "This is an example", :env => "EXAMPLE"
+
+The above means that in the absence of a value on the command line, Clamp will
+check for `EXAMPLE` in the environment. This lets you do:
+
+    % export EXAMPLE="hello" 
+    % ./mycommand
 
 Parsing and validation of options and parameters
 ------------------------------------------------
