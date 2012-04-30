@@ -52,6 +52,19 @@ module Clamp
           end
 
         end
+
+        # Verify that all required options are present
+        self.class.recognised_options.each do |option|
+          # If this option is required and the value is nil, there's an error.
+          if option.required? and send(option.attribute_name).nil?
+            message = "option '#{option.switches.first}'"
+            if option.environment_variable
+              message += " (or env #{option.environment_variable})"
+            end
+            message += " is required"
+            signal_usage_error message
+          end
+        end
       end
 
       def parse_environment_options
