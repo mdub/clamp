@@ -521,6 +521,40 @@ describe Clamp::Command do
 
     end
 
+    describe "with :env value" do
+
+      before do
+        @command.class.parameter "[FILE]", "a file", :env => "FILE",
+          :default => "default"
+      end
+
+      it "should use the default if neither flag nor env var are present" do
+        @command.parse([])
+        @command.file.should == "default"
+      end
+
+      it "should use the env value if present (instead of default)" do
+        ENV["FILE"] = "/etc/motd"
+        @command.parse([])
+        @command.file.should == ENV["FILE"]
+      end
+
+      it "should use the the flag value if present (instead of env)" do
+        ENV["FILE"] = "/etc/motd"
+        @command.parse(%w(/bin/sh))
+        @command.file.should == "/bin/sh"
+      end
+
+      describe "#help" do
+
+        it "describes the default value and env usage" do
+          @command.help.should include("a file (default: \"default\") (env: \"FILE\")")
+        end
+
+      end
+
+    end
+
   end
 
   describe "with no parameters declared" do
