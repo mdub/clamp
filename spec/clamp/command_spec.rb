@@ -110,10 +110,10 @@ describe Clamp::Command do
 
     end
 
-    describe "with :env value" do
+    describe "with :environment_variable value" do
 
       before do
-        @command.class.option "--port", "PORT", "port to listen on", :default => 4321, :env => "PORT" do |value|
+        @command.class.option "--port", "PORT", "port to listen on", :default => 4321, :environment_variable => "PORT" do |value|
           value.to_i
         end
       end
@@ -145,10 +145,10 @@ describe Clamp::Command do
 
     end
 
-    describe "with :env value on a :flag option" do
+    describe "with :environment_variable value on a :flag option" do
 
       before do
-        @command.class.option "--[no-]enable", :flag, "enable?", :default => false, :env => "ENABLE"
+        @command.class.option "--[no-]enable", :flag, "enable?", :default => false, :environment_variable => "ENABLE"
       end
 
       it "should use the default if neither flag nor env var are present" do
@@ -521,10 +521,10 @@ describe Clamp::Command do
 
     end
 
-    describe "with :env value" do
+    describe "with :environment_variable value" do
 
       before do
-        @command.class.parameter "[FILE]", "a file", :env => "FILE",
+        @command.class.parameter "[FILE]", "a file", :environment_variable => "FILE",
           :default => "default"
       end
 

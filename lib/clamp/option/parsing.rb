@@ -8,7 +8,7 @@ module Clamp
       #
       # Example:
       #  
-      #   option "--foo", :flag, "Use foo", :env => "FOO"
+      #   option "--foo", :flag, "Use foo", :environment_variable => "FOO"
       #
       # All of these will set 'foo' to true:
       #

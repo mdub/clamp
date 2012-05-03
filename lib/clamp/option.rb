@@ -14,8 +14,8 @@ module Clamp
       if options.has_key?(:default)
         @default_value = options[:default]
       end
-      if options.has_key?(:env)
-        @environment_variable = options[:env]
+      if options.has_key?(:environment_variable)
+        @environment_variable = options[:environment_variable]
       end
     end
 
