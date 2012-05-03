@@ -92,7 +92,7 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 
 Sometimes you'll want to pass in option values from the environment:
 
-    option "--port", "PORT", "the port to listen on", :env => "PORT" do |val|
+    option "--port", "PORT", "the port to listen on", :environment_variable => "PORT" do |val|
       val.to_i
     end
 
@@ -134,7 +134,7 @@ The suffix "`_list`" is appended to the default attribute name for greedy parame
 
 Optional parameters can have values given from the environment the same way options can.
 
-    parameter "[EXAMPLE]", "This is an example", :env => "EXAMPLE"
+    parameter "[EXAMPLE]", "This is an example", :environment_variable => "EXAMPLE"
 
 The above means that in the absence of a value on the command line, Clamp will
 check for `EXAMPLE` in the environment. This lets you do:
