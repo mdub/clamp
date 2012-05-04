@@ -1,7 +1,7 @@
 Clamp
 =====
 
-"Clamp" is a minimal framework for command-line utilities.  
+"Clamp" is a minimal framework for command-line utilities.
 
 It handles boring stuff like parsing the command-line, and generating help, so you can get on with making your command actually do stuff.
 
@@ -42,7 +42,7 @@ Calling `run` on a command class creates an instance of it, then invokes it usin
 
     SpeakCommand.run
 
-Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.  
+Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.
 
 Declaring options
 -----------------
@@ -82,25 +82,11 @@ Some options are just boolean flags.  Pass "`:flag`" as the second parameter to 
 
 For flag options, Clamp appends "`?`" to the generated reader method; ie. you get a method called "`#verbose?`", rather than just "`#verbose`".
 
-Negatable flags are easy to generate, too: 
+Negatable flags are easy to generate, too:
 
     option "--[no-]force", :flag, "be forceful (or not)"
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
-
-### Values from the environment
-
-Sometimes you'll want to pass in option values from the environment:
-
-    option "--port", "PORT", "the port to listen on", :environment_variable => "PORT" do |val|
-      val.to_i
-    end
-
-The above means that in the absence of '--port' on the command line, Clamp will
-check for `PORT` in the environment. This lets you do:
-
-    % export PORT=8080 
-    % ./mycommand
 
 Declaring parameters
 --------------------
@@ -130,18 +116,6 @@ Three dots at the end of a parameter name makes it "greedy" - it will consume al
 
 The suffix "`_list`" is appended to the default attribute name for greedy parameters; in this case, an attribute called "`file_list`" would be generated.
 
-### Parameters from the environment
-
-Optional parameters can have values given from the environment the same way options can.
-
-    parameter "[EXAMPLE]", "This is an example", :environment_variable => "EXAMPLE"
-
-The above means that in the absence of a value on the command line, Clamp will
-check for `EXAMPLE` in the environment. This lets you do:
-
-    % export EXAMPLE="hello" 
-    % ./mycommand
-
 Parsing and validation of options and parameters
 ------------------------------------------------
 
@@ -151,8 +125,8 @@ Clamp will verify that all required (ie. non-optional) parameters are present, a
 
 ### Validation block
 
-Both `option` and `parameter` accept an optional block.  If present, the block will be 
-called with the raw string option argument, and is expected to coerce it to 
+Both `option` and `parameter` accept an optional block.  If present, the block will be
+called with the raw string option argument, and is expected to coerce it to
 the correct type, e.g.
 
     option "--port", "PORT", "port to listen on" do |s|
@@ -169,18 +143,16 @@ If the block raises an ArgumentError, Clamp will catch it, and report that the v
 While Clamp provides an attribute-writer method for each declared option or parameter, you always have the option of overriding it to provide custom argument-handling logic, e.g.
 
     parameter "SERVER", "location of server"
-    
+
     def server=(server)
       @server_address, @server_port = server.split(":")
     end
 
 ### Default values
 
-Default values can be specified for options:
+Default values can be specified for options, and optional parameters:
 
     option "--flavour", "FLAVOUR", "ice-cream flavour", :default => "chocolate"
-
-and also for optional parameters
 
     parameter "[HOST]", "server host", :default => "localhost"
 
@@ -193,6 +165,18 @@ For more advanced cases, you can also specify default values by defining a metho
     def default_admin_port
        http_port + 1
     end
+
+### Environment variable support
+
+Options (and optional parameters) can also be associated with environment variables:
+
+    option "--port", "PORT", "the port to listen on", :environment_variable => "MYAPP_PORT" do |val|
+      val.to_i
+    end
+
+    parameter "[HOST]", "server address", :environment_variable => "MYAPP_HOST"
+
+Clamp will check the specified envariables in the absence of values supplied on the command line, before looking for a default value.
 
 Declaring Subcommands
 ---------------------
@@ -210,15 +194,15 @@ Unsuprisingly, subcommands are declared using the `subcommand` method. e.g.
         end
 
       end
-      
+
     end
 
 Clamp generates an anonymous subclass of the current class, to represent the subcommand.  Alternatively, you can provide an explicit subcommand class:
-    
+
     class MainCommand < Clamp::Command
 
       subcommand "init", "Initialize the repository", InitCommand
-      
+
     end
 
     class InitCommand < Clamp::Command
@@ -236,7 +220,7 @@ You can set a default subcommand, at the class level, as follows:
     class MainCommand < Clamp::Command
 
       self.default_subcommand = "status"
-      
+
       subcommand "status", "Display current status" do
 
         def execute
@@ -244,7 +228,7 @@ You can set a default subcommand, at the class level, as follows:
         end
 
       end
-      
+
     end
 
 Then, if when no SUBCOMMAND argument is provided, the default will be selected.
@@ -253,7 +237,7 @@ Then, if when no SUBCOMMAND argument is provided, the default will be selected.
 
 Options are inheritable, so any options declared for a command are supported for it's sub-classes (e.g. those created using `subcommand`).  Parameters, on the other hand, are not inherited - each subcommand must declare it's own parameter list.
 
-Note that, if a subcommand accepts options, they must be specified on the command-line _after_ the subcommand name.  
+Note that, if a subcommand accepts options, they must be specified on the command-line _after_ the subcommand name.
 
 Getting help
 ------------
@@ -297,4 +281,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Contributing to Clamp
 ---------------------
 
-Source-code for Clamp is [on Github](https://github.com/mdub/clamp).  
+Source-code for Clamp is [on Github](https://github.com/mdub/clamp).
