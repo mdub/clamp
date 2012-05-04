@@ -119,6 +119,7 @@ describe Clamp::Command do
       end
 
       it "should use the default if neither flag nor env var are present" do
+        ENV.delete("PORT")
         @command.parse([])
         @command.port.should == 4321
       end
@@ -171,10 +172,12 @@ describe Clamp::Command do
         Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.should == %w(1 yes enable on true)
       end
 
-      it "should use an env value other than '1' to mean false" do
-        ENV["ENABLE"] = "0"
-        @command.parse([])
-        @command.enable?.should == false
+      it "should use an env value other than truthy ones to mean false" do
+        [nil, "0", "no", "whatever"].each do |val|
+          ENV["ENABLE"] = val
+          @command.parse([])
+          @command.enable?.should == false
+        end
       end
 
       it "should use the the flag value if present (instead of env)" do
@@ -184,6 +187,46 @@ describe Clamp::Command do
       end
 
     end
+
+    describe "with :required value" do
+
+      before do
+        @command.class.option "--port", "PORT", "port to listen on", :required => true
+      end
+
+      it "should fail if a required option is not provided" do
+        expect { @command.parse([]) }.to raise_error(Clamp::UsageError)
+      end
+
+      it "should succeed if a required option is provided" do
+        @command.parse(["--port", "12345"])
+      end
+
+    end
+
+    describe "with :required value with :env" do
+
+      before do
+        @command.class.option "--port", "PORT", "port to listen on", :required => true, :env => "PORT"
+      end
+
+      it "should fail if a required option is not provided" do
+        ENV.delete("PORT")
+        expect { @command.parse([]) }.to raise_error(Clamp::UsageError)
+      end
+
+      it "should succeed if a required option is provided via arguments" do
+        ENV.delete("PORT")
+        @command.parse(["--port", "12345"])
+      end
+
+      it "should succeed if a required option is provided via env" do
+        ENV["PORT"] = "12345"
+        @command.parse([])
+      end
+
+    end
+
 
     describe "with a block" do
 

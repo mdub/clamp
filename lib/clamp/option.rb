@@ -17,6 +17,16 @@ module Clamp
       if options.has_key?(:environment_variable)
         @environment_variable = options[:environment_variable]
       end
+      if options.has_key?(:required)
+        @required = options[:required]
+        # Do some light validation for conflicting settings.
+        if options.has_key?(:default)
+          raise ArgumentError, "Specifying a :default value also :required doesn't make sense"
+        end
+        if type == :flag
+          raise ArgumentError, "A required flag (boolean) doesn't make sense."
+        end
+      end
     end
 
     attr_reader :switches, :type
@@ -31,6 +41,10 @@ module Clamp
 
     def handles?(switch)
       recognised_switches.member?(switch)
+    end
+
+    def required?
+      @required
     end
 
     def flag?

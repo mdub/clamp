@@ -88,6 +88,32 @@ Negatable flags are easy to generate, too:
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
 
+### Values from the environment
+
+Sometimes you'll want to pass in option values from the environment:
+
+    option "--port", "PORT", "the port to listen on", :environment_variable => "PORT" do |val|
+      val.to_i
+    end
+
+The above means that in the absence of '--port' on the command line, Clamp will
+check for `PORT` in the environment. This lets you do:
+
+    % export PORT=8080 
+    % ./mycommand
+
+### Required options
+
+While a 'required option' is a bit of an oxymoron, it is common to use options
+as named parameters to your program. Clamp lets you make an option required:
+
+    option "--password", "PASSWORD", "the secret password", :required => true
+
+Special notes about required options:
+
+* You may not use :required and :default values in the same option ('require' doesn't make sense if you provide a default)
+* You may not use :required on :flag options. Since :flag options are boolean, a 'required flag' would mean "always true" ;)
+
 Declaring parameters
 --------------------
 

@@ -179,4 +179,18 @@ describe Clamp::Option do
 
   end
 
+  describe "a required option" do
+    it "rejects :default" do
+      expect do
+        Clamp::Option.new("--key-file", "FILE", "SSH identity",
+                          :required => true, :default => "hello")
+      end.to raise_error(ArgumentError)
+    end
+
+    it "rejects :flag options" do
+      expect do
+        Clamp::Option.new("--awesome", :flag, "Be awesome?", :required => true)
+      end.to raise_error(ArgumentError)
+    end
+  end
 end
