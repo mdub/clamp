@@ -3,6 +3,24 @@ module Clamp
 
     module Parsing
 
+      # For :flag options with environment variables attached, this is a list
+      # of possible values that are accepted as 'true'
+      #
+      # Example:
+      #  
+      #   option "--foo", :flag, "Use foo", :environment_variable => "FOO"
+      #
+      # All of these will set 'foo' to true:
+      #
+      #   FOO=1 ./myprogram
+      #   FOO=true ./myprogram
+      #   FOO=yes ./myprogram
+      #   FOO=on ./myprogram
+      #   FOO=enable ./myprogram
+      #
+      # See {Clamp::Command.option} for more information.
+      TRUTHY_ENVIRONMENT_VALUES = %w(1 yes enable on true)
+
       protected
 
       def parse_options
@@ -33,6 +51,20 @@ module Clamp
             signal_usage_error "option '#{switch}': #{e.message}"
           end
 
+        end
+      end
+
+      def parse_environment_options
+        self.class.recognised_options.each do |option|
+          next if option.environment_variable.nil?
+          next unless ENV.has_key?(option.environment_variable)
+          value = ENV[option.environment_variable]
+          if option.flag?
+            # Set true if the environment value is truthy.
+            send("#{option.attribute_name}=", TRUTHY_ENVIRONMENT_VALUES.include?(value))
+          else
+            send("#{option.attribute_name}=", value)
+          end
         end
       end
 

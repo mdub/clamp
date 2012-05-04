@@ -110,6 +110,89 @@ describe Clamp::Command do
 
     end
 
+    describe "with :environment_variable value" do
+
+      before do
+        @command.class.option "--port", "PORT", "port to listen on", :default => 4321, :environment_variable => "PORT" do |value|
+          value.to_i
+        end
+      end
+
+      it "should use the default if neither flag nor env var are present" do
+        @command.parse([])
+        @command.port.should == 4321
+      end
+
+      it "should use the env value if present (instead of default)" do
+        ENV["PORT"] = rand(10000).to_s
+        @command.parse([])
+        @command.port.should == ENV["PORT"].to_i
+      end
+
+      it "should use the the flag value if present (instead of env)" do
+        ENV["PORT"] = "12345"
+        @command.parse(%w(--port 1500))
+        @command.port.should == 1500
+      end
+
+      describe "#help" do
+
+        it "describes the default value and env usage" do
+          @command.help.should include("port to listen on (default: 4321) (env: \"PORT\")")
+        end
+
+      end
+
+    end
+
+    describe "with :environment_variable value on a :flag option" do
+
+      before do
+        @command.class.option "--[no-]enable", :flag, "enable?", :default => false, :environment_variable => "ENABLE"
+      end
+
+      it "should use the default if neither flag nor env var are present" do
+        @command.parse([])
+        @command.enable?.should == false
+      end
+
+      Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.each do |value|
+        it "should use environment value '#{value}' to mean true" do
+          ENV["ENABLE"] = value
+          @command.parse([])
+          @command.enable?.should == true
+        end
+      end
+
+      # Make sure tests fail if ever the TRUTHY_ENVIRONMENT_VALUES loses a
+      # value. This is just a safety check to make sure maintainers update
+      # any relevant docs and aware that they could be breaking compatibility.
+      it "should accept only these values as 'truthy' environment values: 1, yes, enable, on, true" do
+        Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.should == %w(1 yes enable on true)
+      end
+
+      it "should use an env value other than '1' to mean false" do
+        ENV["ENABLE"] = "0"
+        @command.parse([])
+        @command.enable?.should == false
+      end
+
+      it "should use the the flag value if present (instead of env)" do
+        ENV["ENABLE"] = "1"
+        @command.parse(%w(--no-enable))
+        @command.enable?.should == false
+      end
+
+      describe "#help" do
+
+        it "describes the default value and env usage" do
+          @command.help.should include("enable? (default: false) (env: \"ENABLE\")")
+        end
+
+      end
+
+    end
+
     describe "with a block" do
 
       before do
@@ -446,6 +529,40 @@ describe Clamp::Command do
         @command.parse([])
         @command.default_file_list.should == []
         @command.file_list.should == []
+      end
+
+    end
+
+    describe "with :environment_variable value" do
+
+      before do
+        @command.class.parameter "[FILE]", "a file", :environment_variable => "FILE",
+          :default => "default"
+      end
+
+      it "should use the default if neither flag nor env var are present" do
+        @command.parse([])
+        @command.file.should == "default"
+      end
+
+      it "should use the env value if present (instead of default)" do
+        ENV["FILE"] = "/etc/motd"
+        @command.parse([])
+        @command.file.should == ENV["FILE"]
+      end
+
+      it "should use the the flag value if present (instead of env)" do
+        ENV["FILE"] = "/etc/motd"
+        @command.parse(%w(/bin/sh))
+        @command.file.should == "/bin/sh"
+      end
+
+      describe "#help" do
+
+        it "describes the default value and env usage" do
+          @command.help.should include("a file (default: \"default\") (env: \"FILE\")")
+        end
+
       end
 
     end
