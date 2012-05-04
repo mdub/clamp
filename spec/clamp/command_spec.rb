@@ -138,7 +138,7 @@ describe Clamp::Command do
       describe "#help" do
 
         it "describes the default value and env usage" do
-          @command.help.should include("port to listen on (default: 4321) (env: \"PORT\")")
+          @command.help.should include("port to listen on (default: $PORT, or 4321)")
         end
 
       end
@@ -181,14 +181,6 @@ describe Clamp::Command do
         ENV["ENABLE"] = "1"
         @command.parse(%w(--no-enable))
         @command.enable?.should == false
-      end
-
-      describe "#help" do
-
-        it "describes the default value and env usage" do
-          @command.help.should include("enable? (default: false) (env: \"ENABLE\")")
-        end
-
       end
 
     end
@@ -537,12 +529,12 @@ describe Clamp::Command do
 
       before do
         @command.class.parameter "[FILE]", "a file", :environment_variable => "FILE",
-          :default => "default"
+          :default => "/dev/null"
       end
 
       it "should use the default if neither flag nor env var are present" do
         @command.parse([])
-        @command.file.should == "default"
+        @command.file.should == "/dev/null"
       end
 
       it "should use the env value if present (instead of default)" do
@@ -560,7 +552,7 @@ describe Clamp::Command do
       describe "#help" do
 
         it "describes the default value and env usage" do
-          @command.help.should include("a file (default: \"default\") (env: \"FILE\")")
+          @command.help.should include(%{ (default: $FILE, or "/dev/null")})
         end
 
       end

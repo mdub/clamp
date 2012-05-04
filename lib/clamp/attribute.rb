@@ -5,14 +5,7 @@ module Clamp
     attr_reader :description, :attribute_name, :default_value, :environment_variable
 
     def help_rhs
-      rhs = description
-      if defined?(@default_value)
-        rhs += " (default: #{@default_value.inspect})"
-      end
-      if defined?(@environment_variable)
-        rhs += " (env: #{@environment_variable.inspect})"
-      end
-      rhs
+      description + default_description
     end
 
     def help
@@ -33,6 +26,17 @@ module Clamp
 
     def write_method
       "#{attribute_name}="
+    end
+
+    private
+
+    def default_description
+      default_sources = [
+        ("$#{@environment_variable}" if defined?(@environment_variable)),
+        (@default_value.inspect if defined?(@default_value))
+      ].compact
+      return "" if default_sources.empty?
+      " (default: " + default_sources.join(", or ") + ")"
     end
 
   end

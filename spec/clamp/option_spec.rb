@@ -57,7 +57,7 @@ describe Clamp::Option do
   end
 
   describe "flag" do
-    
+
     before do
       @option = Clamp::Option.new("--verbose", :flag, "Blah blah blah")
     end
@@ -69,11 +69,11 @@ describe Clamp::Option do
       end
 
     end
-    
+
   end
 
   describe "negatable flag" do
-    
+
     before do
       @option = Clamp::Option.new("--[no-]force", :flag, "Force installation")
     end
@@ -91,7 +91,7 @@ describe Clamp::Option do
       end
 
     end
-    
+
     describe "#attribute_name" do
 
       it "is derived from the (long) switch" do
@@ -99,7 +99,7 @@ describe Clamp::Option do
       end
 
     end
-    
+
   end
 
   describe "with both short and long switches" do
@@ -123,7 +123,40 @@ describe Clamp::Option do
 
   end
 
+  describe "with an associated environment variable" do
+
+    before do
+      @option = Clamp::Option.new("-x", "X", "mystery option", :environment_variable => "APP_X")
+    end
+
+    describe "#help" do
+
+      it "describes environment variable" do
+        @option.help.should == ["-x X", "mystery option (default: $APP_X)"]
+      end
+
+    end
+
+    describe "and a default value" do
+
+      before do
+        @option = Clamp::Option.new("-x", "X", "mystery option", :environment_variable => "APP_X", :default => "xyz")
+      end
+
+      describe "#help" do
+
+        it "describes both environment variable and default" do
+          @option.help.should == ["-x X", %{mystery option (default: $APP_X, or "xyz")}]
+        end
+
+      end
+
+    end
+
+  end
+
   describe "in subcommand" do
+
     before do
 
       @command = Class.new(Clamp::Command) do
@@ -145,5 +178,5 @@ describe Clamp::Option do
     end
 
   end
-  
+
 end
