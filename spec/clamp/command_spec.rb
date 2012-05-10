@@ -316,6 +316,7 @@ describe Clamp::Command do
       end
 
       describe "with multi-line option arguments attached using equals sign" do
+
         before do
           @command.parse(["--flavour=straw\n-berry"])
         end
@@ -323,6 +324,7 @@ describe Clamp::Command do
         it "doesn't look for options" do
           @command.flavour.should == "straw\n-berry"
         end
+
       end
 
       describe "with option-like things beyond the arguments" do
