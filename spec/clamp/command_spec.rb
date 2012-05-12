@@ -207,7 +207,7 @@ describe Clamp::Command do
     describe "with :required value with :env" do
 
       before do
-        @command.class.option "--port", "PORT", "port to listen on", :required => true, :env => "PORT"
+        @command.class.option "--port", "PORT", "port to listen on", :required => true, :environment_variable => "PORT"
       end
 
       it "should fail if a required option is not provided" do
