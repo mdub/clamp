@@ -90,15 +90,11 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 
 ### Required options
 
-While a 'required option' is a bit of an oxymoron, it is common to use options
-as named parameters to your program. Clamp lets you make an option required:
+Although 'required option' is a an oxymoron, Clamp lets you mark an option as required, and will verify that a value is provided:
 
     option "--password", "PASSWORD", "the secret password", :required => true
 
-Special notes about required options:
-
-* You may not use :required and :default values in the same option ('require' doesn't make sense if you provide a default)
-* You may not use :required on :flag options. Since :flag options are boolean, a 'required flag' would mean "always true" ;)
+Note that it makes no sense to mark a `:flag` option, or one with a `:default`, as `:required`.
 
 Declaring parameters
 --------------------
