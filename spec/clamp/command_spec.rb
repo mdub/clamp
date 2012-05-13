@@ -1,3 +1,4 @@
+
 require 'spec_helper'
 
 describe Clamp::Command do
@@ -296,18 +297,6 @@ describe Clamp::Command do
 
       end
 
-      describe "with short options having multi-line values" do
-
-        before do
-          @command.parse(["-f", "straw\n-berry"])
-        end
-
-        it "parses correctly and doesn't look for more options in the value" do
-          @command.flavour.should == "straw\n-berry"
-        end
-
-      end
-
       describe "with a value appended to a short option" do
 
         before do
@@ -316,18 +305,6 @@ describe Clamp::Command do
 
         it "works as though the value were separated" do
           @command.flavour.should == "strawberry"
-        end
-
-      end
-
-      describe "with a multi-line value appended to a short option" do
-
-        before do
-          @command.parse(["-fstraw\n-berry"])
-        end
-
-        it "parses correctly and doesn't look for more options in the value" do
-          @command.flavour.should == "straw\n-berry"
         end
 
       end
@@ -358,18 +335,6 @@ describe Clamp::Command do
 
       end
 
-      describe "with multi-line option arguments attached using equals sign" do
-
-        before do
-          @command.parse(["--flavour=straw\n-berry"])
-        end
-
-        it "doesn't look for options" do
-          @command.flavour.should == "straw\n-berry"
-        end
-
-      end
-
       describe "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
@@ -377,9 +342,18 @@ describe Clamp::Command do
           @command.arguments.should == %w(a b c --flavour strawberry)
         end
 
-        it "doesn't look for more options in multi-line things even if the first one is tempting" do
-          @command.parse(["favorite\n----flavour"] + %w(strawberry))
-          @command.arguments.should == ["favorite\n----flavour"] + %w(strawberry)
+      end
+
+      describe "with multi-line arguments that look like options" do
+
+        before do
+          @command.parse(["foo\n--flavour=strawberry", "bar\n-cblue"])
+        end
+
+        it "treats them as positional arguments" do
+          @command.arguments.should == ["foo\n--flavour=strawberry", "bar\n-cblue"]
+          @command.flavour.should be_nil
+          @command.color.should be_nil
         end
 
       end
