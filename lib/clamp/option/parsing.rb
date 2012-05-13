@@ -7,7 +7,7 @@ module Clamp
       # of possible values that are accepted as 'true'
       #
       # Example:
-      #  
+      #
       #   option "--foo", :flag, "Use foo", :environment_variable => "FOO"
       #
       # All of these will set 'foo' to true:
@@ -24,20 +24,20 @@ module Clamp
       protected
 
       def parse_options
-        while remaining_arguments.first =~ /^-/
+        while remaining_arguments.first =~ /\A-/
 
           switch = remaining_arguments.shift
           break if switch == "--"
 
           case switch
-          when /^(-\w)(.+)$/ # combined short options
+          when /\A(-\w)(.+)\z/m # combined short options
             switch = $1
             if find_option(switch).flag?
               remaining_arguments.unshift("-" + $2)
             else
               remaining_arguments.unshift($2)
             end
-          when /^(--[^=]+)=(.*)/
+          when /\A(--[^=]+)=(.*)\z/m
             switch = $1
             remaining_arguments.unshift($2)
           end
