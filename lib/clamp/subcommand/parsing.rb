@@ -9,8 +9,6 @@ module Clamp
         return false unless self.class.has_subcommands?
         subcommand_name = parse_subcommand_name
         @subcommand = instatiate_subcommand(subcommand_name)
-        @subcommand.parse(remaining_arguments)
-        remaining_arguments.clear
       end
 
       private

@@ -43,20 +43,6 @@ describe Clamp::Command do
 
     end
 
-    describe "#parse" do
-
-      describe "with too many arguments" do
-
-        it "raises a UsageError" do
-          lambda do
-            @command.parse(["flip", "extra", "args"])
-          end.should raise_error(Clamp::UsageError, "too many arguments")
-        end
-
-      end
-
-    end
-
     describe "#help" do
 
       it "shows subcommand parameters in usage" do

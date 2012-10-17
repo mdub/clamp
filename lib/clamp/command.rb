@@ -63,7 +63,11 @@ module Clamp
     #
     def run(arguments)
       parse(arguments)
-      invoke
+      if @subcommand
+        @subcommand.run(remaining_arguments)
+      else
+        execute
+      end
     end
 
     # Execute the command (assuming that all options/parameters have been set).
@@ -89,16 +93,8 @@ module Clamp
     attr_accessor :context
 
     def handle_remaining_arguments
-      unless remaining_arguments.empty?
+      unless @subcommand || remaining_arguments.empty?
         signal_usage_error "too many arguments"
-      end
-    end
-
-    def invoke
-      if @subcommand
-        @subcommand.invoke
-      else
-        execute
       end
     end
 
