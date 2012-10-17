@@ -63,7 +63,7 @@ module Clamp
     #
     def run(arguments)
       parse(arguments)
-      execute
+      invoke
     end
 
     # Execute the command (assuming that all options/parameters have been set).
@@ -71,11 +71,7 @@ module Clamp
     # This method is designed to be overridden in sub-classes.
     #
     def execute
-      if @subcommand
-        @subcommand.execute
-      else
-        raise "you need to define #execute"
-      end
+      raise "you need to define #execute"
     end
 
     # @return [String] usage documentation for this command
@@ -95,6 +91,14 @@ module Clamp
     def handle_remaining_arguments
       unless remaining_arguments.empty?
         signal_usage_error "too many arguments"
+      end
+    end
+
+    def invoke
+      if @subcommand
+        @subcommand.invoke
+      else
+        execute
       end
     end
 
