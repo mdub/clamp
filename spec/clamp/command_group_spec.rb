@@ -9,15 +9,19 @@ describe Clamp::Command do
 
     given_command "flipflop" do
 
+      def execute
+        puts message
+      end
+
       subcommand "flip", "flip it" do
-        def execute
-          puts "FLIPPED"
+        def message
+          "FLIPPED"
         end
       end
 
       subcommand "flop", "flop it\nfor extra flop" do
-        def execute
-          puts "FLOPPED"
+        def message
+          "FLOPPED"
         end
       end
 
