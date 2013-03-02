@@ -4,9 +4,10 @@ module Clamp
 
   class Parameter < Attribute
 
-    def initialize(name, description, options = {})
+    def initialize(name, description, options = {}, &block)
       @name = name
       @description = description
+      @block = block
       infer_attribute_name_and_multiplicity
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s

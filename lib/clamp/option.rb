@@ -4,10 +4,11 @@ module Clamp
 
   class Option < Attribute
 
-    def initialize(switches, type, description, options = {})
+    def initialize(switches, type, description, options = {}, &block)
       @switches = Array(switches)
       @type = type
       @description = description
+      @block = block
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s 
       end
