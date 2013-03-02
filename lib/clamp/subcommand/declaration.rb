@@ -14,6 +14,7 @@ module Clamp
           # generate a anonymous sub-class
           subcommand_class = Class.new(subcommand_class, &block)
         end
+        subcommand_class.parent_command = self
         recognised_subcommands << Subcommand.new(name, description, subcommand_class)
       end
 
@@ -26,6 +27,7 @@ module Clamp
       end
 
       attr_writer :default_subcommand
+      attr_accessor :parent_command
 
       def default_subcommand(*args, &block)
         if args.empty?

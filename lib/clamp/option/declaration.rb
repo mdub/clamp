@@ -9,9 +9,10 @@ module Clamp
       include Clamp::AttributeDeclaration
 
       def option(switches, type, description, opts = {}, &block)
-        option = Clamp::Option.new(switches, type, description, opts)
+        option = Clamp::Option.new(switches, type, description, opts, &block)
         declared_options << option
-        define_accessors_for(option, &block)
+        define_accessors_for(option)
+        option
       end
 
       def find_option(switch)
@@ -41,14 +42,19 @@ module Clamp
         @implicit_options_declared = true
       end
 
+      protected
+
       def effective_options
-        ancestors.inject([]) do |options, ancestor|
+        initial_options = parent_command.nil? ? [] : parent_command.effective_options
+        accumulated_options = ancestors.inject(initial_options) do |options, ancestor|
           if ancestor.kind_of?(Clamp::Option::Declaration)
             options + ancestor.declared_options
           else
             options
           end
         end
+        accumulated_options.each { |opt| define_accessors_for(opt) }
+        accumulated_options
       end
 
     end

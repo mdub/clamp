@@ -2,7 +2,7 @@ module Clamp
 
   class Attribute
 
-    attr_reader :description, :attribute_name, :default_value, :environment_variable
+    attr_reader :description, :attribute_name, :default_value, :environment_variable, :block
 
     def help_rhs
       description + default_description
