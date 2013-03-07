@@ -107,7 +107,7 @@ describe Clamp::Parameter do
 
     describe "#attribute_name" do
 
-      it "indicates multiplicity" do
+      it "gets a _list suffix" do
         parameter.attribute_name.should == "file_list"
       end
 
@@ -133,6 +133,23 @@ describe Clamp::Parameter do
       end
 
     end
+
+    context "with a weird parameter name, and an explicit attribute_name" do
+
+      let(:parameter) do
+        Clamp::Parameter.new("KEY=VALUE ...", "config-settings", :attribute_name => :config_settings)
+      end
+
+      describe "#attribute_name" do
+
+        it "is the specified one" do
+          parameter.attribute_name.should == "config_settings"
+        end
+
+      end
+
+    end
+
   end
 
   describe "optional list" do
@@ -147,7 +164,7 @@ describe Clamp::Parameter do
 
     describe "#attribute_name" do
 
-      it "indicates multiplicity" do
+      it "gets a _list suffix" do
         parameter.attribute_name.should == "files_list"
       end
 

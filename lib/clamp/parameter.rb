@@ -7,7 +7,8 @@ module Clamp
     def initialize(name, description, options = {})
       @name = name
       @description = description
-      infer_attribute_name_and_multiplicity
+      @multivalued = (@name =~ ELLIPSIS_SUFFIX)
+      @required = (@name !~ OPTIONAL)
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s
       end
@@ -17,6 +18,7 @@ module Clamp
       if options.has_key?(:environment_variable)
         @environment_variable = options[:environment_variable]
       end
+      @attribute_name ||= infer_attribute_name
     end
 
     attr_reader :name, :attribute_name
@@ -48,26 +50,18 @@ module Clamp
 
     private
 
-    NAME_PATTERN = "([A-Za-z0-9_-]+)"
+    ELLIPSIS_SUFFIX = / \.\.\.$/
+    OPTIONAL = /^\[(.*)\]/
 
-    def infer_attribute_name_and_multiplicity
-      case @name
-      when /^\[#{NAME_PATTERN}\]$/
-        @attribute_name = $1
-      when /^\[#{NAME_PATTERN}\] ...$/
-        @attribute_name = "#{$1}_list"
-        @multivalued = true
-      when /^#{NAME_PATTERN} ...$/
-        @attribute_name = "#{$1}_list"
-        @multivalued = true
-        @required = true
-      when /^#{NAME_PATTERN}$/
-        @attribute_name = @name
-        @required = true
-      else
-        raise "invalid parameter name: '#{name}'"
+    VALID_ATTRIBUTE_NAME = /^[a-z0-9_]+$/
+
+    def infer_attribute_name
+      inferred_name = name.downcase.tr('-', '_').sub(ELLIPSIS_SUFFIX, '').sub(OPTIONAL) { $1 }
+      unless inferred_name =~ VALID_ATTRIBUTE_NAME
+        raise "cannot infer attribute_name from #{name.inspect}"
       end
-      @attribute_name = @attribute_name.downcase.tr('-', '_')
+      inferred_name += "_list" if multivalued?
+      inferred_name
     end
 
     def multivalued?
