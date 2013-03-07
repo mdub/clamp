@@ -29,10 +29,10 @@ describe Clamp::Command do
 
     it "delegates to sub-commands" do
 
-      @command.run(["flip"])
+      command.run(["flip"])
       stdout.should =~ /FLIPPED/
 
-      @command.run(["flop"])
+      command.run(["flop"])
       stdout.should =~ /FLOPPED/
 
     end
@@ -41,7 +41,7 @@ describe Clamp::Command do
 
       it "triggers help" do
         lambda do
-          @command.run([])
+          command.run([])
         end.should raise_error(Clamp::HelpWanted)
       end
 
@@ -50,18 +50,18 @@ describe Clamp::Command do
     describe "#help" do
 
       it "shows subcommand parameters in usage" do
-        @command.help.should include("flipflop [OPTIONS] SUBCOMMAND [ARGS] ...")
+        command.help.should include("flipflop [OPTIONS] SUBCOMMAND [ARGS] ...")
       end
 
       it "lists subcommands" do
-        @help = @command.help
-        @help.should =~ /Subcommands:/
-        @help.should =~ /flip +flip it/
-        @help.should =~ /flop +flop it/
+        help = command.help
+        help.should =~ /Subcommands:/
+        help.should =~ /flip +flip it/
+        help.should =~ /flop +flop it/
       end
 
       it "handles new lines in subcommand descriptions" do
-        @command.help.should =~ /flop +flop it\n +for extra flop/
+        command.help.should =~ /flop +flop it\n +for extra flop/
       end
 
     end
@@ -86,10 +86,10 @@ describe Clamp::Command do
 
     it "responds to both aliases" do
 
-      @command.run(["say", "boo"])
+      command.run(["say", "boo"])
       stdout.should =~ /boo/
 
-      @command.run(["talk", "jive"])
+      command.run(["talk", "jive"])
       stdout.should =~ /jive/
 
     end
@@ -97,8 +97,8 @@ describe Clamp::Command do
     describe "#help" do
 
       it "lists all aliases" do
-        @help = @command.help
-        @help.should =~ /say, talk .* Say something/
+        help = command.help
+        help.should =~ /say, talk .* Say something/
       end
 
     end
@@ -122,7 +122,7 @@ describe Clamp::Command do
     end
 
     it "delegates multiple levels" do
-      @command.run(["foo", "bar"])
+      command.run(["foo", "bar"])
       stdout.should =~ /FUBAR/
     end
 
@@ -147,7 +147,7 @@ describe Clamp::Command do
     context "executed with no subcommand" do
 
       it "invokes the default subcommand" do
-        @command.run([])
+        command.run([])
         stdout.should =~ /All good/
       end
 
@@ -172,7 +172,7 @@ describe Clamp::Command do
     context "executed with no subcommand" do
 
       it "invokes the default subcommand" do
-        @command.run([])
+        command.run([])
         stdout.should =~ /All good/
       end
 
@@ -182,14 +182,14 @@ describe Clamp::Command do
 
   describe "each subcommand" do
 
-    before do
+    let(:command_class) do
 
       speed_options = Module.new do
         extend Clamp::Option::Declaration
         option "--speed", "SPEED", "how fast", :default => "slowly"
       end
 
-      @command_class = Class.new(Clamp::Command) do
+      Class.new(Clamp::Command) do
 
         option "--direction", "DIR", "which way", :default => "home"
 
@@ -205,29 +205,30 @@ describe Clamp::Command do
         end
 
       end
+    end
 
-      @command = @command_class.new("go")
-
+    let(:command) do
+      command_class.new("go")
     end
 
     it "accepts options defined in superclass (specified after the subcommand)" do
-      @command.run(["move", "--direction", "north"])
+      command.run(["move", "--direction", "north"])
       stdout.should =~ /walking north/
     end
 
     it "accepts options defined in superclass (specified before the subcommand)" do
-      @command.run(["--direction", "north", "move"])
+      command.run(["--direction", "north", "move"])
       stdout.should =~ /walking north/
     end
 
     it "accepts options defined in included modules" do
-      @command.run(["move", "--speed", "very quickly"])
+      command.run(["move", "--speed", "very quickly"])
       stdout.should =~ /walking home very quickly/
     end
 
     it "has access to command context" do
-      @command = @command_class.new("go", :motion => "wandering")
-      @command.run(["move"])
+      command = command_class.new("go", :motion => "wandering")
+      command.run(["move"])
       stdout.should =~ /wandering home/
     end
 
@@ -248,7 +249,7 @@ describe Clamp::Command do
     end
 
     it "only parses options once" do
-      @command.run(['--json', '{"a":"b"}', 'woohoohoo'])
+      command.run(['--json', '{"a":"b"}', 'woohoohoo'])
       stdout.should == 'parsing!'
     end
 
