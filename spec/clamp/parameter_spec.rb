@@ -16,6 +16,10 @@ describe Clamp::Parameter do
       parameter.description.should == "hue of choice"
     end
 
+    it "is single-valued" do
+      parameter.should_not be_multivalued
+    end
+
     describe "#attribute_name" do
 
       it "is derived from the name" do
@@ -58,6 +62,10 @@ describe Clamp::Parameter do
       Clamp::Parameter.new("[COLOR]", "hue of choice")
     end
 
+    it "is single-valued" do
+      parameter.should_not be_multivalued
+    end
+
     describe "#attribute_name" do
 
       it "omits the brackets" do
@@ -91,6 +99,10 @@ describe Clamp::Parameter do
 
     let(:parameter) do
       Clamp::Parameter.new("FILE ...", "files to process")
+    end
+
+    it "is multi-valued" do
+      parameter.should be_multivalued
     end
 
     describe "#attribute_name" do
@@ -127,6 +139,10 @@ describe Clamp::Parameter do
 
     let(:parameter) do
       Clamp::Parameter.new("[FILES] ...", "files to process")
+    end
+
+    it "is multi-valued" do
+      parameter.should be_multivalued
     end
 
     describe "#attribute_name" do
