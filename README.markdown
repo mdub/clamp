@@ -19,6 +19,8 @@ Quick Start
 
 Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They look something like this:
 
+    require 'clamp'
+
     class SpeakCommand < Clamp::Command
 
       option "--loud", :flag, "say it loud"
@@ -38,11 +40,15 @@ Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They lo
 
     end
 
-Calling `run` on a command class creates an instance of it, then invokes it using command-line arguments (from ARGV, by default).
-
     SpeakCommand.run
 
 Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.
+
+The call to `run` creates an instance of the command class, then invokes it with command-line arguments (from `ARGV`).
+
+There are more examples demonstrating various features of Clamp [on Github][examples].
+
+[examples]: https://github.com/mdub/clamp/tree/master/examples
 
 Declaring options
 -----------------
