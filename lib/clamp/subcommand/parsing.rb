@@ -28,7 +28,8 @@ module Clamp
       def instatiate_subcommand(name)
         subcommand_class = find_subcommand(name).subcommand_class
         subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
-        self.class.recognised_options.each do |option|
+        shared_options = self.class.recognised_options & subcommand_class.recognised_options
+        shared_options.each do |option|
           if instance_variable_defined?(option.ivar_name)
             subcommand.instance_variable_set(option.ivar_name, instance_variable_get(option.ivar_name))
           end
