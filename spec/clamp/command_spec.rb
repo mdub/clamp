@@ -111,7 +111,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :environment_variable value" do
+    describe "with :environment_variable" do
 
       before do
         command.class.option "--port", "PORT", "port to listen on", :default => 4321, :environment_variable => "PORT" do |value|
@@ -119,22 +119,39 @@ describe Clamp::Command do
         end
       end
 
-      it "should use the default if neither flag nor env var are present" do
-        ENV.delete("PORT")
-        command.parse([])
-        command.port.should == 4321
+      context "when no environment variable is present" do
+
+        before do
+          ENV.delete("PORT")
+        end
+
+        it "uses the default" do
+          command.parse([])
+          command.port.should == 4321
+        end
+
       end
 
-      it "should use the env value if present (instead of default)" do
-        ENV["PORT"] = rand(10000).to_s
-        command.parse([])
-        command.port.should == ENV["PORT"].to_i
-      end
+      context "when environment variable is present" do
 
-      it "should use the the flag value if present (instead of env)" do
-        ENV["PORT"] = "12345"
-        command.parse(%w(--port 1500))
-        command.port.should == 1500
+        before do
+          ENV["PORT"] = "12345"
+        end
+
+        it "uses the environment variable" do
+          command.parse([])
+          command.port.should == 12345
+        end
+
+        context "and a value is specified on the command-line" do
+
+          it "uses command-line value" do
+            command.parse(%w(--port 1500))
+            command.port.should == 1500
+          end
+
+        end
+
       end
 
       describe "#help" do
@@ -147,87 +164,82 @@ describe Clamp::Command do
 
     end
 
-    describe "with :environment_variable value on a :flag option" do
+    describe "with :environment_variable and type :flag" do
 
       before do
         command.class.option "--[no-]enable", :flag, "enable?", :default => false, :environment_variable => "ENABLE"
       end
 
-      it "should use the default if neither flag nor env var are present" do
-        command.parse([])
-        command.enable?.should == false
-      end
+      context "when no environment variable is present" do
 
-      Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.each do |value|
-        it "should use environment value '#{value}' to mean true" do
-          ENV["ENABLE"] = value
-          command.parse([])
-          command.enable?.should == true
+        before do
+          ENV.delete("ENABLE")
         end
-      end
 
-      # Make sure tests fail if ever the TRUTHY_ENVIRONMENT_VALUES loses a
-      # value. This is just a safety check to make sure maintainers update
-      # any relevant docs and aware that they could be breaking compatibility.
-      it "should accept only these values as 'truthy' environment values: 1, yes, enable, on, true" do
-        Clamp::Option::Parsing::TRUTHY_ENVIRONMENT_VALUES.should == %w(1 yes enable on true)
-      end
-
-      it "should use an env value other than truthy ones to mean false" do
-        [nil, "0", "no", "whatever"].each do |val|
-          ENV["ENABLE"] = val
+        it "uses the default" do
           command.parse([])
           command.enable?.should == false
         end
+
       end
 
-      it "should use the the flag value if present (instead of env)" do
-        ENV["ENABLE"] = "1"
-        command.parse(%w(--no-enable))
-        command.enable?.should == false
+      %w(1 yes enable on true).each do |truthy_value|
+
+        context "when environment variable is #{truthy_value.inspect}" do
+
+          it "sets the flag" do
+            ENV["ENABLE"] = truthy_value
+            command.parse([])
+            command.enable?.should == true
+          end
+
+        end
+
+      end
+
+      %w(0 no disable off false).each do |falsey_value|
+
+        context "when environment variable is #{falsey_value.inspect}" do
+
+          it "clears the flag" do
+            ENV["ENABLE"] = falsey_value
+            command.parse([])
+            command.enable?.should == false
+          end
+
+        end
+
       end
 
     end
 
-    describe "with :required value" do
+    describe "with :required" do
 
       before do
         command.class.option "--port", "PORT", "port to listen on", :required => true
       end
 
-      it "should fail if a required option is not provided" do
-        expect { command.parse([]) }.to raise_error(Clamp::UsageError)
+      context "when no value is provided" do
+
+        it "raises a UsageError" do
+          expect do
+            command.parse([])
+          end.to raise_error(Clamp::UsageError)
+        end
+
       end
 
-      it "should succeed if a required option is provided" do
-        command.parse(["--port", "12345"])
-      end
+      context "when a value is provided" do
 
-    end
+        it "does not raise an error" do
+          expect do
+            command.parse(["--port", "12345"])
+          end.not_to raise_error
+        end
 
-    describe "with :required value with :env" do
-
-      before do
-        command.class.option "--port", "PORT", "port to listen on", :required => true, :environment_variable => "PORT"
-      end
-
-      it "should fail if a required option is not provided" do
-        ENV.delete("PORT")
-        expect { command.parse([]) }.to raise_error(Clamp::UsageError)
-      end
-
-      it "should succeed if a required option is provided via arguments" do
-        ENV.delete("PORT")
-        command.parse(["--port", "12345"])
-      end
-
-      it "should succeed if a required option is provided via env" do
-        ENV["PORT"] = "12345"
-        command.parse([])
       end
 
     end
-
 
     describe "with a block" do
 
