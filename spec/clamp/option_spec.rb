@@ -33,6 +33,14 @@ describe Clamp::Option do
 
     end
 
+    describe "#write_method" do
+
+      it "is derived from the attribute_name" do
+        option.write_method.should == "key_file="
+      end
+
+    end
+
     describe "#default_value" do
 
       it "defaults to nil" do
@@ -150,6 +158,47 @@ describe Clamp::Option do
           option.help.should == ["-x X", %{mystery option (default: $APP_X, or "xyz")}]
         end
 
+      end
+
+    end
+
+  end
+
+  describe "multivalued" do
+
+    let(:option) do
+      Clamp::Option.new(["-H", "--header"], "HEADER", "extra header", :multivalued => true)
+    end
+
+    it "is multivalued" do
+      option.should be_multivalued
+    end
+
+    describe "#default_value" do
+
+      it "defaults to an empty Array" do
+        option.default_value.should == []
+      end
+
+      it "can be overridden" do
+        option = Clamp::Option.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1,2,3])
+        option.default_value.should == [1,2,3]
+      end
+
+    end
+
+    describe "#attribute_name" do
+
+      it "gets a _list suffix" do
+        option.attribute_name.should == "header_list"
+      end
+
+    end
+
+    describe "#write_method" do
+
+      it "is derived from the attribute_name" do
+        option.write_method.should == "append_to_header_list"
       end
 
     end

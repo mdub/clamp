@@ -111,6 +111,23 @@ describe Clamp::Command do
 
     end
 
+    describe "with :multivalued" do
+
+      before do
+        command.class.option "--flavour", "FLAVOUR", "flavour(s)", :multivalued => true, :attribute_name => :flavours
+      end
+
+      it "defaults to empty array" do
+        command.flavours.should == []
+      end
+
+      it "supports multiple values" do
+        command.parse(%w(--flavour chocolate --flavour vanilla))
+        command.flavours.should == %w(chocolate vanilla)
+      end
+
+    end
+
     describe "with :environment_variable" do
 
       before do

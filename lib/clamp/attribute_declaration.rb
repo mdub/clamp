@@ -33,7 +33,14 @@ module Clamp
         if block
           value = instance_exec(value, &block)
         end
-        instance_variable_set(attribute.ivar_name, value)
+        if attribute.multivalued?
+          unless instance_variable_defined?(attribute.ivar_name)
+            instance_variable_set(attribute.ivar_name, [])
+          end
+          instance_variable_get(attribute.ivar_name) << value
+        else
+          instance_variable_set(attribute.ivar_name, value)
+        end
       end
     end
 

@@ -2,7 +2,19 @@ module Clamp
 
   class Attribute
 
-    attr_reader :description, :attribute_name, :default_value, :environment_variable
+    def initialize(options)
+      if options.has_key?(:attribute_name)
+        @attribute_name = options[:attribute_name].to_s
+      end
+      if options.has_key?(:default)
+        @default_value = options[:default]
+      end
+      if options.has_key?(:environment_variable)
+        @environment_variable = options[:environment_variable]
+      end
+    end
+
+    attr_reader :description, :environment_variable
 
     def help_rhs
       description + default_description
@@ -25,7 +37,31 @@ module Clamp
     end
 
     def write_method
-      "#{attribute_name}="
+      if multivalued?
+        "append_to_#{attribute_name}"
+      else
+        "#{attribute_name}="
+      end
+    end
+
+    def multivalued?
+      @multivalued
+    end
+
+    def required?
+      @required
+    end
+
+    def attribute_name
+      @attribute_name ||= infer_attribute_name
+    end
+
+    def default_value
+      if defined?(@default_value)
+        @default_value
+      elsif multivalued?
+        []
+      end
     end
 
     private

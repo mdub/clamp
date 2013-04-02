@@ -46,7 +46,7 @@ module Clamp
           value = option.extract_value(switch, remaining_arguments)
 
           begin
-            send("#{option.attribute_name}=", value)
+            send(option.write_method, value)
           rescue ArgumentError => e
             signal_usage_error "option '#{switch}': #{e.message}"
           end

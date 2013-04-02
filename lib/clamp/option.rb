@@ -8,15 +8,8 @@ module Clamp
       @switches = Array(switches)
       @type = type
       @description = description
-      if options.has_key?(:attribute_name)
-        @attribute_name = options[:attribute_name].to_s 
-      end
-      if options.has_key?(:default)
-        @default_value = options[:default]
-      end
-      if options.has_key?(:environment_variable)
-        @environment_variable = options[:environment_variable]
-      end
+      super(options)
+      @multivalued = options[:multivalued]
       if options.has_key?(:required)
         @required = options[:required]
         # Do some light validation for conflicting settings.
@@ -31,10 +24,6 @@ module Clamp
 
     attr_reader :switches, :type
 
-    def attribute_name
-      @attribute_name ||= long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
-    end
-    
     def long_switch
       switches.find { |switch| switch =~ /^--/ }
     end
@@ -43,14 +32,10 @@ module Clamp
       recognised_switches.member?(switch)
     end
 
-    def required?
-      @required
-    end
-
     def flag?
       @type == :flag
     end
-    
+
     def flag_value(switch)
       !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{$1}"))
     end
@@ -62,7 +47,7 @@ module Clamp
         super
       end
     end
-    
+
     def extract_value(switch, arguments)
       if flag?
         flag_value(switch)
@@ -70,7 +55,7 @@ module Clamp
         arguments.shift
       end
     end
-    
+
     def help_lhs
       lhs = switches.join(", ")
       lhs += " " + type unless flag?
@@ -88,7 +73,12 @@ module Clamp
         end
       end.flatten
     end
-    
+
+    def infer_attribute_name
+      inferred_name = long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
+      inferred_name += "_list" if multivalued?
+      inferred_name
+    end
   end
 
 end

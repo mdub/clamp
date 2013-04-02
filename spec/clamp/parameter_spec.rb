@@ -37,7 +37,7 @@ describe Clamp::Parameter do
 
       it "consumes one argument" do
         arguments = %w(a b c)
-        parameter.consume(arguments).should == "a"
+        parameter.consume(arguments).should == ["a"]
         arguments.should == %w(b c)
       end
 
@@ -78,15 +78,15 @@ describe Clamp::Parameter do
 
       it "consumes one argument" do
         arguments = %w(a b c)
-        parameter.consume(arguments).should == "a"
+        parameter.consume(arguments).should == ["a"]
         arguments.should == %w(b c)
       end
 
       describe "with no arguments" do
 
-        it "returns nil" do
+        it "consumes nothing" do
           arguments = []
-          parameter.consume(arguments).should == nil
+          parameter.consume(arguments).should == []
         end
 
       end
@@ -109,6 +109,14 @@ describe Clamp::Parameter do
 
       it "gets a _list suffix" do
         parameter.attribute_name.should == "file_list"
+      end
+
+    end
+
+    describe "#write_method" do
+
+      it "is derived from the attribute_name" do
+        parameter.write_method.should == "append_to_file_list"
       end
 
     end
@@ -220,7 +228,7 @@ describe Clamp::Parameter do
 
           it "don't override defaults" do
             arguments = []
-            parameter.consume(arguments).should == nil
+            parameter.consume(arguments).should == []
           end
 
         end
