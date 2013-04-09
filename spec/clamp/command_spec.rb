@@ -764,11 +764,11 @@ describe Clamp::Command do
 
   end
 
-  describe "with a description" do
+  describe "with a banner" do
 
     given_command("punt") do
 
-      self.description = <<-EOF
+      banner <<-EOF
         Punt is an example command.  It doesn't do much, really.
 
         The prefix at the beginning of this description should be normalised
@@ -779,7 +779,7 @@ describe Clamp::Command do
 
     describe "#help" do
 
-      it "includes the description" do
+      it "includes the banner" do
         command.help.should =~ /^  Punt is an example command/
         command.help.should =~ /^  The prefix/
       end
