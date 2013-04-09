@@ -20,6 +20,10 @@ module Clamp
       @description.strip!
     end
 
+    def banner(description)
+      self.description = description
+    end
+
     attr_reader :description
 
     def derived_usage_description
