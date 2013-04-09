@@ -1,4 +1,4 @@
-Clamp
+Clamp  [![Build Status](https://secure.travis-ci.org/mdub/clamp.png?branch=master)](http://travis-ci.org/mdub/clamp)
 =====
 
 "Clamp" is a minimal framework for command-line utilities.
