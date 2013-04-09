@@ -6,7 +6,7 @@ require "clamp"
 
 class SpeakCommand < Clamp::Command
 
-  self.description = %{
+  banner %{
     Say something.
   }
 
