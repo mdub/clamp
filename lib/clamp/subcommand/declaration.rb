@@ -10,6 +10,14 @@ module Clamp
       end
 
       def subcommand(name, description, subcommand_class = self, &block)
+        unless has_subcommands?
+          if @default_subcommand
+            parameter "[SUBCOMMAND]", "subcommand", :default => @default_subcommand
+          else
+            parameter "SUBCOMMAND", "subcommand", :required => false
+          end
+          parameter "[ARG] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
+        end
         if block
           # generate a anonymous sub-class
           subcommand_class = Class.new(subcommand_class, &block)
@@ -33,8 +41,8 @@ module Clamp
         else
           $stderr.puts "WARNING: Clamp default_subcommand syntax has changed; check the README."
           $stderr.puts "  (from #{caller.first})"
-          subcommand(*args, &block)
           self.default_subcommand = args.first
+          subcommand(*args, &block)
         end
       end
 

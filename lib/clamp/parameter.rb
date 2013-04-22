@@ -8,7 +8,9 @@ module Clamp
       @name = name
       @description = description
       @multivalued = (@name =~ ELLIPSIS_SUFFIX)
-      @required = (@name !~ OPTIONAL)
+      @required = options.fetch(:required) do
+        (@name !~ OPTIONAL)
+      end
       if options.has_key?(:attribute_name)
         @attribute_name = options[:attribute_name].to_s
       end

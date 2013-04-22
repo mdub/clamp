@@ -50,7 +50,7 @@ describe Clamp::Command do
     describe "#help" do
 
       it "shows subcommand parameters in usage" do
-        command.help.should include("flipflop [OPTIONS] SUBCOMMAND [ARGS] ...")
+        command.help.should include("flipflop [OPTIONS] SUBCOMMAND [ARG] ...")
       end
 
       it "lists subcommands" do
@@ -132,6 +132,8 @@ describe Clamp::Command do
 
     given_command "admin" do
 
+      self.default_subcommand = "status"
+
       subcommand "status", "Show status" do
 
         def execute
@@ -139,8 +141,6 @@ describe Clamp::Command do
         end
 
       end
-
-      self.default_subcommand = "status"
 
     end
 

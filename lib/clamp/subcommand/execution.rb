@@ -7,8 +7,10 @@ module Clamp
 
       def execute
         # delegate to subcommand
-        @subcommand.run(remaining_arguments)
+        @subcommand.run(subcommand_arguments)
       end
+
+      private
 
       def handle_remaining_arguments
         # no-op, because subcommand will handle them
