@@ -180,6 +180,31 @@ describe Clamp::Command do
 
   end
 
+  describe "with subcommands, declared after a parameter" do
+
+    given_command "with" do
+
+      parameter "THING", "the thing"
+
+      subcommand "spit", "spit it" do
+        def execute
+          puts "spat the #{thing}"
+        end
+      end
+
+    end
+
+    it "allows the parameter to be specified first" do
+
+      pending do
+        command.run(["dummy", "spit"])
+        stdout.should == "spat the dummy"
+      end
+
+    end
+
+  end
+
   describe "each subcommand" do
 
     let(:command_class) do
