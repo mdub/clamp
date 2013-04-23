@@ -14,7 +14,7 @@ module Clamp
       private
 
       def instatiate_subcommand(name)
-        subcommand_class = find_subcommand(name).subcommand_class
+        subcommand_class = find_subcommand_class(name)
         subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
         shared_options = self.class.recognised_options & subcommand_class.recognised_options
         shared_options.each do |option|
@@ -23,6 +23,11 @@ module Clamp
           end
         end
         subcommand
+      end
+
+      def find_subcommand_class(name)
+        subcommand_def = self.class.find_subcommand(name) || signal_usage_error("No such sub-command '#{name}'")
+        subcommand_def.subcommand_class
       end
 
     end

@@ -18,11 +18,6 @@ module Clamp
         self.class.default_subcommand || request_help
       end
 
-      def find_subcommand(name)
-        self.class.find_subcommand(name) ||
-        signal_usage_error("No such sub-command '#{name}'")
-      end
-
     end
 
   end

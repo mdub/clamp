@@ -171,7 +171,7 @@ describe Clamp::Option do
     describe "Command#help" do
 
       it "includes help for each option exactly once" do
-        subcommand = command_class.new("").send(:find_subcommand, 'foo')
+        subcommand = command_class.send(:find_subcommand, 'foo')
         subcommand_help = subcommand.subcommand_class.help("")
         subcommand_help.lines.grep(/--bar BAR/).count.should == 1
       end
