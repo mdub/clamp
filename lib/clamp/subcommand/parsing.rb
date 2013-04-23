@@ -9,18 +9,14 @@ module Clamp
 
       def parse_subcommand
         return false unless self.class.has_subcommands?
-        @subcommand = instatiate_subcommand(parse_subcommand_name)
+        @subcommand = instatiate_subcommand(subcommand_name)
         self.extend(Subcommand::Execution)
       end
 
       private
 
-      def parse_subcommand_name
-        self.subcommand || default_subcommand || request_help
-      end
-
-      def default_subcommand
-        self.class.default_subcommand
+      def default_subcommand_name
+        self.class.default_subcommand || request_help
       end
 
       def find_subcommand(name)

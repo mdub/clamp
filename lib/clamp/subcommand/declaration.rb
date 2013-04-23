@@ -12,10 +12,11 @@ module Clamp
       def subcommand(name, description, subcommand_class = self, &block)
         unless has_subcommands?
           if @default_subcommand
-            parameter "[SUBCOMMAND]", "subcommand", :default => @default_subcommand
+            parameter "[SUBCOMMAND]", "subcommand", :attribute_name => :subcommand_name, :default => @default_subcommand
           else
-            parameter "SUBCOMMAND", "subcommand", :required => false
+            parameter "SUBCOMMAND", "subcommand", :attribute_name => :subcommand_name, :required => false
           end
+          remove_method :default_subcommand_name
           parameter "[ARG] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
         end
         if block
