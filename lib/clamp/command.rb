@@ -24,9 +24,10 @@ module Clamp
     # @param [String] invocation_path the path used to invoke the command
     # @param [Hash] context additional data the command may need
     #
-    def initialize(invocation_path, context = {})
+    def initialize(invocation_path, context = {}, parent_attribute_values = {})
       @invocation_path = invocation_path
       @context = context
+      @parent_attribute_values = parent_attribute_values
     end
 
     # @return [String] the path used to invoke this command
@@ -87,6 +88,7 @@ module Clamp
     protected
 
     attr_accessor :context
+    attr_accessor :parent_attribute_values
 
     def handle_remaining_arguments
       unless remaining_arguments.empty?

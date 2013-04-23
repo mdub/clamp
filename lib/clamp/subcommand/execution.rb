@@ -15,14 +15,13 @@ module Clamp
 
       def instatiate_subcommand(name)
         subcommand_class = find_subcommand_class(name)
-        subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
-        shared_options = self.class.recognised_options & subcommand_class.recognised_options
-        shared_options.each do |option|
+        parent_attribute_values = {}
+        self.class.recognised_options.each do |option|
           if instance_variable_defined?(option.ivar_name)
-            subcommand.instance_variable_set(option.ivar_name, instance_variable_get(option.ivar_name))
+            parent_attribute_values[option] = instance_variable_get(option.ivar_name)
           end
         end
-        subcommand
+        subcommand_class.new("#{invocation_path} #{name}", context, parent_attribute_values)
       end
 
       def find_subcommand_class(name)
