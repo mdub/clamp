@@ -9,7 +9,6 @@ module Clamp
 
       def parse_subcommand
         return false unless self.class.has_subcommands?
-        @subcommand = instatiate_subcommand(subcommand_name)
         self.extend(Subcommand::Execution)
       end
 
@@ -22,18 +21,6 @@ module Clamp
       def find_subcommand(name)
         self.class.find_subcommand(name) ||
         signal_usage_error("No such sub-command '#{name}'")
-      end
-
-      def instatiate_subcommand(name)
-        subcommand_class = find_subcommand(name).subcommand_class
-        subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
-        shared_options = self.class.recognised_options & subcommand_class.recognised_options
-        shared_options.each do |option|
-          if instance_variable_defined?(option.ivar_name)
-            subcommand.instance_variable_set(option.ivar_name, instance_variable_get(option.ivar_name))
-          end
-        end
-        subcommand
       end
 
     end
