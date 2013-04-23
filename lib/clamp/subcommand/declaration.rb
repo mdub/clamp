@@ -34,6 +34,10 @@ module Clamp
         recognised_subcommands.find { |sc| sc.is_called?(name) }
       end
 
+      def parameters_before_subcommand
+        parameters.take_while { |p| p.attribute_name != :subcommand_name }
+      end
+
       attr_writer :default_subcommand
 
       def default_subcommand(*args, &block)

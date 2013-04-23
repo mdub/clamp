@@ -196,10 +196,8 @@ describe Clamp::Command do
 
     it "allows the parameter to be specified first" do
 
-      pending do
-        command.run(["dummy", "spit"])
-        stdout.should == "spat the dummy"
-      end
+      command.run(["dummy", "spit"])
+      stdout.strip.should == "spat the dummy"
 
     end
 
