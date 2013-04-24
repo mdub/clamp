@@ -4,7 +4,7 @@
 
 require "clamp"
 
-class AdminCommand < Clamp::Command
+Clamp do
 
   option "--timeout", "SECONDS", "connection timeout", :default => 5, :environment_variable => "MYAPP_TIMEOUT" do |x|
     Integer(x)
@@ -18,5 +18,3 @@ class AdminCommand < Clamp::Command
   end
 
 end
-
-AdminCommand.run

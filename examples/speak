@@ -4,7 +4,7 @@
 
 require "clamp"
 
-class SpeakCommand < Clamp::Command
+Clamp do
 
   banner %{
     Say something.
@@ -29,5 +29,3 @@ class SpeakCommand < Clamp::Command
   end
 
 end
-
-SpeakCommand.run

@@ -4,7 +4,7 @@
 
 require "clamp"
 
-class Fubar < Clamp::Command
+Clamp do
 
   subcommand "foo", "Foo!" do
 
@@ -19,5 +19,3 @@ class Fubar < Clamp::Command
   end
 
 end
-
-Fubar.run
