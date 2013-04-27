@@ -14,8 +14,6 @@ module Clamp
       define_method(attribute.read_method) do
         if instance_variable_defined?(attribute.ivar_name)
           instance_variable_get(attribute.ivar_name)
-        elsif parent_attribute_values.has_key?(attribute)
-          parent_attribute_values[attribute]
         else
           send(attribute.default_method)
         end

@@ -17,9 +17,10 @@ module Clamp
       end
 
       def parameter(name, description, options = {}, &block)
-        parameter = Parameter.new(name, description, options)
-        parameters << parameter
-        define_accessors_for(parameter, &block)
+        Parameter.new(name, description, options).tap do |parameter|
+          parameters << parameter
+          define_accessors_for(parameter, &block)
+        end
       end
 
     end

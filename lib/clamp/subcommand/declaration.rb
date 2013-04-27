@@ -11,7 +11,7 @@ module Clamp
 
       def subcommand(name, description, subcommand_class = self, &block)
         unless has_subcommands?
-          if @default_subcommand
+          @subcommand_parameter = if @default_subcommand
             parameter "[SUBCOMMAND]", "subcommand", :attribute_name => :subcommand_name, :default => @default_subcommand
           else
             parameter "SUBCOMMAND", "subcommand", :attribute_name => :subcommand_name, :required => false
@@ -35,7 +35,7 @@ module Clamp
       end
 
       def parameters_before_subcommand
-        parameters.take_while { |p| p.attribute_name != :subcommand_name }
+        parameters.take_while { |p| p != @subcommand_parameter }
       end
 
       attr_writer :default_subcommand

@@ -9,9 +9,10 @@ module Clamp
       include Clamp::AttributeDeclaration
 
       def option(switches, type, description, opts = {}, &block)
-        option = Clamp::Option.new(switches, type, description, opts)
-        declared_options << option
-        define_accessors_for(option, &block)
+        Clamp::Option.new(switches, type, description, opts).tap do |option|
+          declared_options << option
+          define_accessors_for(option, &block)
+        end
       end
 
       def find_option(switch)
