@@ -74,9 +74,9 @@ module Clamp
           value = ENV[option.environment_variable]
           if option.flag?
             # Set true if the environment value is truthy.
-            send("#{option.attribute_name}=", TRUTHY_ENVIRONMENT_VALUES.include?(value))
+            send(option.write_method, TRUTHY_ENVIRONMENT_VALUES.include?(value))
           else
-            send("#{option.attribute_name}=", value)
+            send(option.write_method, value)
           end
         end
       end
