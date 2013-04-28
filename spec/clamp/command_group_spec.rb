@@ -180,6 +180,30 @@ describe Clamp::Command do
 
   end
 
+  describe "declaring a default subcommand after subcommands" do
+
+    it "is not supported" do
+
+      lambda do
+        Class.new(Clamp::Command) do
+
+          subcommand "status", "Show status" do
+
+            def execute
+              puts "All good!"
+            end
+
+          end
+
+          self.default_subcommand = "status"
+
+        end
+      end.should raise_error(/default_subcommand must be defined before subcommands/)
+
+    end
+
+  end
+
   describe "with subcommands, declared after a parameter" do
 
     given_command "with" do

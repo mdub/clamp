@@ -1,3 +1,4 @@
+require 'clamp/errors'
 require 'clamp/subcommand/definition'
 
 module Clamp
@@ -38,7 +39,12 @@ module Clamp
         parameters.take_while { |p| p != @subcommand_parameter }
       end
 
-      attr_writer :default_subcommand
+      def default_subcommand=(name)
+        if has_subcommands?
+          raise Clamp::DeclarationError, "default_subcommand must be defined before subcommands"
+        end
+        @default_subcommand = name
+      end
 
       def default_subcommand(*args, &block)
         if args.empty?

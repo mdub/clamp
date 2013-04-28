@@ -1,6 +1,9 @@
 module Clamp
-  
-  class Error < StandardError
+
+  class DeclarationError < StandardError
+  end
+
+  class RuntimeError < StandardError
 
     def initialize(message, command)
       super(message)
@@ -12,10 +15,10 @@ module Clamp
   end
 
   # raise to signal incorrect command usage
-  class UsageError < Error; end
+  class UsageError < RuntimeError; end
 
   # raise to request usage help
-  class HelpWanted < Error
+  class HelpWanted < RuntimeError
 
     def initialize(command)
       super("I need help", command)
