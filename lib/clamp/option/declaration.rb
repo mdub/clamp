@@ -1,15 +1,15 @@
-require 'clamp/attribute_declaration'
-require 'clamp/option'
+require 'clamp/attribute/declaration'
+require 'clamp/option/definition'
 
 module Clamp
-  class Option
+  module Option
 
     module Declaration
 
-      include Clamp::AttributeDeclaration
+      include Clamp::Attribute::Declaration
 
       def option(switches, type, description, opts = {}, &block)
-        Clamp::Option.new(switches, type, description, opts).tap do |option|
+        Option::Definition.new(switches, type, description, opts).tap do |option|
           declared_options << option
           define_accessors_for(option, &block)
         end

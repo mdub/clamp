@@ -1,5 +1,5 @@
 module Clamp
-  class Subcommand
+  module Subcommand
 
     module Execution
 

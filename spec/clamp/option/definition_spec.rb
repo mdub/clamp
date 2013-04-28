@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Clamp::Option do
+describe Clamp::Option::Definition do
 
   describe "with String argument" do
 
     let(:option) do
-      Clamp::Option.new("--key-file", "FILE", "SSH identity")
+      described_class.new("--key-file", "FILE", "SSH identity")
     end
 
     it "has a long_switch" do
@@ -27,7 +27,7 @@ describe Clamp::Option do
       end
 
       it "can be overridden" do
-        option = Clamp::Option.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
+        option = described_class.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
         option.attribute_name.should == "ssh_identity"
       end
 
@@ -44,12 +44,12 @@ describe Clamp::Option do
     describe "#default_value" do
 
       it "defaults to nil" do
-        option = Clamp::Option.new("-n", "N", "iterations")
+        option = described_class.new("-n", "N", "iterations")
         option.default_value.should == nil
       end
 
       it "can be overridden" do
-        option = Clamp::Option.new("-n", "N", "iterations", :default => 1)
+        option = described_class.new("-n", "N", "iterations", :default => 1)
         option.default_value.should == 1
       end
 
@@ -68,7 +68,7 @@ describe Clamp::Option do
   describe "flag" do
 
     let(:option) do
-      Clamp::Option.new("--verbose", :flag, "Blah blah blah")
+      described_class.new("--verbose", :flag, "Blah blah blah")
     end
 
     describe "#help" do
@@ -84,7 +84,7 @@ describe Clamp::Option do
   describe "negatable flag" do
 
     let(:option) do
-      Clamp::Option.new("--[no-]force", :flag, "Force installation")
+      described_class.new("--[no-]force", :flag, "Force installation")
     end
 
     it "handles both positive and negative forms" do
@@ -114,7 +114,7 @@ describe Clamp::Option do
   describe "with both short and long switches" do
 
     let(:option) do
-      Clamp::Option.new(["-k", "--key-file"], "FILE", "SSH identity")
+      described_class.new(["-k", "--key-file"], "FILE", "SSH identity")
     end
 
     it "handles both switches" do
@@ -135,7 +135,7 @@ describe Clamp::Option do
   describe "with an associated environment variable" do
 
     let(:option) do
-      Clamp::Option.new("-x", "X", "mystery option", :environment_variable => "APP_X")
+      described_class.new("-x", "X", "mystery option", :environment_variable => "APP_X")
     end
 
     describe "#help" do
@@ -149,7 +149,7 @@ describe Clamp::Option do
     describe "and a default value" do
 
       let(:option) do
-        Clamp::Option.new("-x", "X", "mystery option", :environment_variable => "APP_X", :default => "xyz")
+        described_class.new("-x", "X", "mystery option", :environment_variable => "APP_X", :default => "xyz")
       end
 
       describe "#help" do
@@ -167,7 +167,7 @@ describe Clamp::Option do
   describe "multivalued" do
 
     let(:option) do
-      Clamp::Option.new(["-H", "--header"], "HEADER", "extra header", :multivalued => true)
+      described_class.new(["-H", "--header"], "HEADER", "extra header", :multivalued => true)
     end
 
     it "is multivalued" do
@@ -181,7 +181,7 @@ describe Clamp::Option do
       end
 
       it "can be overridden" do
-        option = Clamp::Option.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1,2,3])
+        option = described_class.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1,2,3])
         option.default_value.should == [1,2,3]
       end
 
@@ -232,14 +232,14 @@ describe Clamp::Option do
   describe "a required option" do
     it "rejects :default" do
       expect do
-        Clamp::Option.new("--key-file", "FILE", "SSH identity",
+        described_class.new("--key-file", "FILE", "SSH identity",
                           :required => true, :default => "hello")
       end.to raise_error(ArgumentError)
     end
 
     it "rejects :flag options" do
       expect do
-        Clamp::Option.new("--awesome", :flag, "Be awesome?", :required => true)
+        described_class.new("--awesome", :flag, "Be awesome?", :required => true)
       end.to raise_error(ArgumentError)
     end
   end

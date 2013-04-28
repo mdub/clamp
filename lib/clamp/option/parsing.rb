@@ -1,5 +1,5 @@
 module Clamp
-  class Option
+  module Option
 
     module Parsing
 

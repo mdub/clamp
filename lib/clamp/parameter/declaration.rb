@@ -1,12 +1,12 @@
-require 'clamp/attribute_declaration'
-require 'clamp/parameter'
+require 'clamp/attribute/declaration'
+require 'clamp/parameter/definition'
 
 module Clamp
-  class Parameter
+  module Parameter
 
     module Declaration
 
-      include Clamp::AttributeDeclaration
+      include Clamp::Attribute::Declaration
 
       def parameters
         @parameters ||= []
@@ -17,7 +17,7 @@ module Clamp
       end
 
       def parameter(name, description, options = {}, &block)
-        Parameter.new(name, description, options).tap do |parameter|
+        Parameter::Definition.new(name, description, options).tap do |parameter|
           parameters << parameter
           define_accessors_for(parameter, &block)
         end

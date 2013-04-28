@@ -1,5 +1,5 @@
 module Clamp
-  class Parameter
+  module Parameter
 
     module Parsing
 

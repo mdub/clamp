@@ -1,7 +1,7 @@
 require 'clamp/subcommand/execution'
 
 module Clamp
-  class Subcommand
+  module Subcommand
 
     module Parsing
 

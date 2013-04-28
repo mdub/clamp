@@ -1,7 +1,7 @@
-require 'clamp/subcommand'
+require 'clamp/subcommand/definition'
 
 module Clamp
-  class Subcommand
+  module Subcommand
 
     module Declaration
 
@@ -23,7 +23,7 @@ module Clamp
           # generate a anonymous sub-class
           subcommand_class = Class.new(subcommand_class, &block)
         end
-        recognised_subcommands << Subcommand.new(name, description, subcommand_class)
+        recognised_subcommands << Subcommand::Definition.new(name, description, subcommand_class)
       end
 
       def has_subcommands?

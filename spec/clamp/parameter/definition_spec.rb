@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Clamp::Parameter do
+describe Clamp::Parameter::Definition do
 
   describe "normal" do
 
     let(:parameter) do
-      Clamp::Parameter.new("COLOR", "hue of choice")
+      described_class.new("COLOR", "hue of choice")
     end
 
     it "has a name" do
@@ -27,7 +27,7 @@ describe Clamp::Parameter do
       end
 
       it "can be overridden" do
-        parameter = Clamp::Parameter.new("COLOR", "hue of choice", :attribute_name => "hue")
+        parameter = described_class.new("COLOR", "hue of choice", :attribute_name => "hue")
         parameter.attribute_name.should == "hue"
       end
 
@@ -59,7 +59,7 @@ describe Clamp::Parameter do
   describe "optional (name in square brackets)" do
 
     let(:parameter) do
-      Clamp::Parameter.new("[COLOR]", "hue of choice")
+      described_class.new("[COLOR]", "hue of choice")
     end
 
     it "is single-valued" do
@@ -98,7 +98,7 @@ describe Clamp::Parameter do
   describe "list (name followed by ellipsis)" do
 
     let(:parameter) do
-      Clamp::Parameter.new("FILE ...", "files to process")
+      described_class.new("FILE ...", "files to process")
     end
 
     it "is multi-valued" do
@@ -145,7 +145,7 @@ describe Clamp::Parameter do
     context "with a weird parameter name, and an explicit attribute_name" do
 
       let(:parameter) do
-        Clamp::Parameter.new("KEY=VALUE ...", "config-settings", :attribute_name => :config_settings)
+        described_class.new("KEY=VALUE ...", "config-settings", :attribute_name => :config_settings)
       end
 
       describe "#attribute_name" do
@@ -163,7 +163,7 @@ describe Clamp::Parameter do
   describe "optional list" do
 
     let(:parameter) do
-      Clamp::Parameter.new("[FILES] ...", "files to process")
+      described_class.new("[FILES] ...", "files to process")
     end
 
     it "is multi-valued" do
@@ -197,7 +197,7 @@ describe Clamp::Parameter do
     describe "with specified default value" do
 
       let(:parameter) do
-        Clamp::Parameter.new("[FILES] ...", "files to process", :default => %w(a b c))
+        described_class.new("[FILES] ...", "files to process", :default => %w(a b c))
       end
 
       describe "#default_value" do
