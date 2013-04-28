@@ -1,4 +1,5 @@
 require 'clamp/attribute/definition'
+require 'clamp/truthy'
 
 module Clamp
   module Option
@@ -54,6 +55,12 @@ module Clamp
           flag_value(switch)
         else
           arguments.shift
+        end
+      end
+
+      def default_conversion_block
+        if flag?
+          Clamp.method(:truthy?)
         end
       end
 

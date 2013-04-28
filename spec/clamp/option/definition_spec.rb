@@ -71,6 +71,20 @@ describe Clamp::Option::Definition do
       described_class.new("--verbose", :flag, "Blah blah blah")
     end
 
+    describe "#default_conversion_block" do
+
+      it "converts truthy values to true" do
+        option.default_conversion_block.call("true").should == true
+        option.default_conversion_block.call("yes").should == true
+      end
+
+      it "converts falsey values to false" do
+        option.default_conversion_block.call("false").should == false
+        option.default_conversion_block.call("no").should == false
+      end
+
+    end
+
     describe "#help" do
 
       it "excludes option argument" do
