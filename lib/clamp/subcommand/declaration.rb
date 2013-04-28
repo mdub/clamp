@@ -42,7 +42,7 @@ module Clamp
 
       def default_subcommand(*args, &block)
         if args.empty?
-          @default_subcommand ||= nil
+          @default_subcommand
         else
           $stderr.puts "WARNING: Clamp default_subcommand syntax has changed; check the README."
           $stderr.puts "  (from #{caller.first})"
