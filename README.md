@@ -102,6 +102,14 @@ Although 'required option' is a an oxymoron, Clamp lets you mark an option as re
 
 Note that it makes no sense to mark a `:flag` option, or one with a `:default`, as `:required`.
 
+### Multivalued options
+
+Declaring an option "`:multivalued`" allows it to be specified multiple times on the command line.
+
+    option "--format", "FORMAT", "output format", :multivalued => true
+
+The underlying attribute becomes an Array, and the suffix "`_list`" is appended to the default attribute name.  In this case, an attribute called "`format_list`" would be generated (unless you override the default by specifying an `:attribute_name`).
+
 Declaring parameters
 --------------------
 
@@ -122,13 +130,14 @@ Wrapping a parameter name in square brackets indicates that it's optional, e.g.
 
     parameter "[TARGET_DIR]", "target directory"
 
-### Greedy parameters
+### Multivalued (aka "greedy") parameters
 
 Three dots at the end of a parameter name makes it "greedy" - it will consume all remaining command-line arguments.  For example:
 
-    parameter "FILE ...", "input files"
+    parameter "FILE ...", "input files", :attribute_name => :files
 
-The suffix "`_list`" is appended to the default attribute name for greedy parameters; in this case, an attribute called "`file_list`" would be generated.
+
+Like multivalued options, greedy parameters are backed by an Array attribute (named with a "`_list`" suffix, by default).
 
 Parsing and validation of options and parameters
 ------------------------------------------------
@@ -151,6 +160,8 @@ If the block raises an ArgumentError, Clamp will catch it, and report that the v
 
     !!!plain
     ERROR: option '--port': invalid value for Integer: "blah"
+
+For multivalued options and parameters, the validation block will be called for each value specified.
 
 ### Advanced option/parameter handling
 
