@@ -17,7 +17,30 @@ Yeah, sorry.  There are a bunch of existing command-line parsing libraries out t
 Quick Start
 -----------
 
-Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They look something like this:
+A typical Clamp script looks like this:
+
+    require 'clamp'
+
+    Clamp do
+
+      option "--loud", :flag, "say it loud"
+      option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
+        Integer(s)
+      end
+
+      parameter "WORDS ...", "the thing to say", :attribute_name => :words
+
+      def execute
+        the_truth = words.join(" ")
+        the_truth.upcase! if loud?
+        iterations.times do
+          puts the_truth
+        end
+      end
+
+    end
+
+Internally, Clamp models a command as a Ruby class (a subclass of `Clamp::Command`), and a command execution as an instance of that class.  The example above is really just syntax-sugar for:
 
     require 'clamp'
 
@@ -42,9 +65,7 @@ Clamp models a command as a Ruby class; a subclass of `Clamp::Command`.  They lo
 
     SpeakCommand.run
 
-Class-level methods like `option` and `parameter` declare attributes (in a similar way to `attr_accessor`), and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.
-
-The call to `run` creates an instance of the command class, then invokes it with command-line arguments (from `ARGV`).
+Class-level methods like `option` and `parameter` declare attributes, in a similar way to `attr_accessor`, and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.
 
 There are more examples demonstrating various features of Clamp [on Github][examples].
 
@@ -63,7 +84,7 @@ For example:
 
     option "--flavour", "FLAVOUR", "ice-cream flavour"
 
-It works a little like `attr_accessor`, defining reader and writer methods on the command class.  The attribute name is derived from the switch (in this case, "`flavour`").  When you pass options to your command, Clamp will populate the attributes, which are then available for use in your `#execute` method.
+It works a little like `attr_accessor`, defining reader and writer methods on the command class.  The attribute name is inferred from the switch (in this case, "`flavour`").  When you pass options to your command, Clamp will populate the attributes, which are then available for use in your `#execute` method.
 
     def execute
       puts "You chose #{flavour}.  Excellent choice!"
@@ -210,7 +231,7 @@ Subcommand support helps you wrap a number of related commands into a single scr
 
 Unsuprisingly, subcommands are declared using the `subcommand` method. e.g.
 
-    class MainCommand < Clamp::Command
+    Clamp do
 
       subcommand "init", "Initialize the repository" do
 
@@ -242,7 +263,7 @@ Clamp generates an anonymous subclass of the current class, to represent the sub
 
 You can set a default subcommand, at the class level, as follows:
 
-    class MainCommand < Clamp::Command
+    Clamp do
 
       self.default_subcommand = "status"
 
