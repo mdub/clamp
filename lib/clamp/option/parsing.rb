@@ -7,13 +7,6 @@ module Clamp
 
       def parse_options
 
-        self.class.recognised_options.each do |option|
-          next if option.environment_variable.nil?
-          next unless ENV.has_key?(option.environment_variable)
-          value = ENV[option.environment_variable]
-          send(option.write_method, value)
-        end
-
         while remaining_arguments.first =~ /\A-/
 
           switch = remaining_arguments.shift
@@ -41,6 +34,15 @@ module Clamp
             signal_usage_error "option '#{switch}': #{e.message}"
           end
 
+        end
+
+        # Fill in gap from environment
+        self.class.recognised_options.each do |option|
+          next if instance_variable_defined?(option.ivar_name)
+          next if option.environment_variable.nil?
+          next unless ENV.has_key?(option.environment_variable)
+          value = ENV[option.environment_variable]
+          send(option.write_method, value)
         end
 
         # Verify that all required options are present
