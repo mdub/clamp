@@ -39,6 +39,10 @@ module Clamp
         parameters.take_while { |p| p != @subcommand_parameter }
       end
 
+      def inheritable_attributes
+        recognised_options + parameters_before_subcommand
+      end
+
       def default_subcommand=(name)
         if has_subcommands?
           raise Clamp::DeclarationError, "default_subcommand must be defined before subcommands"
