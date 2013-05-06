@@ -38,11 +38,7 @@ module Clamp
 
         # Fill in gap from environment
         self.class.recognised_options.each do |option|
-          next if option.of(self).defined?
-          next if option.environment_variable.nil?
-          next unless ENV.has_key?(option.environment_variable)
-          value = ENV[option.environment_variable]
-          option.of(self).write(value)
+          option.of(self).default_from_environment
         end
 
         # Verify that all required options are present

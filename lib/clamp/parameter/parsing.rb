@@ -18,12 +18,7 @@ module Clamp
         end
 
         self.class.parameters.each do |parameter|
-          next if parameter.of(self).defined?
-          next if parameter.environment_variable.nil?
-          next unless ENV.has_key?(parameter.environment_variable)
-          # Set the parameter value if it's environment variable is present
-          value = ENV[parameter.environment_variable]
-          parameter.of(self).write(value)
+          parameter.of(self).default_from_environment
         end
 
       end
