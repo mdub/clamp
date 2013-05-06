@@ -38,6 +38,17 @@ module Clamp
         end
       end
 
+      def set_value(value)
+        if attribute.multivalued?
+          unless self.defined?
+            self.value = []
+          end
+          self.value << value
+        else
+          self.value = value
+        end
+      end
+
       def read
         command.send(attribute.read_method)
       end

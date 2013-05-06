@@ -28,14 +28,7 @@ module Clamp
           if block
             value = instance_exec(value, &block)
           end
-          if attribute.multivalued?
-            unless attribute.of(self).defined?
-              attribute.of(self).value = []
-            end
-            attribute.of(self).value << value
-          else
-            attribute.of(self).value = value
-          end
+          attribute.of(self).set_value(value)
         end
       end
 
