@@ -29,7 +29,7 @@ module Clamp
           value = option.extract_value(switch, remaining_arguments)
 
           begin
-            send(option.write_method, value)
+            option.of(self).write(value)
           rescue ArgumentError => e
             signal_usage_error "option '#{switch}': #{e.message}"
           end
@@ -38,11 +38,11 @@ module Clamp
 
         # Fill in gap from environment
         self.class.recognised_options.each do |option|
-          next if instance_variable_defined?(option.ivar_name)
+          next if option.of(self).defined?
           next if option.environment_variable.nil?
           next unless ENV.has_key?(option.environment_variable)
           value = ENV[option.environment_variable]
-          send(option.write_method, value)
+          option.of(self).write(value)
         end
 
         # Verify that all required options are present

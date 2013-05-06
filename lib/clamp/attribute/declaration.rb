@@ -13,8 +13,8 @@ module Clamp
 
       def define_reader_for(attribute)
         define_method(attribute.read_method) do
-          if instance_variable_defined?(attribute.ivar_name)
-            instance_variable_get(attribute.ivar_name)
+          if attribute.of(self).defined?
+            attribute.of(self).value
           else
             send(attribute.default_method)
           end
@@ -33,12 +33,12 @@ module Clamp
             value = instance_exec(value, &block)
           end
           if attribute.multivalued?
-            unless instance_variable_defined?(attribute.ivar_name)
-              instance_variable_set(attribute.ivar_name, [])
+            unless attribute.of(self).defined?
+              attribute.of(self).value = []
             end
-            instance_variable_get(attribute.ivar_name) << value
+            attribute.of(self).value << value
           else
-            instance_variable_set(attribute.ivar_name, value)
+            attribute.of(self).value = value
           end
         end
       end

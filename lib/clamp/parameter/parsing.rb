@@ -10,7 +10,7 @@ module Clamp
         self.class.parameters.each do |parameter|
           begin
             parameter.consume(remaining_arguments).each do |value|
-              send(parameter.write_method, value)
+              parameter.of(self).write(value)
             end
           rescue ArgumentError => e
             signal_usage_error "parameter '#{parameter.name}': #{e.message}"
@@ -18,12 +18,12 @@ module Clamp
         end
 
         self.class.parameters.each do |parameter|
-          next if instance_variable_defined?(parameter.ivar_name)
+          next if parameter.of(self).defined?
           next if parameter.environment_variable.nil?
           next unless ENV.has_key?(parameter.environment_variable)
           # Set the parameter value if it's environment variable is present
           value = ENV[parameter.environment_variable]
-          send(parameter.write_method, value)
+          parameter.of(self).write(value)
         end
 
       end

@@ -1,3 +1,5 @@
+require 'clamp/attribute/instance'
+
 module Clamp
   module Attribute
 
@@ -63,6 +65,10 @@ module Clamp
         elsif multivalued?
           []
         end
+      end
+
+      def of(command)
+        Attribute::Instance.new(self, command)
       end
 
       private
