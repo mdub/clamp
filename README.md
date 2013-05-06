@@ -167,11 +167,12 @@ When you `#run` a command, it will first attempt to `#parse` command-line argume
 
 Clamp will verify that all required (ie. non-optional) parameters are present, and signal a error if they aren't.
 
-### Validation block
+### Validation
 
 Both `option` and `parameter` accept an optional block.  If present, the block will be
-called with the raw string option argument, and is expected to coerce it to
-the correct type, e.g.
+called with the raw string argument, and is expected to validate it.  The value returned by the block will be assigned to the underlying attribute, so it's also a good place to coerce the String to a different type, if appropriate.  
+
+For example:
 
     option "--port", "PORT", "port to listen on" do |s|
       Integer(s)
@@ -183,6 +184,15 @@ If the block raises an ArgumentError, Clamp will catch it, and report that the v
     ERROR: option '--port': invalid value for Integer: "blah"
 
 For multivalued options and parameters, the validation block will be called for each value specified.
+
+More complex validation, e.g. those involving multiple options/parameters, should be performed within the `#execute` method.  Use `#signal_usage_error` to tell the user what they did wrong, e.g.
+
+    def execute
+      if port < 1024 && user != 'root'
+        signal_usage_error "port restricted for non-root users"
+      end
+      # ... carry on ...
+    end
 
 ### Advanced option/parameter handling
 
