@@ -13,11 +13,7 @@ module Clamp
 
       def define_reader_for(attribute)
         define_method(attribute.read_method) do
-          if attribute.of(self).defined?
-            attribute.of(self).value
-          else
-            send(attribute.default_method)
-          end
+          attribute.of(self).value_or_default
         end
       end
 

@@ -16,7 +16,7 @@ module Clamp
         command.instance_variable_defined?(attribute.ivar_name)
       end
 
-      # get value, without defaulting
+      # get value directly
       def value
         command.instance_variable_get(attribute.ivar_name)
       end
@@ -26,12 +26,22 @@ module Clamp
         command.instance_variable_set(attribute.ivar_name, value)
       end
 
-      # get value, with defaulting
+      def default
+        command.send(attribute.default_method)
+      end
+
+      def value_or_default
+        if self.defined?
+          self.value
+        else
+          default
+        end
+      end
+
       def read
         command.send(attribute.read_method)
       end
 
-      # set value via write_method
       def write(value)
         command.send(attribute.write_method, value)
       end
