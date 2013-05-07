@@ -63,7 +63,11 @@ module Clamp
         return unless ENV.has_key?(attribute.environment_variable)
         # Set the parameter value if it's environment variable is present
         value = ENV[attribute.environment_variable]
-        write(value)
+        begin
+          write(value)
+        rescue ArgumentError => e
+          command.send(:signal_usage_error, "$#{attribute.environment_variable}: #{e.message}")
+        end
       end
 
     end

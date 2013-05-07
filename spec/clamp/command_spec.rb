@@ -283,6 +283,11 @@ describe Clamp::Command do
     before do
       command.class.option ["-f", "--flavour"], "FLAVOUR", "Flavour of the month"
       command.class.option ["-c", "--color"], "COLOR", "Preferred hue"
+      command.class.option ["--scoops"], "N", "Number of scoops",
+          :default => 1,
+          :environment_variable => "DEFAULT_SCOOPS" do |arg|
+        Integer(arg)
+      end
       command.class.option ["-n", "--[no-]nuts"], :flag, "Nuts (or not)\nMay include nuts"
       command.class.parameter "[ARG] ...", "extra arguments", :attribute_name => :arguments
     end
@@ -441,24 +446,23 @@ describe Clamp::Command do
 
       end
 
-      describe "when option-writer raises an ArgumentError" do
+      describe "when a bad option value is specified on the command-line" do
 
-        before do
-          command.class.class_eval do
-
-            def color=(c)
-              unless c == "black"
-                raise ArgumentError, "sorry, we're out of #{c}"
-              end
-            end
-
-          end
+        it "signals a UsageError" do
+          lambda do
+            command.parse(%w(--scoops reginald))
+          end.should raise_error(Clamp::UsageError, /^option '--scoops': invalid value for Integer/)
         end
 
-        it "re-raises it as a UsageError" do
+      end
+
+      describe "when a bad option value is specified in the environment" do
+
+        it "signals a UsageError" do
+          ENV["DEFAULT_SCOOPS"] = "marjorie"
           lambda do
-            command.parse(%w(--color red))
-          end.should raise_error(Clamp::UsageError, /^option '--color': sorry, we're out of red/)
+            command.parse([])
+          end.should raise_error(Clamp::UsageError, /^\$DEFAULT_SCOOPS: invalid value for Integer/)
         end
 
       end
