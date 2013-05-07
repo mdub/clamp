@@ -13,7 +13,7 @@ module Clamp
 
       def define_reader_for(attribute)
         define_method(attribute.read_method) do
-          attribute.of(self).value_or_default
+          attribute.of(self)._read
         end
       end
 
@@ -28,7 +28,7 @@ module Clamp
           if block
             value = instance_exec(value, &block)
           end
-          attribute.of(self).set_value(value)
+          attribute.of(self)._write(value)
         end
       end
 

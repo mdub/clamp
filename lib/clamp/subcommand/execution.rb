@@ -16,9 +16,9 @@ module Clamp
       def instatiate_subcommand(name)
         subcommand_class = find_subcommand_class(name)
         parent_attribute_values = {}
-        self.class.inheritable_attributes.each do |option|
-          if instance_variable_defined?(option.ivar_name)
-            parent_attribute_values[option] = instance_variable_get(option.ivar_name)
+        self.class.inheritable_attributes.each do |attribute|
+          if attribute.of(self).defined?
+            parent_attribute_values[attribute] = attribute.of(self).get
           end
         end
         subcommand_class.new("#{invocation_path} #{name}", context, parent_attribute_values)

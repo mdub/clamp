@@ -28,7 +28,7 @@ module Clamp
       @invocation_path = invocation_path
       @context = context
       parent_attribute_values.each do |attribute, value|
-        instance_variable_set(attribute.ivar_name, value)
+        attribute.of(self).set(value)
       end
     end
 

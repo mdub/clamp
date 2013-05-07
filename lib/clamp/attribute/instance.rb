@@ -17,12 +17,12 @@ module Clamp
       end
 
       # get value directly
-      def value
+      def get
         command.instance_variable_get(attribute.ivar_name)
       end
 
       # set value directly
-      def value=(value)
+      def set(value)
         command.instance_variable_set(attribute.ivar_name, value)
       end
 
@@ -30,22 +30,22 @@ module Clamp
         command.send(attribute.default_method)
       end
 
-      def value_or_default
+      # default implementation of read_method
+      def _read
         if self.defined?
-          self.value
+          get
         else
           default
         end
       end
 
-      def set_value(value)
+      # default implementation of write_method
+      def _write(value)
         if attribute.multivalued?
-          unless self.defined?
-            self.value = []
-          end
-          self.value << value
+          current_values = get || []
+          set(current_values + [value])
         else
-          self.value = value
+          set(value)
         end
       end
 
