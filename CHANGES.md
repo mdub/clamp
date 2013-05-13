@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 (2013-05-07)
+
+* Signal a usage error when an environment_variable fails validation.
+* Refactor setting, defaulting and inheritance of attributes.
+
 ## 0.6.0 (2013-04-28)
 
 * Introduce "banner" to describe a command (replacing "self.description=").
