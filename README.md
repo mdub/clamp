@@ -8,11 +8,12 @@ It handles boring stuff like parsing the command-line, and generating help, so y
 Not another one!
 ----------------
 
-Yeah, sorry.  There are a bunch of existing command-line parsing libraries out there, and Clamp draws inspiration from a variety of sources, including [Thor], [optparse], and [Clip].  In the end, though, I wanted a slightly rounder wheel.
+Yeah, sorry.  There are a bunch of existing command-line parsing libraries out there, and Clamp draws inspiration from a variety of sources, including [Thor], [optparse], and [Clip].  In the end, though, I wanted a slightly rounder wheel.  (Although, Clamp has a _lot_ in common with Ara T. Howard's [main.rb]. Had I been aware of that project at the time, I might not have written Clamp.)
 
 [optparse]: http://ruby-doc.org/stdlib/libdoc/optparse/rdoc/index.html
 [Thor]: http://github.com/wycats/thor
 [Clip]: http://clip.rubyforge.org/
+[main.rb]: https://github.com/ahoward/main
 
 Quick Start
 -----------
