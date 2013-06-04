@@ -8,8 +8,12 @@ module Clamp
       def define_accessors_for(attribute, &block)
         define_reader_for(attribute)
         define_default_for(attribute)
-        define_writer_for(attribute, &block)
-        define_multi_writer_for(attribute) if attribute.multivalued?
+        if attribute.multivalued?
+          define_appender_for(attribute, &block)
+          define_multi_writer_for(attribute)
+        else
+          define_simple_writer_for(attribute, &block)
+        end
       end
 
       def define_reader_for(attribute)
@@ -24,20 +28,25 @@ module Clamp
         end
       end
 
-      def define_writer_for(attribute, &block)
+      def define_simple_writer_for(attribute, &block)
         define_method(attribute.write_method) do |value|
-          if block
-            value = instance_exec(value, &block)
-          end
-          attribute.of(self)._write(value)
+          value = instance_exec(value, &block) if block
+          attribute.of(self).set(value)
+        end
+      end
+
+      def define_appender_for(attribute, &block)
+        define_method(attribute.append_method) do |value|
+          value = instance_exec(value, &block) if block
+          attribute.of(self)._append(value)
         end
       end
 
       def define_multi_writer_for(attribute)
-        define_method(attribute.multi_write_method) do |values|
+        define_method(attribute.write_method) do |values|
           attribute.of(self).set([])
           Array(values).each do |value|
-            attribute.of(self).write(value)
+            attribute.of(self).take(value)
           end
         end
       end

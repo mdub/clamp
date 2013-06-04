@@ -29,7 +29,7 @@ module Clamp
           value = option.extract_value(switch, remaining_arguments)
 
           begin
-            option.of(self).write(value)
+            option.of(self).take(value)
           rescue ArgumentError => e
             signal_usage_error "option '#{switch}': #{e.message}"
           end

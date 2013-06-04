@@ -39,22 +39,28 @@ module Clamp
         end
       end
 
-      # default implementation of write_method
-      def _write(value)
-        if attribute.multivalued?
-          current_values = get || []
-          set(current_values + [value])
-        else
-          set(value)
-        end
+      # default implementation of append_method
+      def _append(value)
+        current_values = get || []
+        set(current_values + [value])
+      end
+
+      # default implementation of write_method for multi-valued attributes
+      def _replace(values)
+        set([])
+        Array(values).each { |value| take(value) }
       end
 
       def read
         command.send(attribute.read_method)
       end
 
-      def write(value)
-        command.send(attribute.write_method, value)
+      def take(value)
+        if attribute.multivalued?
+          command.send(attribute.append_method, value)
+        else
+          command.send(attribute.write_method, value)
+        end
       end
 
       def default_from_environment
@@ -64,7 +70,7 @@ module Clamp
         # Set the parameter value if it's environment variable is present
         value = ENV[attribute.environment_variable]
         begin
-          write(value)
+          take(value)
         rescue ArgumentError => e
           command.send(:signal_usage_error, "$#{attribute.environment_variable}: #{e.message}")
         end

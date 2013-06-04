@@ -10,7 +10,7 @@ module Clamp
         self.class.parameters.each do |parameter|
           begin
             parameter.consume(remaining_arguments).each do |value|
-              parameter.of(self).write(value)
+              parameter.of(self).take(value)
             end
           rescue ArgumentError => e
             signal_usage_error "parameter '#{parameter.name}': #{e.message}"

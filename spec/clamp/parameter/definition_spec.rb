@@ -113,10 +113,10 @@ describe Clamp::Parameter::Definition do
 
     end
 
-    describe "#write_method" do
+    describe "#append_method" do
 
       it "is derived from the attribute_name" do
-        parameter.write_method.should == "append_to_file_list"
+        parameter.append_method.should == "append_to_file_list"
       end
 
     end

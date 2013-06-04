@@ -40,16 +40,12 @@ module Clamp
       end
 
       def write_method
-        if multivalued?
-          "append_to_#{attribute_name}"
-        else
-          "#{attribute_name}="
-        end
+        "#{attribute_name}="
       end
 
-      def multi_write_method
+      def append_method
         if multivalued?
-          "#{attribute_name}="
+          "append_to_#{attribute_name}"
         end
       end
 

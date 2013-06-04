@@ -209,10 +209,10 @@ describe Clamp::Option::Definition do
 
     end
 
-    describe "#write_method" do
+    describe "#append_method" do
 
       it "is derived from the attribute_name" do
-        option.write_method.should == "append_to_header_list"
+        option.append_method.should == "append_to_header_list"
       end
 
     end
