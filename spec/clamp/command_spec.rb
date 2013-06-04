@@ -126,6 +126,18 @@ describe Clamp::Command do
         command.flavours.should == %w(chocolate vanilla)
       end
 
+      it "generates a single-value appender method" do
+        command.append_to_flavours("mud")
+        command.append_to_flavours("pie")
+        command.flavours.should == %w(mud pie)
+      end
+
+      it "generates a multi-value setter method" do
+        command.append_to_flavours("replaceme")
+        command.flavours = %w(mud pie)
+        command.flavours.should == %w(mud pie)
+      end
+
     end
 
     describe "with :environment_variable" do

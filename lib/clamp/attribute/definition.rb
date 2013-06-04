@@ -47,6 +47,12 @@ module Clamp
         end
       end
 
+      def multi_write_method
+        if multivalued?
+          "#{attribute_name}="
+        end
+      end
+
       def multivalued?
         @multivalued
       end
