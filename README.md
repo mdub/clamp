@@ -1,3 +1,4 @@
+
 Clamp  [![Build Status](https://secure.travis-ci.org/mdub/clamp.png?branch=master)](http://travis-ci.org/mdub/clamp)
 =====
 
@@ -20,51 +21,55 @@ Quick Start
 
 A typical Clamp script looks like this:
 
-    require 'clamp'
+```ruby
+require 'clamp'
 
-    Clamp do
+Clamp do
 
-      option "--loud", :flag, "say it loud"
-      option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
-        Integer(s)
-      end
+  option "--loud", :flag, "say it loud"
+  option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
+    Integer(s)
+  end
 
-      parameter "WORDS ...", "the thing to say", :attribute_name => :words
+  parameter "WORDS ...", "the thing to say", :attribute_name => :words
 
-      def execute
-        the_truth = words.join(" ")
-        the_truth.upcase! if loud?
-        iterations.times do
-          puts the_truth
-        end
-      end
-
+  def execute
+    the_truth = words.join(" ")
+    the_truth.upcase! if loud?
+    iterations.times do
+      puts the_truth
     end
+  end
+
+end
+```
 
 Internally, Clamp models a command as a Ruby class (a subclass of `Clamp::Command`), and a command execution as an instance of that class.  The example above is really just syntax-sugar for:
 
-    require 'clamp'
+```ruby
+require 'clamp'
 
-    class SpeakCommand < Clamp::Command
+class SpeakCommand < Clamp::Command
 
-      option "--loud", :flag, "say it loud"
-      option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
-        Integer(s)
-      end
+  option "--loud", :flag, "say it loud"
+  option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
+    Integer(s)
+  end
 
-      parameter "WORDS ...", "the thing to say", :attribute_name => :words
+  parameter "WORDS ...", "the thing to say", :attribute_name => :words
 
-      def execute
-        the_truth = words.join(" ")
-        the_truth.upcase! if loud?
-        iterations.times do
-          puts the_truth
-        end
-      end
-
+  def execute
+    the_truth = words.join(" ")
+    the_truth.upcase! if loud?
+    iterations.times do
+      puts the_truth
     end
+  end
 
-    SpeakCommand.run
+end
+
+SpeakCommand.run
+```
 
 Class-level methods like `option` and `parameter` declare attributes, in a similar way to `attr_accessor`, and arrange for them to be populated automatically based on command-line arguments.  They are also used to generate `help` documentation.
 
@@ -83,36 +88,48 @@ Options are declared using the `option` method.  The three required arguments ar
 
 For example:
 
-    option "--flavour", "FLAVOUR", "ice-cream flavour"
+```ruby
+option "--flavour", "FLAVOUR", "ice-cream flavour"
+```
 
 It works a little like `attr_accessor`, defining reader and writer methods on the command class.  The attribute name is inferred from the switch (in this case, "`flavour`").  When you pass options to your command, Clamp will populate the attributes, which are then available for use in your `#execute` method.
 
-    def execute
-      puts "You chose #{flavour}.  Excellent choice!"
-    end
+```ruby
+def execute
+  puts "You chose #{flavour}.  Excellent choice!"
+end
+```
 
 If you don't like the inferred attribute name, you can override it:
 
-    option "--type", "TYPE", "type of widget", :attribute_name => :widget_type
-                                               # to avoid clobbering Object#type
+```ruby
+option "--type", "TYPE", "type of widget", :attribute_name => :widget_type
+                                           # to avoid clobbering Object#type
+```
 
 ### Short/long option switches
 
 The first argument to `option` can be an array, rather than a single string, in which case all the switches are treated as aliases:
 
-    option ["-s", "--subject"], "SUBJECT", "email subject line"
+```ruby
+option ["-s", "--subject"], "SUBJECT", "email subject line"
+```
 
 ### Flag options
 
 Some options are just boolean flags.  Pass "`:flag`" as the second parameter to tell Clamp not to expect an option argument:
 
-    option "--verbose", :flag, "be chatty"
+```ruby
+option "--verbose", :flag, "be chatty"
+```
 
 For flag options, Clamp appends "`?`" to the generated reader method; ie. you get a method called "`#verbose?`", rather than just "`#verbose`".
 
 Negatable flags are easy to generate, too:
 
-    option "--[no-]force", :flag, "be forceful (or not)"
+```ruby
+option "--[no-]force", :flag, "be forceful (or not)"
+```
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
 
@@ -120,7 +137,9 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 
 Although 'required option' is a an oxymoron, Clamp lets you mark an option as required, and will verify that a value is provided:
 
-    option "--password", "PASSWORD", "the secret password", :required => true
+```ruby
+option "--password", "PASSWORD", "the secret password", :required => true
+```
 
 Note that it makes no sense to mark a `:flag` option, or one with a `:default`, as `:required`.
 
@@ -128,7 +147,9 @@ Note that it makes no sense to mark a `:flag` option, or one with a `:default`, 
 
 Declaring an option "`:multivalued`" allows it to be specified multiple times on the command line.
 
-    option "--format", "FORMAT", "output format", :multivalued => true
+```ruby
+option "--format", "FORMAT", "output format", :multivalued => true
+```
 
 The underlying attribute becomes an Array, and the suffix "`_list`" is appended to the default attribute name.  In this case, an attribute called "`format_list`" would be generated (unless you override the default by specifying an `:attribute_name`).
 
@@ -142,7 +163,9 @@ Positional parameters can be declared using `parameter`, specifying
 
 For example:
 
-    parameter "SRC", "source file"
+```ruby
+parameter "SRC", "source file"
+```
 
 Like options, parameters are implemented as attributes of the command, with the default attribute name derived from the parameter name (in this case, "`src`"). By convention, parameter names are specified in uppercase, to make them obvious in usage help.
 
@@ -150,14 +173,17 @@ Like options, parameters are implemented as attributes of the command, with the 
 
 Wrapping a parameter name in square brackets indicates that it's optional, e.g.
 
-    parameter "[TARGET_DIR]", "target directory"
+```ruby
+parameter "[TARGET_DIR]", "target directory"
+```
 
 ### Multivalued (aka "greedy") parameters
 
 Three dots at the end of a parameter name makes it "greedy" - it will consume all remaining command-line arguments.  For example:
 
-    parameter "FILE ...", "input files", :attribute_name => :files
-
+```ruby
+parameter "FILE ...", "input files", :attribute_name => :files
+```
 
 Like multivalued options, greedy parameters are backed by an Array attribute (named with a "`_list`" suffix, by default).
 
@@ -175,63 +201,77 @@ called with the raw string argument, and is expected to validate it.  The value 
 
 For example:
 
-    option "--port", "PORT", "port to listen on" do |s|
-      Integer(s)
-    end
+```ruby
+option "--port", "PORT", "port to listen on" do |s|
+  Integer(s)
+end
+```
 
 If the block raises an ArgumentError, Clamp will catch it, and report that the value was bad:
 
-    !!!plain
-    ERROR: option '--port': invalid value for Integer: "blah"
+```ruby
+!!!plain
+ERROR: option '--port': invalid value for Integer: "blah"
+```
 
 For multivalued options and parameters, the validation block will be called for each value specified.
 
 More complex validation, e.g. those involving multiple options/parameters, should be performed within the `#execute` method.  Use `#signal_usage_error` to tell the user what they did wrong, e.g.
 
-    def execute
-      if port < 1024 && user != 'root'
-        signal_usage_error "port restricted for non-root users"
-      end
-      # ... carry on ...
-    end
+```ruby
+def execute
+  if port < 1024 && user != 'root'
+    signal_usage_error "port restricted for non-root users"
+  end
+  # ... carry on ...
+end
+```
 
 ### Advanced option/parameter handling
 
 While Clamp provides an attribute-writer method for each declared option or parameter, you always have the option of overriding it to provide custom argument-handling logic, e.g.
 
-    parameter "SERVER", "location of server"
+```ruby
+parameter "SERVER", "location of server"
 
-    def server=(server)
-      @server_address, @server_port = server.split(":")
-    end
+def server=(server)
+  @server_address, @server_port = server.split(":")
+end
+```
 
 ### Default values
 
 Default values can be specified for options, and optional parameters:
 
-    option "--flavour", "FLAVOUR", "ice-cream flavour", :default => "chocolate"
+```ruby
+option "--flavour", "FLAVOUR", "ice-cream flavour", :default => "chocolate"
 
-    parameter "[HOST]", "server host", :default => "localhost"
+parameter "[HOST]", "server host", :default => "localhost"
+```
 
 For more advanced cases, you can also specify default values by defining a method called "`default_#{attribute_name}`":
 
-    option "--http-port", "PORT", "web-server port", :default => 9000
+```ruby
+option "--http-port", "PORT", "web-server port", :default => 9000
 
-    option "--admin-port", "PORT", "admin port"
+option "--admin-port", "PORT", "admin port"
 
-    def default_admin_port
-       http_port + 1
-    end
+def default_admin_port
+   http_port + 1
+end
+```
 
 ### Environment variable support
 
 Options (and optional parameters) can also be associated with environment variables:
 
-    option "--port", "PORT", "the port to listen on", :environment_variable => "MYAPP_PORT" do |val|
-      val.to_i
-    end
+```ruby
+option "--port", "PORT", "the port to listen on", :environment_variable => "MYAPP_PORT" do |val|
+  val.to_i
+end
 
-    parameter "[HOST]", "server address", :environment_variable => "MYAPP_HOST"
+parameter "[HOST]", "server address", :environment_variable => "MYAPP_HOST"
+```
 
 Clamp will check the specified envariables in the absence of values supplied on the command line, before looking for a default value.
 
@@ -242,51 +282,57 @@ Subcommand support helps you wrap a number of related commands into a single scr
 
 Unsuprisingly, subcommands are declared using the `subcommand` method. e.g.
 
-    Clamp do
+```ruby
+Clamp do
 
-      subcommand "init", "Initialize the repository" do
+  subcommand "init", "Initialize the repository" do
 
-        def execute
-          # ...
-        end
-
-      end
-
+    def execute
+      # ...
     end
+
+  end
+
+end
+```
 
 Clamp generates an anonymous subclass of the current class, to represent the subcommand.  Alternatively, you can provide an explicit subcommand class:
 
-    class MainCommand < Clamp::Command
+```ruby
+class MainCommand < Clamp::Command
 
-      subcommand "init", "Initialize the repository", InitCommand
+  subcommand "init", "Initialize the repository", InitCommand
 
-    end
+end
 
-    class InitCommand < Clamp::Command
+class InitCommand < Clamp::Command
 
-      def execute
-        # ...
-      end
+  def execute
+    # ...
+  end
 
-    end
+end
+```
 
 ### Default subcommand
 
 You can set a default subcommand, at the class level, as follows:
 
-    Clamp do
+```ruby
+Clamp do
 
-      self.default_subcommand = "status"
+  self.default_subcommand = "status"
 
-      subcommand "status", "Display current status" do
+  subcommand "status", "Display current status" do
 
-        def execute
-          # ...
-        end
-
-      end
-
+    def execute
+      # ...
     end
+
+  end
+
+end
+```
 
 Then, if when no SUBCOMMAND argument is provided, the default will be selected.
 
@@ -301,17 +347,19 @@ Getting help
 
 All Clamp commands support a "`--help`" option, which outputs brief usage documentation, based on those seemingly useless extra parameters that you had to pass to `option` and `parameter`.
 
-    $ speak --help
-    Usage:
-        speak [OPTIONS] WORDS ...
+```sh
+$ speak --help
+Usage:
+    speak [OPTIONS] WORDS ...
 
-    Arguments:
-        WORDS ...                     the thing to say
+Arguments:
+    WORDS ...                     the thing to say
 
-    Options:
-        --loud                        say it loud
-        -n, --iterations N            say it N times (default: 1)
-        -h, --help                    print help
+Options:
+    --loud                        say it loud
+    -n, --iterations N            say it N times (default: 1)
+    -h, --help                    print help
+```
 
 License
 -------
