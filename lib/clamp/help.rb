@@ -36,8 +36,8 @@ module Clamp
       declared_usage_descriptions || [derived_usage_description]
     end
 
-    def help(invocation_path)
-      help = Builder.new
+    def help(invocation_path, builder = Builder.new)
+      help = builder
       help.add_usage(invocation_path, usage_descriptions)
       help.add_description(description)
       if has_parameters?
