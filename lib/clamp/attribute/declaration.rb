@@ -44,10 +44,7 @@ module Clamp
 
       def define_multi_writer_for(attribute)
         define_method(attribute.write_method) do |values|
-          attribute.of(self).set([])
-          Array(values).each do |value|
-            attribute.of(self).take(value)
-          end
+          attribute.of(self)._replace(values)
         end
       end
 
