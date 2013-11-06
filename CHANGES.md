@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.2 (2013-11-06)
+
+* Refactoring around multi-valued attributes.
+* Allow injection of a custom help-builder.
+
 ## 0.6.1 (2013-05-07)
 
 * Signal a usage error when an environment_variable fails validation.
