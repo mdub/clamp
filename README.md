@@ -1,6 +1,8 @@
-
-Clamp  [![Build Status](https://secure.travis-ci.org/mdub/clamp.png?branch=master)](http://travis-ci.org/mdub/clamp)
+Clamp
 =====
+
+[![Gem Version](https://badge.fury.io/rb/clamp.png)](http://badge.fury.io/rb/clamp)
+[![Build Status](https://secure.travis-ci.org/mdub/clamp.png?branch=master)](http://travis-ci.org/mdub/clamp)
 
 "Clamp" is a minimal framework for command-line utilities.
 
@@ -197,7 +199,7 @@ Clamp will verify that all required (ie. non-optional) parameters are present, a
 ### Validation
 
 Both `option` and `parameter` accept an optional block.  If present, the block will be
-called with the raw string argument, and is expected to validate it.  The value returned by the block will be assigned to the underlying attribute, so it's also a good place to coerce the String to a different type, if appropriate.  
+called with the raw string argument, and is expected to validate it.  The value returned by the block will be assigned to the underlying attribute, so it's also a good place to coerce the String to a different type, if appropriate.
 
 For example:
 
