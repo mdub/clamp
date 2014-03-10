@@ -316,6 +316,18 @@ class InitCommand < Clamp::Command
 end
 ```
 
+Like options, subcommands may have aliases:
+
+```ruby
+Clamp do
+
+  subcommand ["initialize", "init"], "Initialize the repository" do
+    # ...
+  end
+
+end
+```
+
 ### Default subcommand
 
 You can set a default subcommand, at the class level, as follows:
