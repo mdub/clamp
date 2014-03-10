@@ -8,7 +8,7 @@ Clamp do
 
   subcommand "foo", "Foo!" do
 
-    subcommand "bar", "Baaaa!" do
+    subcommand ["bar", "bah", "baa"], "Baaaa!" do
 
       def execute
         puts "FUBAR"
