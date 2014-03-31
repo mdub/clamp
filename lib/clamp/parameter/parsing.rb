@@ -13,7 +13,7 @@ module Clamp
               parameter.of(self).take(value)
             end
           rescue ArgumentError => e
-            signal_usage_error "parameter '#{parameter.name}': #{e.message}"
+            raise ParameterParseError.new("parameter '#{parameter.name}': #{e.message}", self, parameter.name, e)
           end
         end
 

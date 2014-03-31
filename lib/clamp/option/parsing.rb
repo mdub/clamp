@@ -31,7 +31,7 @@ module Clamp
           begin
             option.of(self).take(value)
           rescue ArgumentError => e
-            signal_usage_error "option '#{switch}': #{e.message}"
+            raise OptionParseError.new("option '#{switch}': #{e.message}", self, switch, e)
           end
 
         end
@@ -50,7 +50,7 @@ module Clamp
               message += " (or env #{option.environment_variable})"
             end
             message += " is required"
-            signal_usage_error message
+            raise RequiredOptionError.new(message, self, option)
           end
         end
       end
@@ -59,7 +59,7 @@ module Clamp
 
       def find_option(switch)
         self.class.find_option(switch) ||
-        signal_usage_error("Unrecognised option '#{switch}'")
+        raise(UnrecognisedOptionError.new("Unrecognised option '#{switch}'", self, switch))
       end
 
     end

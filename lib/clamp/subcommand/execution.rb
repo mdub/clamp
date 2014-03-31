@@ -25,7 +25,7 @@ module Clamp
       end
 
       def find_subcommand_class(name)
-        subcommand_def = self.class.find_subcommand(name) || signal_usage_error("No such sub-command '#{name}'")
+        subcommand_def = self.class.find_subcommand(name) || raise(UnrecognisedSubcommandError.new("No such sub-command '#{name}'", self, name))
         subcommand_def.subcommand_class
       end
 

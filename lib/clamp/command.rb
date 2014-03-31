@@ -91,7 +91,7 @@ module Clamp
 
     def handle_remaining_arguments
       unless remaining_arguments.empty?
-        signal_usage_error "too many arguments"
+        raise TooManyArgumentsError.new("too many arguments", self)
       end
     end
 
