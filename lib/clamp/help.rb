@@ -61,7 +61,7 @@ module Clamp
       end
 
       def add_usage(invocation_path, usage_descriptions)
-        puts "Usage:"
+        puts usage_heading
         usage_descriptions.each do |usage|
           puts "    #{invocation_path} #{usage}".rstrip
         end
@@ -85,6 +85,12 @@ module Clamp
             label = ''
           end
         end
+      end
+
+      protected
+
+      def usage_heading
+        "Usage:"
       end
 
       private
