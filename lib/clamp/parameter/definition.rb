@@ -22,7 +22,7 @@ module Clamp
       end
 
       def consume(arguments)
-        raise ArgumentError, "no value provided" if required? && arguments.empty?
+        raise ArgumentError, Clamp.message(:no_value_provided) if required? && arguments.empty?
         arguments.shift(multivalued? ? arguments.length : 1)
       end
 
