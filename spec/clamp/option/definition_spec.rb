@@ -102,15 +102,15 @@ describe Clamp::Option::Definition do
     end
 
     it "handles both positive and negative forms" do
-      option.handles?("--force").should be_true
-      option.handles?("--no-force").should be_true
+      option.handles?("--force").should be true
+      option.handles?("--no-force").should be true
     end
 
     describe "#flag_value" do
 
       it "returns true for the positive variant" do
-        option.flag_value("--force").should be_true
-        option.flag_value("--no-force").should be_false
+        option.flag_value("--force").should be true
+        option.flag_value("--no-force").should be false
       end
 
     end
@@ -132,8 +132,8 @@ describe Clamp::Option::Definition do
     end
 
     it "handles both switches" do
-      option.handles?("--key-file").should be_true
-      option.handles?("-k").should be_true
+      option.handles?("--key-file").should be true
+      option.handles?("-k").should be true
     end
 
     describe "#help" do

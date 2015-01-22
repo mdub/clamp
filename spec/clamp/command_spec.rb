@@ -420,7 +420,7 @@ describe Clamp::Command do
         end
 
         it "sets the flag" do
-          command.nuts?.should be_true
+          command.nuts?.should be true
         end
 
       end
@@ -433,7 +433,7 @@ describe Clamp::Command do
         end
 
         it "clears the flag" do
-          command.nuts?.should be_false
+          command.nuts?.should be false
         end
 
       end
@@ -510,7 +510,7 @@ describe Clamp::Command do
       lambda do
         command.parse(%w(--help))
       end.should_not raise_error
-      command.help.should be_true
+      command.help?.should be true
     end
 
     it "does not recognise -h" do
