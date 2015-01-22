@@ -1,4 +1,5 @@
 require 'stringio'
+require 'clamp/messages'
 
 module Clamp
 
@@ -41,12 +42,12 @@ module Clamp
       help.add_usage(invocation_path, usage_descriptions)
       help.add_description(description)
       if has_parameters?
-        help.add_list("Parameters", parameters)
+        help.add_list(Clamp.message(:parameters_heading), parameters)
       end
       if has_subcommands?
-        help.add_list("Subcommands", recognised_subcommands)
+        help.add_list(Clamp.message(:subcommands_heading), recognised_subcommands)
       end
-      help.add_list("Options", recognised_options)
+      help.add_list(Clamp.message(:options_heading), recognised_options)
       help.string
     end
 
@@ -90,7 +91,7 @@ module Clamp
       protected
 
       def usage_heading
-        "Usage:"
+        Clamp.message(:usage_heading) + ":"
       end
 
       private
