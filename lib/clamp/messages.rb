@@ -20,7 +20,11 @@ module Clamp
       :env_argument_error => "$%<env>s: %<message>s",
       :unrecognised_option => "Unrecognised option '%<switch>s'",
       :no_such_subcommand => "No such sub-command '%<name>s'",
-      :no_value_provided => "no value provided"
+      :no_value_provided => "no value provided",
+      :usage_heading => "Usage",
+      :parameters_heading => "Parameters",
+      :subcommands_heading => "Subcommands",
+      :options_heading => "Options"
     }
   end
 
