@@ -9,26 +9,26 @@ describe Clamp::Parameter::Definition do
     end
 
     it "has a name" do
-      parameter.name.should == "COLOR"
+      expect(parameter.name).to eql "COLOR"
     end
 
     it "has a description" do
-      parameter.description.should == "hue of choice"
+      expect(parameter.description).to eql "hue of choice"
     end
 
     it "is single-valued" do
-      parameter.should_not be_multivalued
+      expect(parameter).to_not be_multivalued
     end
 
     describe "#attribute_name" do
 
       it "is derived from the name" do
-        parameter.attribute_name.should == "color"
+        expect(parameter.attribute_name).to eql "color"
       end
 
       it "can be overridden" do
         parameter = described_class.new("COLOR", "hue of choice", :attribute_name => "hue")
-        parameter.attribute_name.should == "hue"
+        expect(parameter.attribute_name).to eql "hue"
       end
 
     end
@@ -37,17 +37,17 @@ describe Clamp::Parameter::Definition do
 
       it "consumes one argument" do
         arguments = %w(a b c)
-        parameter.consume(arguments).should == ["a"]
-        arguments.should == %w(b c)
+        expect(parameter.consume(arguments)).to eql ["a"]
+        expect(arguments).to eql %w(b c)
       end
 
       describe "with no arguments" do
 
         it "raises an Argument error" do
           arguments = []
-          lambda do
+          expect do
             parameter.consume(arguments)
-          end.should raise_error(ArgumentError)
+          end.to raise_error(ArgumentError)
         end
 
       end
@@ -63,13 +63,13 @@ describe Clamp::Parameter::Definition do
     end
 
     it "is single-valued" do
-      parameter.should_not be_multivalued
+      expect(parameter).to_not be_multivalued
     end
 
     describe "#attribute_name" do
 
       it "omits the brackets" do
-        parameter.attribute_name.should == "color"
+        expect(parameter.attribute_name).to eql "color"
       end
 
     end
@@ -78,15 +78,15 @@ describe Clamp::Parameter::Definition do
 
       it "consumes one argument" do
         arguments = %w(a b c)
-        parameter.consume(arguments).should == ["a"]
-        arguments.should == %w(b c)
+        expect(parameter.consume(arguments)).to eql ["a"]
+        expect(arguments).to eql %w(b c)
       end
 
       describe "with no arguments" do
 
         it "consumes nothing" do
           arguments = []
-          parameter.consume(arguments).should == []
+          expect(parameter.consume(arguments)).to eql []
         end
 
       end
@@ -102,13 +102,13 @@ describe Clamp::Parameter::Definition do
     end
 
     it "is multi-valued" do
-      parameter.should be_multivalued
+      expect(parameter).to be_multivalued
     end
 
     describe "#attribute_name" do
 
       it "gets a _list suffix" do
-        parameter.attribute_name.should == "file_list"
+        expect(parameter.attribute_name).to eql "file_list"
       end
 
     end
@@ -116,7 +116,7 @@ describe Clamp::Parameter::Definition do
     describe "#append_method" do
 
       it "is derived from the attribute_name" do
-        parameter.append_method.should == "append_to_file_list"
+        expect(parameter.append_method).to eql "append_to_file_list"
       end
 
     end
@@ -125,17 +125,17 @@ describe Clamp::Parameter::Definition do
 
       it "consumes all the remaining arguments" do
         arguments = %w(a b c)
-        parameter.consume(arguments).should == %w(a b c)
-        arguments.should == []
+        expect(parameter.consume(arguments)).to eql %w(a b c)
+        expect(arguments).to eql []
       end
 
       describe "with no arguments" do
 
         it "raises an Argument error" do
           arguments = []
-          lambda do
+          expect do
             parameter.consume(arguments)
-          end.should raise_error(ArgumentError)
+          end.to raise_error(ArgumentError)
         end
 
       end
@@ -151,7 +151,7 @@ describe Clamp::Parameter::Definition do
       describe "#attribute_name" do
 
         it "is the specified one" do
-          parameter.attribute_name.should == "config_settings"
+          expect(parameter.attribute_name).to eql "config_settings"
         end
 
       end
@@ -167,13 +167,13 @@ describe Clamp::Parameter::Definition do
     end
 
     it "is multi-valued" do
-      parameter.should be_multivalued
+      expect(parameter).to be_multivalued
     end
 
     describe "#attribute_name" do
 
       it "gets a _list suffix" do
-        parameter.attribute_name.should == "files_list"
+        expect(parameter.attribute_name).to eql "files_list"
       end
 
     end
@@ -181,7 +181,7 @@ describe Clamp::Parameter::Definition do
     describe "#default_value" do
 
       it "is an empty list" do
-        parameter.default_value.should == []
+        expect(parameter.default_value).to eql []
       end
 
     end
@@ -189,7 +189,7 @@ describe Clamp::Parameter::Definition do
     describe "#help" do
 
       it "does not include default" do
-        parameter.help_rhs.should_not include("default:")
+        expect(parameter.help_rhs).to_not include("default:")
       end
 
     end
@@ -203,7 +203,7 @@ describe Clamp::Parameter::Definition do
       describe "#default_value" do
 
         it "is that specified" do
-          parameter.default_value.should == %w(a b c)
+          expect(parameter.default_value).to eql %w(a b c)
         end
 
       end
@@ -211,7 +211,7 @@ describe Clamp::Parameter::Definition do
       describe "#help" do
 
         it "includes the default value" do
-          parameter.help_rhs.should include("default:")
+          expect(parameter.help_rhs).to include("default:")
         end
 
       end
@@ -220,15 +220,15 @@ describe Clamp::Parameter::Definition do
 
         it "consumes all the remaining arguments" do
           arguments = %w(a b c)
-          parameter.consume(arguments).should == %w(a b c)
-          arguments.should == []
+          expect(parameter.consume(arguments)).to eql %w(a b c)
+          expect(arguments).to eql []
         end
 
         describe "with no arguments" do
 
           it "don't override defaults" do
             arguments = []
-            parameter.consume(arguments).should == []
+            expect(parameter.consume(arguments)).to eql []
           end
 
         end

@@ -9,26 +9,26 @@ describe Clamp::Option::Definition do
     end
 
     it "has a long_switch" do
-      option.long_switch.should == "--key-file"
+      expect(option.long_switch).to eql "--key-file"
     end
 
     it "has a type" do
-      option.type.should == "FILE"
+      expect(option.type).to eql "FILE"
     end
 
     it "has a description" do
-      option.description.should == "SSH identity"
+      expect(option.description).to eql "SSH identity"
     end
 
     describe "#attribute_name" do
 
       it "is derived from the (long) switch" do
-        option.attribute_name.should == "key_file"
+        expect(option.attribute_name).to eql "key_file"
       end
 
       it "can be overridden" do
         option = described_class.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
-        option.attribute_name.should == "ssh_identity"
+        expect(option.attribute_name).to eql "ssh_identity"
       end
 
     end
@@ -36,7 +36,7 @@ describe Clamp::Option::Definition do
     describe "#write_method" do
 
       it "is derived from the attribute_name" do
-        option.write_method.should == "key_file="
+        expect(option.write_method).to eql "key_file="
       end
 
     end
@@ -45,12 +45,12 @@ describe Clamp::Option::Definition do
 
       it "defaults to nil" do
         option = described_class.new("-n", "N", "iterations")
-        option.default_value.should == nil
+        expect(option.default_value).to eql nil
       end
 
       it "can be overridden" do
         option = described_class.new("-n", "N", "iterations", :default => 1)
-        option.default_value.should == 1
+        expect(option.default_value).to eql 1
       end
 
     end
@@ -58,7 +58,7 @@ describe Clamp::Option::Definition do
     describe "#help" do
 
       it "combines switch, type and description" do
-        option.help.should == ["--key-file FILE", "SSH identity"]
+        expect(option.help).to eql ["--key-file FILE", "SSH identity"]
       end
 
     end
@@ -74,13 +74,13 @@ describe Clamp::Option::Definition do
     describe "#default_conversion_block" do
 
       it "converts truthy values to true" do
-        option.default_conversion_block.call("true").should == true
-        option.default_conversion_block.call("yes").should == true
+        expect(option.default_conversion_block.call("true")).to eql true
+        expect(option.default_conversion_block.call("yes")).to eql true
       end
 
       it "converts falsey values to false" do
-        option.default_conversion_block.call("false").should == false
-        option.default_conversion_block.call("no").should == false
+        expect(option.default_conversion_block.call("false")).to eql false
+        expect(option.default_conversion_block.call("no")).to eql false
       end
 
     end
@@ -88,7 +88,7 @@ describe Clamp::Option::Definition do
     describe "#help" do
 
       it "excludes option argument" do
-        option.help.should == ["--verbose", "Blah blah blah"]
+        expect(option.help).to eql ["--verbose", "Blah blah blah"]
       end
 
     end
@@ -102,15 +102,15 @@ describe Clamp::Option::Definition do
     end
 
     it "handles both positive and negative forms" do
-      option.handles?("--force").should be true
-      option.handles?("--no-force").should be true
+      expect(option.handles?("--force")).to be true
+      expect(option.handles?("--no-force")).to be true
     end
 
     describe "#flag_value" do
 
       it "returns true for the positive variant" do
-        option.flag_value("--force").should be true
-        option.flag_value("--no-force").should be false
+        expect(option.flag_value("--force")).to be true
+        expect(option.flag_value("--no-force")).to be false
       end
 
     end
@@ -118,7 +118,7 @@ describe Clamp::Option::Definition do
     describe "#attribute_name" do
 
       it "is derived from the (long) switch" do
-        option.attribute_name.should == "force"
+        expect(option.attribute_name).to eql "force"
       end
 
     end
@@ -132,14 +132,14 @@ describe Clamp::Option::Definition do
     end
 
     it "handles both switches" do
-      option.handles?("--key-file").should be true
-      option.handles?("-k").should be true
+      expect(option.handles?("--key-file")).to be true
+      expect(option.handles?("-k")).to be true
     end
 
     describe "#help" do
 
       it "includes both switches" do
-        option.help.should == ["-k, --key-file FILE", "SSH identity"]
+        expect(option.help).to eql ["-k, --key-file FILE", "SSH identity"]
       end
 
     end
@@ -155,7 +155,7 @@ describe Clamp::Option::Definition do
     describe "#help" do
 
       it "describes environment variable" do
-        option.help.should == ["-x X", "mystery option (default: $APP_X)"]
+        expect(option.help).to eql ["-x X", "mystery option (default: $APP_X)"]
       end
 
     end
@@ -169,7 +169,7 @@ describe Clamp::Option::Definition do
       describe "#help" do
 
         it "describes both environment variable and default" do
-          option.help.should == ["-x X", %{mystery option (default: $APP_X, or "xyz")}]
+          expect(option.help).to eql ["-x X", %{mystery option (default: $APP_X, or "xyz")}]
         end
 
       end
@@ -185,18 +185,18 @@ describe Clamp::Option::Definition do
     end
 
     it "is multivalued" do
-      option.should be_multivalued
+      expect(option).to be_multivalued
     end
 
     describe "#default_value" do
 
       it "defaults to an empty Array" do
-        option.default_value.should == []
+        expect(option.default_value).to eql []
       end
 
       it "can be overridden" do
         option = described_class.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1,2,3])
-        option.default_value.should == [1,2,3]
+        expect(option.default_value).to eql [1,2,3]
       end
 
     end
@@ -204,7 +204,7 @@ describe Clamp::Option::Definition do
     describe "#attribute_name" do
 
       it "gets a _list suffix" do
-        option.attribute_name.should == "header_list"
+        expect(option.attribute_name).to eql "header_list"
       end
 
     end
@@ -212,7 +212,7 @@ describe Clamp::Option::Definition do
     describe "#append_method" do
 
       it "is derived from the attribute_name" do
-        option.append_method.should == "append_to_header_list"
+        expect(option.append_method).to eql "append_to_header_list"
       end
 
     end
@@ -236,7 +236,7 @@ describe Clamp::Option::Definition do
       it "includes help for each option exactly once" do
         subcommand = command_class.send(:find_subcommand, 'foo')
         subcommand_help = subcommand.subcommand_class.help("")
-        subcommand_help.lines.grep(/--bar BAR/).count.should == 1
+        expect(subcommand_help.lines.grep(/--bar BAR/).count).to eql 1
       end
 
     end

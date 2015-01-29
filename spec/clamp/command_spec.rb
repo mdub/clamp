@@ -17,7 +17,7 @@ describe Clamp::Command do
   describe "#help" do
 
     it "describes usage" do
-      command.help.should =~ /^Usage:\n    cmd.*\n/
+      expect(command.help).to match /^Usage:\n    cmd.*\n/
     end
 
   end
@@ -29,7 +29,7 @@ describe Clamp::Command do
     end
 
     it "executes the #execute method" do
-      stdout.should_not be_empty
+      expect(stdout).to_not be_empty
     end
 
   end
@@ -38,9 +38,9 @@ describe Clamp::Command do
 
     it "declares option argument accessors" do
       command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
-      command.flavour.should == nil
+      expect(command.flavour).to eql nil
       command.flavour = "chocolate"
-      command.flavour.should == "chocolate"
+      expect(command.flavour).to eql "chocolate"
     end
 
     describe "with type :flag" do
@@ -50,8 +50,8 @@ describe Clamp::Command do
       end
 
       it "declares a predicate-style reader" do
-        command.should respond_to(:verbose?)
-        command.should_not respond_to(:verbose)
+        expect(command).to respond_to(:verbose?)
+        expect(command).to_not respond_to(:verbose)
       end
 
     end
@@ -64,12 +64,12 @@ describe Clamp::Command do
 
       it "uses the specified attribute_name name to name accessors" do
         command.bar = "chocolate"
-        command.bar.should == "chocolate"
+        expect(command.bar).to eql "chocolate"
       end
 
       it "does not attempt to create the default accessors" do
-        command.should_not respond_to(:foo)
-        command.should_not respond_to(:foo=)
+        expect(command).to_not respond_to(:foo)
+        expect(command).to_not respond_to(:foo=)
       end
 
     end
@@ -86,7 +86,7 @@ describe Clamp::Command do
       end
 
       it "sets the specified default value" do
-        command.port.should == 4321
+        expect(command.port).to eql 4321
       end
 
     end
@@ -98,13 +98,13 @@ describe Clamp::Command do
       end
 
       it "declares default method" do
-        command.default_port.should == 4321
+        expect(command.default_port).to eql 4321
       end
 
       describe "#help" do
 
         it "describes the default value" do
-          command.help.should include("port to listen on (default: 4321)")
+          expect(command.help).to include("port to listen on (default: 4321)")
         end
 
       end
@@ -118,24 +118,24 @@ describe Clamp::Command do
       end
 
       it "defaults to empty array" do
-        command.flavours.should == []
+        expect(command.flavours).to eql []
       end
 
       it "supports multiple values" do
         command.parse(%w(--flavour chocolate --flavour vanilla))
-        command.flavours.should == %w(chocolate vanilla)
+        expect(command.flavours).to eql %w(chocolate vanilla)
       end
 
       it "generates a single-value appender method" do
         command.append_to_flavours("mud")
         command.append_to_flavours("pie")
-        command.flavours.should == %w(mud pie)
+        expect(command.flavours).to eql %w(mud pie)
       end
 
       it "generates a multi-value setter method" do
         command.append_to_flavours("replaceme")
         command.flavours = %w(mud pie)
-        command.flavours.should == %w(mud pie)
+        expect(command.flavours).to eql %w(mud pie)
       end
 
     end
@@ -156,7 +156,7 @@ describe Clamp::Command do
 
         it "uses the default" do
           command.parse([])
-          command.port.should == 4321
+          expect(command.port).to eql 4321
         end
 
       end
@@ -169,14 +169,14 @@ describe Clamp::Command do
 
         it "uses the environment variable" do
           command.parse([])
-          command.port.should == 12345
+          expect(command.port).to eql 12345
         end
 
         context "and a value is specified on the command-line" do
 
           it "uses command-line value" do
             command.parse(%w(--port 1500))
-            command.port.should == 1500
+            expect(command.port).to eql 1500
           end
 
         end
@@ -186,7 +186,7 @@ describe Clamp::Command do
       describe "#help" do
 
         it "describes the default value and env usage" do
-          command.help.should include("port to listen on (default: $PORT, or 4321)")
+          expect(command.help).to include("port to listen on (default: $PORT, or 4321)")
         end
 
       end
@@ -207,7 +207,7 @@ describe Clamp::Command do
 
         it "uses the default" do
           command.parse([])
-          command.enable?.should == false
+          expect(command.enable?).to eql false
         end
 
       end
@@ -219,7 +219,7 @@ describe Clamp::Command do
           it "sets the flag" do
             ENV["ENABLE"] = truthy_value
             command.parse([])
-            command.enable?.should == true
+            expect(command.enable?).to eql true
           end
 
         end
@@ -233,7 +233,7 @@ describe Clamp::Command do
           it "clears the flag" do
             ENV["ENABLE"] = falsey_value
             command.parse([])
-            command.enable?.should == false
+            expect(command.enable?).to eql false
           end
 
         end
@@ -279,11 +279,11 @@ describe Clamp::Command do
       end
 
       it "uses the block to validate and convert the option argument" do
-        lambda do
+        expect do
           command.port = "blah"
-        end.should raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
         command.port = "1234"
-        command.port.should == 1234
+        expect(command.port).to eql 1234
       end
 
     end
@@ -309,9 +309,9 @@ describe Clamp::Command do
       describe "with an unrecognised option" do
 
         it "raises a UsageError" do
-          lambda do
+          expect do
             command.parse(%w(--foo bar))
-          end.should raise_error(Clamp::UsageError)
+          end.to raise_error(Clamp::UsageError)
         end
 
       end
@@ -323,9 +323,9 @@ describe Clamp::Command do
         end
 
         it "maps the option values onto the command object" do
-          command.flavour.should == "strawberry"
-          command.color.should == "blue"
-          command.nuts?.should == true
+          expect(command.flavour).to eql "strawberry"
+          expect(command.color).to eql "blue"
+          expect(command.nuts?).to eql true
         end
 
       end
@@ -337,8 +337,8 @@ describe Clamp::Command do
         end
 
         it "recognises short options as aliases" do
-          command.flavour.should == "strawberry"
-          command.color.should == "blue"
+          expect(command.flavour).to eql "strawberry"
+          expect(command.color).to eql "blue"
         end
 
       end
@@ -350,7 +350,7 @@ describe Clamp::Command do
         end
 
         it "works as though the value were separated" do
-          command.flavour.should == "strawberry"
+          expect(command.flavour).to eql "strawberry"
         end
 
       end
@@ -362,8 +362,8 @@ describe Clamp::Command do
         end
 
         it "works as though the options were separate" do
-          command.flavour.should == "strawberry"
-          command.nuts?.should == true
+          expect(command.flavour).to eql "strawberry"
+          expect(command.nuts?).to eql true
         end
 
       end
@@ -375,8 +375,8 @@ describe Clamp::Command do
         end
 
         it "works as though the option arguments were separate" do
-          command.flavour.should == "strawberry"
-          command.color.should == "blue"
+          expect(command.flavour).to eql "strawberry"
+          expect(command.color).to eql "blue"
         end
 
       end
@@ -385,7 +385,7 @@ describe Clamp::Command do
 
         it "treats them as positional arguments" do
           command.parse(%w(a b c --flavour strawberry))
-          command.arguments.should == %w(a b c --flavour strawberry)
+          expect(command.arguments).to eql %w(a b c --flavour strawberry)
         end
 
       end
@@ -397,9 +397,9 @@ describe Clamp::Command do
         end
 
         it "treats them as positional arguments" do
-          command.arguments.should == ["foo\n--flavour=strawberry", "bar\n-cblue"]
-          command.flavour.should be_nil
-          command.color.should be_nil
+          expect(command.arguments).to eql ["foo\n--flavour=strawberry", "bar\n-cblue"]
+          expect(command.flavour).to be_nil
+          expect(command.color).to be_nil
         end
 
       end
@@ -408,7 +408,7 @@ describe Clamp::Command do
 
         it "considers everything after the terminator to be an argument" do
           command.parse(%w(--color blue -- --flavour strawberry))
-          command.arguments.should == %w(--flavour strawberry)
+          expect(command.arguments).to eql %w(--flavour strawberry)
         end
 
       end
@@ -420,7 +420,7 @@ describe Clamp::Command do
         end
 
         it "sets the flag" do
-          command.nuts?.should be true
+          expect(command.nuts?).to be true
         end
 
       end
@@ -433,7 +433,7 @@ describe Clamp::Command do
         end
 
         it "clears the flag" do
-          command.nuts?.should be false
+          expect(command.nuts?).to be false
         end
 
       end
@@ -441,9 +441,9 @@ describe Clamp::Command do
       describe "with --help" do
 
         it "requests help" do
-          lambda do
+          expect do
             command.parse(%w(--help))
-          end.should raise_error(Clamp::HelpWanted)
+          end.to raise_error(Clamp::HelpWanted)
         end
 
       end
@@ -451,9 +451,9 @@ describe Clamp::Command do
       describe "with -h" do
 
         it "requests help" do
-          lambda do
+          expect do
             command.parse(%w(-h))
-          end.should raise_error(Clamp::HelpWanted)
+          end.to raise_error(Clamp::HelpWanted)
         end
 
       end
@@ -461,9 +461,9 @@ describe Clamp::Command do
       describe "when a bad option value is specified on the command-line" do
 
         it "signals a UsageError" do
-          lambda do
+          expect do
             command.parse(%w(--scoops reginald))
-          end.should raise_error(Clamp::UsageError, /^option '--scoops': invalid value for Integer/)
+          end.to raise_error(Clamp::UsageError, /^option '--scoops': invalid value for Integer/)
         end
 
       end
@@ -472,9 +472,9 @@ describe Clamp::Command do
 
         it "signals a UsageError" do
           ENV["DEFAULT_SCOOPS"] = "marjorie"
-          lambda do
+          expect do
             command.parse([])
-          end.should raise_error(Clamp::UsageError, /^\$DEFAULT_SCOOPS: invalid value for Integer/)
+          end.to raise_error(Clamp::UsageError, /^\$DEFAULT_SCOOPS: invalid value for Integer/)
         end
 
       end
@@ -484,16 +484,16 @@ describe Clamp::Command do
     describe "#help" do
 
       it "indicates that there are options" do
-        command.help.should include("cmd [OPTIONS]")
+        expect(command.help).to include("cmd [OPTIONS]")
       end
 
       it "includes option details" do
-        command.help.should =~ %r(--flavour FLAVOUR +Flavour of the month)
-        command.help.should =~ %r(--color COLOR +Preferred hue)
+        expect(command.help).to match %r(--flavour FLAVOUR +Flavour of the month)
+        expect(command.help).to match %r(--color COLOR +Preferred hue)
       end
 
       it "handles new lines in option descriptions" do
-        command.help.should =~ %r(--\[no-\]nuts +Nuts \(or not\)\n +May include nuts)
+        expect(command.help).to match %r(--\[no-\]nuts +Nuts \(or not\)\n +May include nuts)
       end
 
     end
@@ -507,16 +507,16 @@ describe Clamp::Command do
     end
 
     it "does not generate implicit help option" do
-      lambda do
+      expect do
         command.parse(%w(--help))
-      end.should_not raise_error
-      command.help?.should be true
+      end.to_not raise_error
+      expect(command.help?).to be true
     end
 
     it "does not recognise -h" do
-      lambda do
+      expect do
         command.parse(%w(-h))
-      end.should raise_error(Clamp::UsageError)
+      end.to raise_error(Clamp::UsageError)
     end
 
   end
@@ -530,13 +530,13 @@ describe Clamp::Command do
     end
 
     it "does not map -h to help" do
-      command.help.should_not =~ %r( -h[, ].*help)
+      expect(command.help).to_not match %r( -h[, ].*help)
     end
 
     it "still recognises --help" do
-      lambda do
+      expect do
         command.parse(%w(--help))
-      end.should raise_error(Clamp::HelpWanted)
+      end.to raise_error(Clamp::HelpWanted)
     end
 
   end
@@ -545,9 +545,9 @@ describe Clamp::Command do
 
     it "declares option argument accessors" do
       command.class.parameter "FLAVOUR", "flavour of the month"
-      command.flavour.should == nil
+      expect(command.flavour).to eql nil
       command.flavour = "chocolate"
-      command.flavour.should == "chocolate"
+      expect(command.flavour).to eql "chocolate"
     end
 
     describe "with explicit :attribute_name" do
@@ -558,7 +558,7 @@ describe Clamp::Command do
 
       it "uses the specified attribute_name name to name accessors" do
         command.bar = "chocolate"
-        command.bar.should == "chocolate"
+        expect(command.bar).to eql "chocolate"
       end
 
     end
@@ -570,13 +570,13 @@ describe Clamp::Command do
       end
 
       it "sets the specified default value" do
-        command.orientation.should == "west"
+        expect(command.orientation).to eql "west"
       end
 
       describe "#help" do
 
         it "describes the default value" do
-          command.help.should include("direction (default: \"west\")")
+          expect(command.help).to include("direction (default: \"west\")")
         end
 
       end
@@ -592,11 +592,11 @@ describe Clamp::Command do
       end
 
       it "uses the block to validate and convert the argument" do
-        lambda do
+        expect do
           command.port = "blah"
-        end.should raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
         command.port = "1234"
-        command.port.should == 1234
+        expect(command.port).to eql 1234
       end
 
     end
@@ -609,7 +609,7 @@ describe Clamp::Command do
 
       it "accepts multiple arguments" do
         command.parse(%w(X Y Z))
-        command.file_list.should == %w(X Y Z)
+        expect(command.file_list).to eql %w(X Y Z)
       end
 
     end
@@ -622,8 +622,8 @@ describe Clamp::Command do
 
       it "default to an empty list" do
         command.parse([])
-        command.default_file_list.should == []
-        command.file_list.should == []
+        expect(command.default_file_list).to eql []
+        expect(command.file_list).to eql []
       end
 
     end
@@ -637,25 +637,25 @@ describe Clamp::Command do
 
       it "should use the default if neither flag nor env var are present" do
         command.parse([])
-        command.file.should == "/dev/null"
+        expect(command.file).to eql "/dev/null"
       end
 
       it "should use the env value if present (instead of default)" do
         ENV["FILE"] = "/etc/motd"
         command.parse([])
-        command.file.should == ENV["FILE"]
+        expect(command.file).to eql ENV["FILE"]
       end
 
       it "should use the the flag value if present (instead of env)" do
         ENV["FILE"] = "/etc/motd"
         command.parse(%w(/bin/sh))
-        command.file.should == "/bin/sh"
+        expect(command.file).to eql "/bin/sh"
       end
 
       describe "#help" do
 
         it "describes the default value and env usage" do
-          command.help.should include(%{ (default: $FILE, or "/dev/null")})
+          expect(command.help).to include(%{ (default: $FILE, or "/dev/null")})
         end
 
       end
@@ -671,9 +671,9 @@ describe Clamp::Command do
       describe "with arguments" do
 
         it "raises a UsageError" do
-          lambda do
+          expect do
             command.parse(["crash"])
-          end.should raise_error(Clamp::UsageError, "too many arguments")
+          end.to raise_error(Clamp::UsageError, "too many arguments")
         end
 
       end
@@ -699,9 +699,9 @@ describe Clamp::Command do
         end
 
         it "maps arguments onto the command object" do
-          command.x.should == "crash"
-          command.y.should == "bang"
-          command.z.should == "wallop"
+          expect(command.x).to eql "crash"
+          expect(command.y).to eql "bang"
+          expect(command.z).to eql "wallop"
         end
 
       end
@@ -709,9 +709,9 @@ describe Clamp::Command do
       describe "with insufficient arguments" do
 
         it "raises a UsageError" do
-          lambda do
+          expect do
             command.parse(["crash"])
-          end.should raise_error(Clamp::UsageError, "parameter 'Y': no value provided")
+          end.to raise_error(Clamp::UsageError, "parameter 'Y': no value provided")
         end
 
       end
@@ -720,9 +720,9 @@ describe Clamp::Command do
 
         it "defaults the optional argument" do
           command.parse(["crash", "bang"])
-          command.x.should == "crash"
-          command.y.should == "bang"
-          command.z.should == "ZZZ"
+          expect(command.x).to eql "crash"
+          expect(command.y).to eql "bang"
+          expect(command.z).to eql "ZZZ"
         end
 
       end
@@ -731,9 +731,9 @@ describe Clamp::Command do
 
         it "parses them correctly" do
           command.parse(["foo\nhi", "bar", "baz"])
-          command.x.should == "foo\nhi"
-          command.y.should == "bar"
-          command.z.should == "baz"
+          expect(command.x).to eql "foo\nhi"
+          expect(command.y).to eql "bar"
+          expect(command.z).to eql "baz"
         end
 
       end
@@ -741,9 +741,9 @@ describe Clamp::Command do
       describe "with too many arguments" do
 
         it "raises a UsageError" do
-          lambda do
+          expect do
             command.parse(["crash", "bang", "wallop", "kapow"])
-          end.should raise_error(Clamp::UsageError, "too many arguments")
+          end.to raise_error(Clamp::UsageError, "too many arguments")
         end
 
       end
@@ -753,17 +753,17 @@ describe Clamp::Command do
     describe "#help" do
 
       it "indicates that there are parameters" do
-        command.help.should include("cmd [OPTIONS] X Y [Z]")
+        expect(command.help).to include("cmd [OPTIONS] X Y [Z]")
       end
 
       it "includes parameter details" do
-        command.help.should =~ %r(X +x)
-        command.help.should =~ %r(Y +y)
-        command.help.should =~ %r(\[Z\] +z \(default: "ZZZ"\))
+        expect(command.help).to match %r(X +x)
+        expect(command.help).to match %r(Y +y)
+        expect(command.help).to match %r(\[Z\] +z \(default: "ZZZ"\))
       end
 
       it "handles new lines in option descriptions" do
-        command.help.should =~ %r(X +x\n +xx)
+        expect(command.help).to match %r(X +x\n +xx)
       end
 
     end
@@ -782,7 +782,7 @@ describe Clamp::Command do
     describe "#help" do
 
       it "includes the explicit usage" do
-        command.help.should include("blah FOO BAR ...\n")
+        expect(command.help).to include("blah FOO BAR ...\n")
       end
 
     end
@@ -801,8 +801,8 @@ describe Clamp::Command do
     describe "#help" do
 
       it "includes both potential usages" do
-        command.help.should include("put THIS HERE\n")
-        command.help.should include("put THAT THERE\n")
+        expect(command.help).to include("put THIS HERE\n")
+        expect(command.help).to include("put THAT THERE\n")
       end
 
     end
@@ -825,8 +825,8 @@ describe Clamp::Command do
     describe "#help" do
 
       it "includes the banner" do
-        command.help.should =~ /^  Punt is an example command/
-        command.help.should =~ /^  The prefix/
+        expect(command.help).to match /^  Punt is an example command/
+        expect(command.help).to match /^  The prefix/
       end
 
     end
@@ -844,7 +844,7 @@ describe Clamp::Command do
       end
       @xyz = %w(x y z)
       command.class.run("cmd", @xyz)
-      stdout.should == @xyz.inspect
+      expect(stdout).to eql @xyz.inspect
     end
 
     describe "invoked with a context hash" do
@@ -856,7 +856,7 @@ describe Clamp::Command do
           end
         end
         command.class.run("xyz", [], :foo => "bar")
-        stdout.should == "bar"
+        expect(stdout).to eql "bar"
       end
 
     end
@@ -880,16 +880,16 @@ describe Clamp::Command do
       end
 
       it "outputs the error message" do
-        stderr.should include "ERROR: bad dog!"
+        expect(stderr).to include "ERROR: bad dog!"
       end
 
       it "outputs help" do
-        stderr.should include "See: 'cmd --help'"
+        expect(stderr).to include "See: 'cmd --help'"
       end
 
       it "exits with a non-zero status" do
-        @system_exit.should_not be_nil
-        @system_exit.status.should == 1
+        expect(@system_exit).to_not be_nil
+        expect(@system_exit.status).to eql 1
       end
 
     end
@@ -898,7 +898,7 @@ describe Clamp::Command do
 
       it "outputs help" do
         command.class.run("cmd", ["--help"])
-        stdout.should include "Usage:"
+        expect(stdout).to include "Usage:"
       end
 
     end
@@ -919,7 +919,7 @@ describe Clamp::Command do
 
     it "inherits options from it's superclass" do
       command.parse(["--verbose"])
-      command.should be_verbose
+      expect(command).to be_verbose
     end
 
   end

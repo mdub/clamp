@@ -29,7 +29,7 @@ describe Clamp::Command do
 
     it "accepts options from included module" do
       command.run(["--size", "42"])
-      stdout.should == "size = 42\n"
+      expect(stdout).to eql "size = 42\n"
     end
 
   end
