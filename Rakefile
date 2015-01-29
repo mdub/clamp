@@ -8,5 +8,5 @@ task "default" => "spec"
 
 RSpec::Core::RakeTask.new do |t|
   t.pattern = 'spec/**/*_spec.rb'
-  t.rspec_opts = ["--colour", "--format", "nested"]
+  t.rspec_opts = ["--colour", "--format", "documentation"]
 end
