@@ -155,6 +155,15 @@ option "--format", "FORMAT", "output format", :multivalued => true
 
 The underlying attribute becomes an Array, and the suffix "`_list`" is appended to the default attribute name.  In this case, an attribute called "`format_list`" would be generated (unless you override the default by specifying an `:attribute_name`).
 
+### Hidden options
+
+Declaring an option "`:hidden`" will cause it to be hidden from `--help` output.
+
+```ruby
+option "--some-option", "VALUE", "Just a little option", :hidden => true
+```
+
+
 Declaring parameters
 --------------------
 

@@ -15,6 +15,9 @@ module Clamp
         if options.has_key?(:environment_variable)
           @environment_variable = options[:environment_variable]
         end
+        if options.has_key?(:hidden)
+          @hidden = options[:hidden]
+        end
       end
 
       attr_reader :description, :environment_variable
@@ -55,6 +58,10 @@ module Clamp
 
       def required?
         @required
+      end
+
+      def hidden?
+        @hidden
       end
 
       def attribute_name

@@ -257,4 +257,33 @@ describe Clamp::Option::Definition do
       end.to raise_error(ArgumentError)
     end
   end
+
+  describe "a hidden option" do
+    let(:option) { described_class.new("--unseen", :flag, "Something", :hidden => true) }
+    it "is hidden" do
+      expect(option).to be_hidden
+    end
+  end
+
+  describe "a hidden option in a command" do
+    let(:command_class) do
+      Class.new(Clamp::Command) do
+        option "--unseen", :flag, "Something", :hidden => true
+
+        def execute
+          # this space intentionally left blank
+        end
+      end
+    end
+
+    it "is not shown in the help" do
+      expect(command_class.help("foo")).not_to match /^ +--unseen +Something$/
+    end
+
+    it "sets the expected accessor" do
+      command = command_class.new("foo")
+      command.run(["--unseen"])
+      expect(command.unseen?).to be_truthy
+    end
+  end
 end
