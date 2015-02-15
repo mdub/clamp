@@ -32,11 +32,8 @@ module Clamp
 
       # default implementation of read_method
       def _read
-        if self.defined?
-          get
-        else
-          default
-        end
+        set(default) unless self.defined?
+        get
       end
 
       # default implementation of append_method

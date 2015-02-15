@@ -620,10 +620,16 @@ describe Clamp::Command do
         command.class.parameter "[FILE] ...", "files"
       end
 
-      it "default to an empty list" do
+      it "defaults to an empty list" do
         command.parse([])
         expect(command.default_file_list).to eql []
         expect(command.file_list).to eql []
+      end
+
+      it "is mutable" do
+        command.parse([])
+        command.file_list << "treasure"
+        command.file_list.should == ["treasure"]
       end
 
     end
