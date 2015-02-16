@@ -26,4 +26,16 @@ module Clamp
 
   end
 
+  # raise to signal error during execution
+  class ExecutionError < RuntimeError
+
+    def initialize(message, command, status = 1)
+      super(message, command)
+      @status = status
+    end
+
+    attr_reader :status
+
+  end
+
 end

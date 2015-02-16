@@ -103,6 +103,13 @@ module Clamp
       raise e
     end
 
+    def signal_error(message, options = {})
+      status = options.fetch(:status, 1)
+      e = ExecutionError.new(message, self, status)
+      e.set_backtrace(caller)
+      raise e
+    end
+
     def request_help
       raise HelpWanted, self
     end
@@ -130,6 +137,9 @@ module Clamp
           exit(1)
         rescue Clamp::HelpWanted => e
           puts e.command.help
+        rescue Clamp::ExecutionError => e
+          $stderr.puts "ERROR: #{e.message}"
+          exit(e.status)
         end
       end
 

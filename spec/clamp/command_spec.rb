@@ -867,6 +867,34 @@ describe Clamp::Command do
 
     end
 
+    describe "when there's a CommandError" do
+
+      before do
+
+        command.class.class_eval do
+          def execute
+            signal_error "Oh crap!", :status => 456
+          end
+        end
+
+        begin
+          command.class.run("cmd", [])
+        rescue SystemExit => e
+          @system_exit = e
+        end
+
+      end
+
+      it "outputs the error message" do
+        expect(stderr).to include "ERROR: Oh crap!"
+      end
+
+      it "exits with the specified status" do
+        expect(@system_exit.status).to eql 456
+      end
+
+    end
+
     describe "when there's a UsageError" do
 
       before do
