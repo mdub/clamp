@@ -43,3 +43,15 @@ module CommandFactory
   end
 
 end
+
+module SetEnv
+
+  def set_env(name, value)
+    if value
+      ENV[name] = value
+    else
+      ENV.delete(name)
+    end
+  end
+
+end

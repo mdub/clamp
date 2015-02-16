@@ -5,6 +5,7 @@ describe Clamp::Command do
 
   extend CommandFactory
   include OutputCapture
+  include SetEnv
 
   given_command("cmd") do
 
@@ -142,20 +143,20 @@ describe Clamp::Command do
 
     describe "with :environment_variable" do
 
+      let(:environment_value) { nil }
+      let(:args) { [] }
+
       before do
         command.class.option "--port", "PORT", "port to listen on", :default => 4321, :environment_variable => "PORT" do |value|
           value.to_i
         end
+        set_env("PORT", environment_value)
+        command.parse(args)
       end
 
       context "when no environment variable is present" do
 
-        before do
-          ENV.delete("PORT")
-        end
-
         it "uses the default" do
-          command.parse([])
           expect(command.port).to eql 4321
         end
 
@@ -163,19 +164,17 @@ describe Clamp::Command do
 
       context "when environment variable is present" do
 
-        before do
-          ENV["PORT"] = "12345"
-        end
+        let(:environment_value) { "12345" }
 
         it "uses the environment variable" do
-          command.parse([])
           expect(command.port).to eql 12345
         end
 
         context "and a value is specified on the command-line" do
 
+          let(:args) { %w(--port 1500) }
+
           it "uses command-line value" do
-            command.parse(%w(--port 1500))
             expect(command.port).to eql 1500
           end
 
@@ -195,18 +194,17 @@ describe Clamp::Command do
 
     describe "with :environment_variable and type :flag" do
 
+      let(:environment_value) { nil }
+
       before do
         command.class.option "--[no-]enable", :flag, "enable?", :default => false, :environment_variable => "ENABLE"
+        set_env("ENABLE", environment_value)
+        command.parse([])
       end
 
       context "when no environment variable is present" do
 
-        before do
-          ENV.delete("ENABLE")
-        end
-
         it "uses the default" do
-          command.parse([])
           expect(command.enable?).to eql false
         end
 
@@ -216,9 +214,9 @@ describe Clamp::Command do
 
         context "when environment variable is #{truthy_value.inspect}" do
 
+          let(:environment_value) { truthy_value }
+
           it "sets the flag" do
-            ENV["ENABLE"] = truthy_value
-            command.parse([])
             expect(command.enable?).to eql true
           end
 
@@ -230,9 +228,9 @@ describe Clamp::Command do
 
         context "when environment variable is #{falsey_value.inspect}" do
 
+          let(:environment_value) { falsey_value }
+
           it "clears the flag" do
-            ENV["ENABLE"] = falsey_value
-            command.parse([])
             expect(command.enable?).to eql false
           end
 
@@ -634,28 +632,52 @@ describe Clamp::Command do
 
     end
 
-    describe "with :environment_variable value" do
+    describe "with :environment_variable" do
 
       before do
         command.class.parameter "[FILE]", "a file", :environment_variable => "FILE",
           :default => "/dev/null"
       end
 
-      it "should use the default if neither flag nor env var are present" do
-        command.parse([])
-        expect(command.file).to eql "/dev/null"
+      let(:args) { [] }
+      let(:environment_value) { nil }
+
+
+      before do
+        set_env("FILE", environment_value)
+        command.parse(args)
       end
 
-      it "should use the env value if present (instead of default)" do
-        ENV["FILE"] = "/etc/motd"
-        command.parse([])
-        expect(command.file).to eql ENV["FILE"]
+      describe "when neither argument nor environment variable are present" do
+
+        it "uses the default" do
+          expect(command.file).to eql "/dev/null"
+        end
+
       end
 
-      it "should use the the flag value if present (instead of env)" do
-        ENV["FILE"] = "/etc/motd"
-        command.parse(%w(/bin/sh))
-        expect(command.file).to eql "/bin/sh"
+      describe "when environment variable is present" do
+
+        let(:environment_value) { "/etc/motd" }
+
+        describe "and no argument is provided" do
+
+          it "uses the environment variable" do
+            expect(command.file).to eql "/etc/motd"
+          end
+
+        end
+
+        describe "and an argument is provided" do
+
+          let(:args) { ["/dev/null"] }
+
+          it "uses the argument" do
+            expect(command.file).to eql "/dev/null"
+          end
+
+        end
+
       end
 
       describe "#help" do
