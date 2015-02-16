@@ -629,7 +629,7 @@ describe Clamp::Command do
       it "is mutable" do
         command.parse([])
         command.file_list << "treasure"
-        command.file_list.should == ["treasure"]
+        expect(command.file_list).to eql ["treasure"]
       end
 
     end
