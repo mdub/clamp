@@ -4,7 +4,7 @@ describe Clamp::Command do
 
   include OutputCapture
 
-  describe "with included module" do
+  context "with included module" do
 
     let(:command) do
 

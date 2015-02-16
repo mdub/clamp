@@ -5,7 +5,7 @@ describe Clamp::Command do
   extend CommandFactory
   include OutputCapture
 
-  describe "with subcommands" do
+  context "with subcommands" do
 
     given_command "flipflop" do
 
@@ -68,7 +68,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with an aliased subcommand" do
+  context "with an aliased subcommand" do
 
     given_command "blah" do
 
@@ -105,7 +105,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with nested subcommands" do
+  context "with nested subcommands" do
 
     given_command "fubar" do
 
@@ -128,7 +128,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with a default subcommand" do
+  context "with a default subcommand" do
 
     given_command "admin" do
 
@@ -155,7 +155,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with a default subcommand, declared the old way" do
+  context "with a default subcommand, declared the old way" do
 
     given_command "admin" do
 
@@ -180,7 +180,7 @@ describe Clamp::Command do
 
   end
 
-  describe "declaring a default subcommand after subcommands" do
+  context "declaring a default subcommand after subcommands" do
 
     it "is not supported" do
 
@@ -204,7 +204,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with subcommands, declared after a parameter" do
+  context "with subcommands, declared after a parameter" do
 
     given_command "with" do
 
@@ -281,7 +281,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with a subcommand, with options" do
+  context "with a subcommand, with options" do
 
     given_command 'weeheehee' do
       option '--json', 'JSON', 'a json blob' do |option|

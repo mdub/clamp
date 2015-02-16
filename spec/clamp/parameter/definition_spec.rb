@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Clamp::Parameter::Definition do
 
-  describe "normal" do
+  context "normal" do
 
     let(:parameter) do
       described_class.new("COLOR", "hue of choice")
@@ -56,7 +56,7 @@ describe Clamp::Parameter::Definition do
 
   end
 
-  describe "optional (name in square brackets)" do
+  context "optional (name in square brackets)" do
 
     let(:parameter) do
       described_class.new("[COLOR]", "hue of choice")
@@ -95,7 +95,7 @@ describe Clamp::Parameter::Definition do
 
   end
 
-  describe "list (name followed by ellipsis)" do
+  context "list (name followed by ellipsis)" do
 
     let(:parameter) do
       described_class.new("FILE ...", "files to process")
@@ -160,7 +160,7 @@ describe Clamp::Parameter::Definition do
 
   end
 
-  describe "optional list" do
+  context "optional list" do
 
     let(:parameter) do
       described_class.new("[FILES] ...", "files to process")
@@ -194,7 +194,7 @@ describe Clamp::Parameter::Definition do
 
     end
 
-    describe "with specified default value" do
+    context "with specified default value" do
 
       let(:parameter) do
         described_class.new("[FILES] ...", "files to process", :default => %w(a b c))
@@ -224,7 +224,7 @@ describe Clamp::Parameter::Definition do
           expect(arguments).to eql []
         end
 
-        describe "with no arguments" do
+        context "with no arguments" do
 
           it "don't override defaults" do
             arguments = []

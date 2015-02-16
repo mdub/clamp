@@ -44,7 +44,7 @@ describe Clamp::Command do
       expect(command.flavour).to eql "chocolate"
     end
 
-    describe "with type :flag" do
+    context "with type :flag" do
 
       before do
         command.class.option "--verbose", :flag, "Be heartier"
@@ -57,7 +57,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with explicit :attribute_name" do
+    context "with explicit :attribute_name" do
 
       before do
         command.class.option "--foo", "FOO", "A foo", :attribute_name => :bar
@@ -75,7 +75,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with default method" do
+    context "with default method" do
 
       before do
         command.class.option "--port", "PORT", "port"
@@ -92,7 +92,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :default value" do
+    context "with :default value" do
 
       before do
         command.class.option "--port", "PORT", "port to listen on", :default => 4321
@@ -112,7 +112,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :multivalued" do
+    context "with :multivalued" do
 
       before do
         command.class.option "--flavour", "FLAVOUR", "flavour(s)", :multivalued => true, :attribute_name => :flavours
@@ -141,7 +141,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :environment_variable" do
+    context "with :environment_variable" do
 
       let(:environment_value) { nil }
       let(:args) { [] }
@@ -192,7 +192,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :environment_variable and type :flag" do
+    context "with :environment_variable and type :flag" do
 
       let(:environment_value) { nil }
 
@@ -240,7 +240,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :required" do
+    context "with :required" do
 
       before do
         command.class.option "--port", "PORT", "port to listen on", :required => true
@@ -268,7 +268,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with a block" do
+    context "with a block" do
 
       before do
         command.class.option "--port", "PORT", "Port to listen on" do |port|
@@ -288,7 +288,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with options declared" do
+  context "with options declared" do
 
     before do
       command.class.option ["-f", "--flavour"], "FLAVOUR", "Flavour of the month"
@@ -304,7 +304,7 @@ describe Clamp::Command do
 
     describe "#parse" do
 
-      describe "with an unrecognised option" do
+      context "with an unrecognised option" do
 
         it "raises a UsageError" do
           expect do
@@ -314,7 +314,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with options" do
+      context "with options" do
 
         before do
           command.parse(%w(--flavour strawberry --nuts --color blue))
@@ -328,7 +328,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with short options" do
+      context "with short options" do
 
         before do
           command.parse(%w(-f strawberry -c blue))
@@ -341,7 +341,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with a value appended to a short option" do
+      context "with a value appended to a short option" do
 
         before do
           command.parse(%w(-fstrawberry))
@@ -353,7 +353,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with combined short options" do
+      context "with combined short options" do
 
         before do
           command.parse(%w(-nf strawberry))
@@ -366,7 +366,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with option arguments attached using equals sign" do
+      context "with option arguments attached using equals sign" do
 
         before do
           command.parse(%w(--flavour=strawberry --color=blue))
@@ -379,7 +379,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with option-like things beyond the arguments" do
+      context "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
           command.parse(%w(a b c --flavour strawberry))
@@ -388,7 +388,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with multi-line arguments that look like options" do
+      context "with multi-line arguments that look like options" do
 
         before do
           command.parse(["foo\n--flavour=strawberry", "bar\n-cblue"])
@@ -402,7 +402,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with an option terminator" do
+      context "with an option terminator" do
 
         it "considers everything after the terminator to be an argument" do
           command.parse(%w(--color blue -- --flavour strawberry))
@@ -411,7 +411,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with --flag" do
+      context "with --flag" do
 
         before do
           command.parse(%w(--nuts))
@@ -423,7 +423,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with --no-flag" do
+      context "with --no-flag" do
 
         before do
           command.nuts = true
@@ -436,7 +436,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with --help" do
+      context "with --help" do
 
         it "requests help" do
           expect do
@@ -446,7 +446,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with -h" do
+      context "with -h" do
 
         it "requests help" do
           expect do
@@ -456,7 +456,7 @@ describe Clamp::Command do
 
       end
 
-      describe "when a bad option value is specified on the command-line" do
+      context "when a bad option value is specified on the command-line" do
 
         it "signals a UsageError" do
           expect do
@@ -466,7 +466,7 @@ describe Clamp::Command do
 
       end
 
-      describe "when a bad option value is specified in the environment" do
+      context "when a bad option value is specified in the environment" do
 
         it "signals a UsageError" do
           ENV["DEFAULT_SCOOPS"] = "marjorie"
@@ -498,7 +498,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with an explicit --help option declared" do
+  context "with an explicit --help option declared" do
 
     before do
       command.class.option ["--help"], :flag, "help wanted"
@@ -519,7 +519,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with an explicit -h option declared" do
+  context "with an explicit -h option declared" do
 
     before do
       command.class.option ["-h", "--humidity"], "PERCENT", "relative humidity" do |n|
@@ -548,7 +548,7 @@ describe Clamp::Command do
       expect(command.flavour).to eql "chocolate"
     end
 
-    describe "with explicit :attribute_name" do
+    context "with explicit :attribute_name" do
 
       before do
         command.class.parameter "FOO", "a foo", :attribute_name => :bar
@@ -561,7 +561,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :default value" do
+    context "with :default value" do
 
       before do
         command.class.parameter "[ORIENTATION]", "direction", :default => "west"
@@ -581,7 +581,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with a block" do
+    context "with a block" do
 
       before do
         command.class.parameter "PORT", "port to listen on" do |port|
@@ -599,7 +599,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with ellipsis" do
+    context "with ellipsis" do
 
       before do
         command.class.parameter "FILE ...", "files"
@@ -612,7 +612,7 @@ describe Clamp::Command do
 
     end
 
-    describe "optional, with ellipsis" do
+    context "optional, with ellipsis" do
 
       before do
         command.class.parameter "[FILE] ...", "files"
@@ -632,7 +632,7 @@ describe Clamp::Command do
 
     end
 
-    describe "with :environment_variable" do
+    context "with :environment_variable" do
 
       before do
         command.class.parameter "[FILE]", "a file", :environment_variable => "FILE",
@@ -648,7 +648,7 @@ describe Clamp::Command do
         command.parse(args)
       end
 
-      describe "when neither argument nor environment variable are present" do
+      context "when neither argument nor environment variable are present" do
 
         it "uses the default" do
           expect(command.file).to eql "/dev/null"
@@ -656,7 +656,7 @@ describe Clamp::Command do
 
       end
 
-      describe "when environment variable is present" do
+      context "when environment variable is present" do
 
         let(:environment_value) { "/etc/motd" }
 
@@ -692,11 +692,11 @@ describe Clamp::Command do
 
   end
 
-  describe "with no parameters declared" do
+  context "with no parameters declared" do
 
     describe "#parse" do
 
-      describe "with arguments" do
+      context "with arguments" do
 
         it "raises a UsageError" do
           expect do
@@ -710,7 +710,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with parameters declared" do
+  context "with parameters declared" do
 
     before do
       command.class.parameter "X", "x\nxx"
@@ -720,7 +720,7 @@ describe Clamp::Command do
 
     describe "#parse" do
 
-      describe "with arguments for all parameters" do
+      context "with arguments for all parameters" do
 
         before do
           command.parse(["crash", "bang", "wallop"])
@@ -734,7 +734,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with insufficient arguments" do
+      context "with insufficient arguments" do
 
         it "raises a UsageError" do
           expect do
@@ -744,7 +744,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with optional argument omitted" do
+      context "with optional argument omitted" do
 
         it "defaults the optional argument" do
           command.parse(["crash", "bang"])
@@ -755,7 +755,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with multi-line arguments" do
+      context "with multi-line arguments" do
 
         it "parses them correctly" do
           command.parse(["foo\nhi", "bar", "baz"])
@@ -766,7 +766,7 @@ describe Clamp::Command do
 
       end
 
-      describe "with too many arguments" do
+      context "with too many arguments" do
 
         it "raises a UsageError" do
           expect do
@@ -799,7 +799,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with explicit usage" do
+  context "with explicit usage" do
 
     given_command("blah") do
 
@@ -817,7 +817,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with multiple usages" do
+  context "with multiple usages" do
 
     given_command("put") do
 
@@ -837,7 +837,7 @@ describe Clamp::Command do
 
   end
 
-  describe "with a banner" do
+  context "with a banner" do
 
     given_command("punt") do
 
@@ -875,7 +875,7 @@ describe Clamp::Command do
       expect(stdout).to eql @xyz.inspect
     end
 
-    describe "invoked with a context hash" do
+    context "invoked with a context hash" do
 
       it "makes the context available within the command" do
         command.class.class_eval do
@@ -889,7 +889,7 @@ describe Clamp::Command do
 
     end
 
-    describe "when there's a CommandError" do
+    context "when there's a CommandError" do
 
       before do
 
@@ -917,7 +917,7 @@ describe Clamp::Command do
 
     end
 
-    describe "when there's a UsageError" do
+    context "when there's a UsageError" do
 
       before do
 
@@ -950,7 +950,7 @@ describe Clamp::Command do
 
     end
 
-    describe "when help is requested" do
+    context "when help is requested" do
 
       it "outputs help" do
         command.class.run("cmd", ["--help"])

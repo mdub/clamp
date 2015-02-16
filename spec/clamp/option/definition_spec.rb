@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Clamp::Option::Definition do
 
-  describe "with String argument" do
+  context "with String argument" do
 
     let(:option) do
       described_class.new("--key-file", "FILE", "SSH identity")
@@ -65,7 +65,7 @@ describe Clamp::Option::Definition do
 
   end
 
-  describe "flag" do
+  context "flag" do
 
     let(:option) do
       described_class.new("--verbose", :flag, "Blah blah blah")
@@ -95,7 +95,7 @@ describe Clamp::Option::Definition do
 
   end
 
-  describe "negatable flag" do
+  context "negatable flag" do
 
     let(:option) do
       described_class.new("--[no-]force", :flag, "Force installation")
@@ -125,7 +125,7 @@ describe Clamp::Option::Definition do
 
   end
 
-  describe "with both short and long switches" do
+  context "with both short and long switches" do
 
     let(:option) do
       described_class.new(["-k", "--key-file"], "FILE", "SSH identity")
@@ -146,7 +146,7 @@ describe Clamp::Option::Definition do
 
   end
 
-  describe "with an associated environment variable" do
+  context "with an associated environment variable" do
 
     let(:option) do
       described_class.new("-x", "X", "mystery option", :environment_variable => "APP_X")
@@ -160,7 +160,7 @@ describe Clamp::Option::Definition do
 
     end
 
-    describe "and a default value" do
+    context "and a default value" do
 
       let(:option) do
         described_class.new("-x", "X", "mystery option", :environment_variable => "APP_X", :default => "xyz")
@@ -178,7 +178,7 @@ describe Clamp::Option::Definition do
 
   end
 
-  describe "multivalued" do
+  context "multivalued" do
 
     let(:option) do
       described_class.new(["-H", "--header"], "HEADER", "extra header", :multivalued => true)
