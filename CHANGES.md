@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.4 (2015-02-26)
+
+* Ensure computed defaults are only computed once.
+
+## 0.6.3 (2013-11-14)
+
+* Specify (MIT) license.
+
 ## 0.6.2 (2013-11-06)
 
 * Refactoring around multi-valued attributes.
