@@ -563,8 +563,8 @@ describe Clamp::Command do
 
   context "with scope declared" do
     before do
-      command.class.option "--either", :flag, "Either this option", scope: :scope_name
-      command.class.option "--or", :flag, "Or this option", scope: :scope_name
+      command.class.option "--either", :flag, "Either this option", :scope => :scope_name
+      command.class.option "--or", :flag, "Or this option",  :scope => :scope_name
     end
 
     context 'when used a few scoped arguments' do
