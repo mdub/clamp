@@ -50,6 +50,7 @@ module Clamp
     def parse(arguments)
       @remaining_arguments = arguments.dup
       parse_options
+      parse_scopes
       parse_parameters
       parse_subcommand
       handle_remaining_arguments

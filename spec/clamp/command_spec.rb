@@ -35,6 +35,27 @@ describe Clamp::Command do
 
   end
 
+  describe ".scope" do
+    it "declares scoped arguments" do
+      option_scope = nil
+      command.class.scope :scope_name do
+        option_scope = option("--flavour", "FLAVOUR", "Flavour of the month").scope
+      end
+
+      expect(option_scope).to eql :scope_name
+    end
+
+    context 'when nested' do
+      it "raises declaration error" do
+        expect do
+          command.class.scope :scope_name do
+            scope :another_name
+          end
+        end.to raise_error(Clamp::DeclarationError, "Nested scopes aren't allowed")
+      end
+    end
+  end
+
   describe ".option" do
 
     it "declares option argument accessors" do
@@ -538,6 +559,42 @@ describe Clamp::Command do
     end
 
   end
+
+
+  context "with scope declared" do
+    before do
+      command.class.option "--either", :flag, "Either this option", scope: :scope_name
+      command.class.option "--or", :flag, "Or this option", scope: :scope_name
+    end
+
+    context 'when used a few scoped arguments' do
+
+      it "raises usage error" do
+        expect do
+          command.parse(%w(--either --or))
+        end.to raise_error(Clamp::UsageError, /mutually exclusive/)
+      end
+
+    end
+
+
+    context "when used only one argument from scope" do
+
+      it "doesn't raise usage error" do
+        expect do
+          command.parse(%w(--either))
+        end.not_to raise_error
+      end
+
+      it "sets scope value" do
+        command.parse(%w(--either))
+        expect(command.scope(:scope_name)).to eql 'either'
+      end
+
+    end
+
+  end
+
 
   describe ".parameter" do
 

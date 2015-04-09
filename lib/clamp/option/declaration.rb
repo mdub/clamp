@@ -9,11 +9,25 @@ module Clamp
       include Clamp::Attribute::Declaration
 
       def option(switches, type, description, opts = {}, &block)
+        opts[:scope] = @current_scope if @current_scope
         Option::Definition.new(switches, type, description, opts).tap do |option|
           declared_options << option
+          scopes[option.scope] ||= []
+          scopes[option.scope] << option if option.scope
           block ||= option.default_conversion_block
           define_accessors_for(option, &block)
         end
+      end
+
+      def scope(name, &block)
+        raise Clamp::DeclarationError, "Nested scopes aren't allowed" if @current_scope
+        @current_scope = name
+        instance_exec(&block)
+        @current_scope = nil
+      end
+
+      def scopes
+        @scopes ||= {}
       end
 
       def find_option(switch)
