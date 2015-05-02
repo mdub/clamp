@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.5 (PENDING)
+
+* Catch signals and exit appropriately.
+
 ## 0.6.4 (2015-02-26)
 
 * Ensure computed defaults are only computed once.

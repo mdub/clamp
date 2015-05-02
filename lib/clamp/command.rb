@@ -140,6 +140,8 @@ module Clamp
         rescue Clamp::ExecutionError => e
           $stderr.puts "ERROR: #{e.message}"
           exit(e.status)
+        rescue SignalException => e
+          exit(128 + e.signo)
         end
       end
 
