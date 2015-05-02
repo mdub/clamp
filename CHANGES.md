@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.5 (PENDING)
+## 0.6.5 (2015-05-02)
 
 * Catch signals and exit appropriately.
 
