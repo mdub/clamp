@@ -37,8 +37,11 @@ end
 module CommandFactory
 
   def given_command(name, &block)
+    let(:command_class) do
+      Class.new(Clamp::Command, &block)
+    end
     let(:command) do
-      Class.new(Clamp::Command, &block).new(name)
+      command_class.new(name)
     end
   end
 

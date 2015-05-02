@@ -66,6 +66,15 @@ describe Clamp::Command do
 
     end
 
+    describe ".find_subcommand_class" do
+
+      it "finds subcommand classes" do
+        flip_class = command_class.find_subcommand_class("flip")
+        expect(flip_class.new("xx").message).to eq("FLIPPED")
+      end
+
+    end
+
   end
 
   context "with an aliased subcommand" do
@@ -112,9 +121,14 @@ describe Clamp::Command do
       subcommand "foo", "Foo!" do
 
         subcommand "bar", "Baaaa!" do
+
+          def self.this_is_bar
+          end
+
           def execute
             puts "FUBAR"
           end
+
         end
 
       end
@@ -124,6 +138,14 @@ describe Clamp::Command do
     it "delegates multiple levels" do
       command.run(["foo", "bar"])
       expect(stdout).to match /FUBAR/
+    end
+
+    describe ".find_subcommand_class" do
+
+      it "finds nested subcommands" do
+        expect(command_class.find_subcommand_class("foo", "bar")).to respond_to(:this_is_bar)
+      end
+
     end
 
   end

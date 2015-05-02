@@ -35,6 +35,16 @@ module Clamp
         recognised_subcommands.find { |sc| sc.is_called?(name) }
       end
 
+      def find_subcommand_class(*names)
+        names.inject(self) do |command_class, name|
+          if command_class
+            if subcommand = command_class.find_subcommand(name)
+              subcommand.subcommand_class
+            end
+          end
+        end
+      end
+
       def parameters_before_subcommand
         parameters.take_while { |p| p != @subcommand_parameter }
       end
