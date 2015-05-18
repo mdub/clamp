@@ -78,7 +78,7 @@ module Clamp
 
       def add_list(heading, items)
         puts "\n#{heading}:"
-        items.each do |item|
+        items.reject { |i| i.respond_to?(:hidden?) && i.hidden? }.each do |item|
           label, description = item.help
           description.each_line do |line|
             puts DETAIL_FORMAT % [label, line]
