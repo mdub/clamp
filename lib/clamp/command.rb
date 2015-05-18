@@ -1,3 +1,4 @@
+require 'clamp/messages'
 require 'clamp/errors'
 require 'clamp/help'
 require 'clamp/option/declaration'
@@ -91,7 +92,7 @@ module Clamp
 
     def handle_remaining_arguments
       unless remaining_arguments.empty?
-        signal_usage_error "too many arguments"
+        signal_usage_error Clamp.message(:too_many_arguments)
       end
     end
 
