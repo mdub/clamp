@@ -35,13 +35,15 @@ module Clamp
       @messages
     end
 
-    if (("%{foo}" % {:foo => "bar"}) == "bar")
+    begin
+
+      ("%{foo}" % {:foo => "bar"}) # test Ruby 1.9 string interpolation
 
       def format_string(format, params = {})
         format % params
       end
 
-    else
+    rescue ArgumentError
 
       # string formatting for ruby 1.8
       def format_string(format, params = {})
