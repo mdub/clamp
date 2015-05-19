@@ -30,14 +30,23 @@ module Clamp
 
   private
 
-  # string formatting for ruby 1.8
-  def self.format_string(string, params)
-    array_params = string.scan(/%[<{]([^>}]*)[>}]/).collect do |name|
-      name = name[0]
-      params[name.to_s] || params[name.to_sym]
+  if (("%{foo}" % {:foo => "bar"}) == "bar")
+
+    def self.format_string(format, params = {})
+      format % params
     end
 
-    string.gsub(/%[<]([^>]*)[>]/, '%').gsub(/%[{]([^}]*)[}]/, '%s') % array_params
+  else
+
+    # string formatting for ruby 1.8
+    def self.format_string(format, params = {})
+      array_params = format.scan(/%[<{]([^>}]*)[>}]/).collect do |name|
+        name = name[0]
+        params[name.to_s] || params[name.to_sym]
+      end
+      format.gsub(/%[<]([^>]*)[>]/, '%').gsub(/%[{]([^}]*)[}]/, '%s') % array_params
+    end
+
   end
 
 end
