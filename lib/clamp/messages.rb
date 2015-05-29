@@ -10,6 +10,10 @@ module Clamp
       format_string(messages.fetch(key), options)
     end
 
+    def clear_messages!
+      init_default_messages
+    end
+
     private
 
     DEFAULTS = {
@@ -30,9 +34,13 @@ module Clamp
 
     def messages
       unless defined?(@messages)
-        @messages = DEFAULTS
+        init_default_messages
       end
       @messages
+    end
+
+    def init_default_messages
+      @messages = DEFAULTS.clone
     end
 
     begin
