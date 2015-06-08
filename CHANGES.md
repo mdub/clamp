@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0 (2015-06-08)
+
+* Allow options to be `:hidden`.
+* I18N support.
+
 ## 0.6.5 (2015-05-02)
 
 * Catch signals and exit appropriately.
