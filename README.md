@@ -384,6 +384,25 @@ Options:
     -h, --help                    print help
 ```
 
+Localization
+------------
+
+Clamp comes with support for overriding strings with custom translations. You can use localization library of your choice and override the strings at startup.
+
+Example usage:
+```ruby
+require 'gettext'
+
+Clamp.messages = {
+  :too_many_arguments =>       _("too many arguments"),
+  :option_required =>          _("option '%<option>s' is required"),
+  :option_or_env_required =>   _("option '%<option>s' (or env %<env>s) is required"),
+  :option_argument_error =>    _("option '%<switch>s': %<message>s")
+  # ...
+}
+```
+See [messages.rb](https://github.com/mdub/clamp/blob/master/lib/clamp/messages.rb) for full list of available messages.
+
 License
 -------
 
