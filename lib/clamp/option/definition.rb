@@ -11,6 +11,7 @@ module Clamp
         @type = type
         @description = description
         super(options)
+        @scope = options[:scope]
         @multivalued = options[:multivalued]
         if options.has_key?(:required)
           @required = options[:required]
@@ -24,7 +25,7 @@ module Clamp
         end
       end
 
-      attr_reader :switches, :type
+      attr_reader :switches, :type, :scope
 
       def long_switch
         switches.find { |switch| switch =~ /^--/ }

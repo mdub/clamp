@@ -3,6 +3,10 @@ module Clamp
 
     module Parsing
 
+      def scope(name)
+        scopes[name]
+      end
+
       protected
 
       def parse_options
@@ -55,7 +59,23 @@ module Clamp
         end
       end
 
+      def parse_scopes
+        self.class.scopes.each do |name, scope|
+          count = scope.count do |option|
+            instance = option.of(self)
+            scopes[name] = option.attribute_name if instance.defined?
+            instance.defined?
+          end
+
+          signal_usage_error("Options #{scope.map(&:long_switch).join(', ')} are mutually exclusive") if count > 1
+        end
+      end
+
       private
+
+      def scopes
+        @scopes ||= {}
+      end
 
       def find_option(switch)
         self.class.find_option(switch) ||

@@ -33,6 +33,19 @@ describe Clamp::Option::Definition do
 
     end
 
+    describe "#scope" do
+
+      it "defaults to nil" do
+        expect(option.scope).to be_nil
+      end
+
+      it "can be overridden" do
+        option = described_class.new("-n", "N", "iterations", :scope => :scope_name)
+        expect(option.scope).to eql :scope_name
+      end
+
+    end
+
     describe "#write_method" do
 
       it "is derived from the attribute_name" do
