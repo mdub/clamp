@@ -83,6 +83,9 @@ module Clamp
       end
 
       def infer_attribute_name
+        unless long_switch
+          raise Clamp::DeclarationError, "You must specify either a long-switch or an :attribute_value"
+        end
         inferred_name = long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
         inferred_name += "_list" if multivalued?
         inferred_name
