@@ -3,7 +3,6 @@ Clamp
 
 [![Gem Version](https://badge.fury.io/rb/clamp.png)](http://badge.fury.io/rb/clamp)
 [![Build Status](https://secure.travis-ci.org/mdub/clamp.png?branch=master)](http://travis-ci.org/mdub/clamp)
-[![Join the chat at https://gitter.im/mdub/clamp](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mdub/clamp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 "Clamp" is a minimal framework for command-line utilities.
 
