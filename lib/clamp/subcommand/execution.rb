@@ -7,13 +7,13 @@ module Clamp
 
       def execute
         # delegate to subcommand
-        subcommand = instatiate_subcommand(subcommand_name)
+        subcommand = instantiate_subcommand(subcommand_name)
         subcommand.run(subcommand_arguments)
       end
 
       private
 
-      def instatiate_subcommand(name)
+      def instantiate_subcommand(name)
         subcommand_class = find_subcommand_class(name)
         parent_attribute_values = {}
         self.class.inheritable_attributes.each do |attribute|
