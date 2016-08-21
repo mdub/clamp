@@ -2,8 +2,9 @@ source "http://rubygems.org"
 
 gemspec
 
-group :developmnt do
-  gem "guard-rspec", :require => false
+group :development do
+  gem "guard-rspec", "~> 4.6.5", :require => false
+  gem "listen", "~> 3.0.2"
   gem "rake", "~> 10.4"
 end
 
