@@ -19,6 +19,7 @@ module Clamp
 
         self.class.parameters.each do |parameter|
           parameter.of(self).default_from_environment
+          parameter.of(self).value_from_prompt
         end
 
       end

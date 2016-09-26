@@ -1,0 +1,17 @@
+#! /usr/bin/env ruby
+
+# An example of prompt
+
+require "clamp"
+
+Clamp do
+
+  parameter "[MESSAGE]", "Message", prompt: proc { print "Enter message: "; gets.chomp }
+  option '--name', '[NAME]', "Name of person to send the message to", prompt: proc { print "Enter recipient: "; gets.chomp }
+
+  def execute
+    puts "#{name}: #{message}"
+  end
+
+end
+

@@ -12,6 +12,9 @@ module Clamp
         if options.has_key?(:default)
           @default_value = options[:default]
         end
+        if options.has_key?(:prompt)
+          @prompt = options[:prompt]
+        end
         if options.has_key?(:environment_variable)
           @environment_variable = options[:environment_variable]
         end
@@ -20,7 +23,7 @@ module Clamp
         end
       end
 
-      attr_reader :description, :environment_variable
+      attr_reader :description, :environment_variable, :prompt
 
       def help_rhs
         description + default_description
@@ -69,7 +72,9 @@ module Clamp
       end
 
       def default_value
-        if defined?(@default_value)
+        if defined?(@prompt) && @prompt.respond_to?(:call)
+          @prompt.call(@default_value)
+        elsif defined?(@default_value)
           @default_value
         elsif multivalued?
           []
@@ -83,12 +88,16 @@ module Clamp
       private
 
       def default_description
-        default_sources = [
-          ("$#{@environment_variable}" if defined?(@environment_variable)),
-          (@default_value.inspect if defined?(@default_value))
-        ].compact
-        return "" if default_sources.empty?
-        " (default: " + default_sources.join(", or ") + ")"
+        if defined?(@prompt) && @prompt.respond_to?(:call)
+          " (default: prompt)"
+        else
+          default_sources = [
+            ("$#{@environment_variable}" if defined?(@environment_variable)),
+            (@default_value.inspect if defined?(@default_value))
+          ].compact
+          return "" if default_sources.empty?
+          " (default: " + default_sources.join(", or ") + ")"
+        end
       end
 
     end

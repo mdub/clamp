@@ -23,6 +23,7 @@ module Clamp
       :option_argument_error => "option '%<switch>s': %<message>s",
       :parameter_argument_error => "parameter '%<param>s': %<message>s",
       :env_argument_error => "$%<env>s: %<message>s",
+      :prompt_argument_error => "Prompt error: %<message>s",
       :unrecognised_option => "Unrecognised option '%<switch>s'",
       :no_such_subcommand => "No such sub-command '%<name>s'",
       :no_value_provided => "no value provided",
