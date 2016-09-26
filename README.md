@@ -325,6 +325,26 @@ class InitCommand < Clamp::Command
 end
 ```
 
+Or a Proc that will only be called when the subcommand is accessed:
+
+```ruby
+class MainCommand < Clamp::Command
+
+  subcommand "init", "Initialize the repository", proc { require 'commands/init_command'; InitCommand }
+
+end
+```
+
+Or as a hash with class name as the key and require path as the value:
+
+```ruby
+class MainCommand < Clamp::Command
+
+  subcommand "init", "Initialize the repository", "Commands::InitCommand" => File.join(__dir__, 'commands/init_command')
+
+end
+```
+
 Like options, subcommands may have aliases:
 
 ```ruby
