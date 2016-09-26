@@ -11,11 +11,21 @@ module Clamp
 
       attr_reader :names, :description
 
+      def class_from_string(string)
+        if RUBY_VERSION >= '2.0.0'
+          Object.const_get(string)
+        else
+          parts = string.split('::')
+          base = parts.shift
+          parts.inject(Object.const_get(base)) { |new_base, part| new_base.const_get(part) }
+        end
+      end
+
       def subcommand_class
         if @subcommand_definition.kind_of?(Hash)
           klass, path = @subcommand_definition.first
           require(path)
-          Object.const_get(klass)
+          class_from_string(klass)
         elsif @subcommand_definition.respond_to?(:call)
           @subcommand_definition.call
         else
