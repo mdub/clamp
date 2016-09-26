@@ -246,7 +246,7 @@ describe Clamp::Parameter::Definition do
     end
 
     it "runs the proc in prompt" do
-      expect(parameter.consume("")).to match /prompted name/
+      expect(parameter.consume("").first).to match /prompted name/
     end
 
   end
