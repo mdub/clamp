@@ -16,7 +16,7 @@ module Clamp
           @required = options[:required]
           # Do some light validation for conflicting settings.
           if options.has_key?(:default)
-            raise ArgumentError, "Specifying a :default value also :required doesn't make sense"
+            raise ArgumentError, "Specifying a :default value with :required doesn't make sense"
           end
           if type == :flag
             raise ArgumentError, "A required flag (boolean) doesn't make sense."
