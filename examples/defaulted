@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-# An example of subcommands
+# An example of default values and methods
 
 require "clamp"
 require "highline"
