@@ -137,7 +137,7 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 
 ### Required options
 
-Although 'required option' is a an oxymoron, Clamp lets you mark an option as required, and will verify that a value is provided:
+Although "required option" is an oxymoron, Clamp lets you mark an option as required, and will verify that a value is provided:
 
 ```ruby
 option "--password", "PASSWORD", "the secret password", :required => true
