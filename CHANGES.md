@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 (2016-10-01)
+
+* Minor bug-fixes.
+
 ## 1.0.0 (2015-06-08)
 
 * Allow options to be `:hidden`.
