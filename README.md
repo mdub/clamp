@@ -272,6 +272,19 @@ def default_admin_port
 end
 ```
 
+### Prompted values
+
+It is possible to define a proc that prompts for the value if not given on the command line for a parameter or an option
+
+```ruby
+parameter "MESSAGE", "Message to send", prompt: proc { print "Enter message: "; gets.chomp }
+option "--name", "NAME", "Recipient name", prompt: proc { print "Enter recipient name: "; gets.chomp }
+
+def execute
+  puts "#{message}: #{name}"
+end
+```
+
 ### Environment variable support
 
 Options (and optional parameters) can also be associated with environment variables:

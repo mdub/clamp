@@ -178,6 +178,16 @@ describe Clamp::Option::Definition do
 
   end
 
+  context "with prompt" do
+    let(:option) do
+      described_class.new("--name", ['NAME'], "Name", prompt: proc { "foobar" } )
+    end
+
+    it "runs the proc in prompt" do
+      expect(option.default_value).to match /foobar/
+    end
+  end
+
   context "multivalued" do
 
     let(:option) do

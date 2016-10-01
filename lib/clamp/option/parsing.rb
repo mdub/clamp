@@ -36,9 +36,10 @@ module Clamp
 
         end
 
-        # Fill in gap from environment
+        # Fill in gap from environment or prompt
         self.class.recognised_options.each do |option|
           option.of(self).default_from_environment
+          option.of(self).value_from_prompt
         end
 
         # Verify that all required options are present

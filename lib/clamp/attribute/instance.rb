@@ -73,6 +73,16 @@ module Clamp
         end
       end
 
+      def value_from_prompt
+        return if self.defined?
+        return if attribute.prompt.nil?
+        begin
+          take(attribute.prompt.call)
+        rescue ArgumentError => e
+          command.send(:signal_usage_error, Clamp.message(:prompt_argument_error, :message => e.message))
+        end
+      end
+
     end
 
   end

@@ -13,16 +13,20 @@ module Clamp
         @required = options.fetch(:required) do
           (@name !~ OPTIONAL)
         end
+        @prompt = options[:prompt]
       end
 
-      attr_reader :name
+      attr_reader :name, :prompt
 
       def help_lhs
         name
       end
 
       def consume(arguments)
-        raise ArgumentError, Clamp.message(:no_value_provided) if required? && arguments.empty?
+        if arguments.empty?
+          return Array(prompt.call) if prompt
+          raise ArgumentError, Clamp.message(:no_value_provided) if required?
+        end
         arguments.shift(multivalued? ? arguments.length : 1)
       end
 

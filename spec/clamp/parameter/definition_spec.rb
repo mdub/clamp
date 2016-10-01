@@ -239,4 +239,16 @@ describe Clamp::Parameter::Definition do
 
   end
 
+  context "with prompt" do
+
+    let(:parameter) do
+      described_class.new("[NAME]", "Name to print", prompt: proc { "prompted name" })
+    end
+
+    it "runs the proc in prompt" do
+      expect(parameter.consume("").first).to match /prompted name/
+    end
+
+  end
+
 end

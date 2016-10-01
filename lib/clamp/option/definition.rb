@@ -22,9 +22,12 @@ module Clamp
             raise ArgumentError, "A required flag (boolean) doesn't make sense."
           end
         end
+        if options.has_key?(:prompt)
+          @prompt = options[:prompt]
+        end
       end
 
-      attr_reader :switches, :type
+      attr_reader :switches, :type, :prompt
 
       def long_switch
         switches.find { |switch| switch =~ /^--/ }
