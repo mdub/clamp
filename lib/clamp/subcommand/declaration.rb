@@ -12,10 +12,10 @@ module Clamp
 
       def subcommand(name, description, subcommand_class = self, &block)
         unless has_subcommands?
-          @subcommand_parameter = if @default_subcommand
-                                    parameter "[SUBCOMMAND]", "subcommand", :attribute_name => :subcommand_name, :default => @default_subcommand
-                                  else
-                                    parameter "SUBCOMMAND", "subcommand", :attribute_name => :subcommand_name, :required => false
+          if @default_subcommand
+            @subcommand_parameter = parameter "[SUBCOMMAND]", "subcommand", :attribute_name => :subcommand_name, :default => @default_subcommand
+          else
+            @subcommand_parameter = parameter "SUBCOMMAND", "subcommand", :attribute_name => :subcommand_name, :required => false
           end
           remove_method :default_subcommand_name
           parameter "[ARG] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
@@ -37,10 +37,9 @@ module Clamp
 
       def find_subcommand_class(*names)
         names.inject(self) do |command_class, name|
-          next unless command_class
-          if subcommand = command_class.find_subcommand(name)
-            subcommand.subcommand_class
-          end
+          return nil unless command_class
+          subcommand = command_class.find_subcommand(name)
+          subcommand.subcommand_class if subcommand
         end
       end
 
