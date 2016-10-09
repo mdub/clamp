@@ -7,7 +7,7 @@ module Clamp
     end
 
     def message(key, options = {})
-      format_string(messages.fetch(key), options)
+      format(messages.fetch(key), options)
     end
 
     def clear_messages!
@@ -39,27 +39,6 @@ module Clamp
 
     def init_default_messages
       @messages = DEFAULTS.dup
-    end
-
-    begin
-
-      ("%{foo}" % { :foo => "bar" }) # test Ruby 1.9 string interpolation
-
-      def format_string(format, params = {})
-        format % params
-      end
-
-    rescue ArgumentError
-
-      # string formatting for ruby 1.8
-      def format_string(format, params = {})
-        array_params = format.scan(/%[<{]([^>}]*)[>}]/).collect do |name|
-          name = name[0]
-          params[name.to_s] || params[name.to_sym]
-        end
-        format.gsub(/%[<]([^>]*)[>]/, "%").gsub(/%[{]([^}]*)[}]/, "%s") % array_params
-      end
-
     end
 
   end
