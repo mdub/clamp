@@ -18,7 +18,7 @@ describe Clamp::Command do
   describe "#help" do
 
     it "describes usage" do
-      expect(command.help).to match /^Usage:\n    cmd.*\n/
+      expect(command.help).to match(/^Usage:\n    cmd.*\n/)
     end
 
   end
@@ -147,7 +147,10 @@ describe Clamp::Command do
       let(:args) { [] }
 
       before do
-        command.class.option "--port", "PORT", "port to listen on", :default => 4321, :environment_variable => "PORT", &:to_i
+        command.class.option "--port", "PORT", "port to listen on",
+                             :default => 4321,
+                             :environment_variable => "PORT",
+                             &:to_i
         set_env("PORT", environment_value)
         command.parse(args)
       end
@@ -484,12 +487,12 @@ describe Clamp::Command do
       end
 
       it "includes option details" do
-        expect(command.help).to match /--flavour FLAVOUR +Flavour of the month/
-        expect(command.help).to match /--color COLOR +Preferred hue/
+        expect(command.help).to match(/--flavour FLAVOUR +Flavour of the month/)
+        expect(command.help).to match(/--color COLOR +Preferred hue/)
       end
 
       it "handles new lines in option descriptions" do
-        expect(command.help).to match /--\[no-\]nuts +Nuts \(or not\)\n +May include nuts/
+        expect(command.help).to match(/--\[no-\]nuts +Nuts \(or not\)\n +May include nuts/)
       end
 
     end
@@ -526,7 +529,7 @@ describe Clamp::Command do
     end
 
     it "does not map -h to help" do
-      expect(command.help).to_not match /-h[, ].*help/
+      expect(command.help).to_not match(/-h[, ].*help/)
     end
 
     it "still recognises --help" do
@@ -782,13 +785,13 @@ describe Clamp::Command do
       end
 
       it "includes parameter details" do
-        expect(command.help).to match /X +x/
-        expect(command.help).to match /Y +y/
-        expect(command.help).to match /\[Z\] +z \(default: "ZZZ"\)/
+        expect(command.help).to match(/X +x/)
+        expect(command.help).to match(/Y +y/)
+        expect(command.help).to match(/\[Z\] +z \(default: "ZZZ"\)/)
       end
 
       it "handles new lines in option descriptions" do
-        expect(command.help).to match /X +x\n +xx/
+        expect(command.help).to match(/X +x\n +xx/)
       end
 
     end
@@ -849,8 +852,8 @@ describe Clamp::Command do
     describe "#help" do
 
       it "includes the banner" do
-        expect(command.help).to match /^  Punt is an example command/
-        expect(command.help).to match /^  The prefix/
+        expect(command.help).to match(/^  Punt is an example command/)
+        expect(command.help).to match(/^  The prefix/)
       end
 
     end

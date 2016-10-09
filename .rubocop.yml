@@ -50,6 +50,9 @@ Style/Lambda:
 Style/NumericLiterals:
   Enabled: false
 
+Style/PredicateName:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 

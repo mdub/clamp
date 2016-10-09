@@ -12,16 +12,11 @@ module Clamp
         @description = description
         super(options)
         @multivalued = options[:multivalued]
-        if options.key?(:required)
-          @required = options[:required]
-          # Do some light validation for conflicting settings.
-          if options.key?(:default)
-            raise ArgumentError, "Specifying a :default value with :required doesn't make sense"
-          end
-          if type == :flag
-            raise ArgumentError, "A required flag (boolean) doesn't make sense."
-          end
-        end
+        return unless options.key?(:required)
+        @required = options[:required]
+        # Do some light validation for conflicting settings.
+        raise ArgumentError, "Specifying a :default value with :required doesn't make sense" if options.key?(:default)
+        raise ArgumentError, "A required flag (boolean) doesn't make sense." if type == :flag
       end
 
       attr_reader :switches, :type

@@ -1,7 +1,7 @@
 module Clamp
   module Subcommand
 
-    class Definition < Struct.new(:name, :description, :subcommand_class)
+    Definition = Struct.new(:name, :description, :subcommand_class) do
 
       def initialize(names, description, subcommand_class)
         @names = Array(names)

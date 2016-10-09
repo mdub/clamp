@@ -30,10 +30,10 @@ describe Clamp::Command do
     it "delegates to sub-commands" do
 
       command.run(["flip"])
-      expect(stdout).to match /FLIPPED/
+      expect(stdout).to match(/FLIPPED/)
 
       command.run(["flop"])
-      expect(stdout).to match /FLOPPED/
+      expect(stdout).to match(/FLOPPED/)
 
     end
 
@@ -55,13 +55,13 @@ describe Clamp::Command do
 
       it "lists subcommands" do
         help = command.help
-        expect(help).to match /Subcommands:/
-        expect(help).to match /flip +flip it/
-        expect(help).to match /flop +flop it/
+        expect(help).to match(/Subcommands:/)
+        expect(help).to match(/flip +flip it/)
+        expect(help).to match(/flop +flop it/)
       end
 
       it "handles new lines in subcommand descriptions" do
-        expect(command.help).to match /flop +flop it\n +for extra flop/
+        expect(command.help).to match(/flop +flop it\n +for extra flop/)
       end
 
     end
@@ -96,10 +96,10 @@ describe Clamp::Command do
     it "responds to both aliases" do
 
       command.run(["say", "boo"])
-      expect(stdout).to match /boo/
+      expect(stdout).to match(/boo/)
 
       command.run(["talk", "jive"])
-      expect(stdout).to match /jive/
+      expect(stdout).to match(/jive/)
 
     end
 
@@ -107,7 +107,7 @@ describe Clamp::Command do
 
       it "lists all aliases" do
         help = command.help
-        expect(help).to match /say, talk .* Say something/
+        expect(help).to match(/say, talk .* Say something/)
       end
 
     end
@@ -137,7 +137,7 @@ describe Clamp::Command do
 
     it "delegates multiple levels" do
       command.run(["foo", "bar"])
-      expect(stdout).to match /FUBAR/
+      expect(stdout).to match(/FUBAR/)
     end
 
     describe ".find_subcommand_class" do
@@ -170,7 +170,7 @@ describe Clamp::Command do
 
       it "invokes the default subcommand" do
         command.run([])
-        expect(stdout).to match /All good/
+        expect(stdout).to match(/All good/)
       end
 
     end
@@ -195,7 +195,7 @@ describe Clamp::Command do
 
       it "invokes the default subcommand" do
         command.run([])
-        expect(stdout).to match /All good/
+        expect(stdout).to match(/All good/)
       end
 
     end
@@ -282,23 +282,23 @@ describe Clamp::Command do
 
     it "accepts options defined in superclass (specified after the subcommand)" do
       command.run(["move", "--direction", "north"])
-      expect(stdout).to match /walking north/
+      expect(stdout).to match(/walking north/)
     end
 
     it "accepts options defined in superclass (specified before the subcommand)" do
       command.run(["--direction", "north", "move"])
-      expect(stdout).to match /walking north/
+      expect(stdout).to match(/walking north/)
     end
 
     it "accepts options defined in included modules" do
       command.run(["move", "--speed", "very quickly"])
-      expect(stdout).to match /walking home very quickly/
+      expect(stdout).to match(/walking home very quickly/)
     end
 
     it "has access to command context" do
       command = command_class.new("go", :motion => "wandering")
       command.run(["move"])
-      expect(stdout).to match /wandering home/
+      expect(stdout).to match(/wandering home/)
     end
 
   end

@@ -45,9 +45,12 @@ module Clamp
           # If this option is required and the value is nil, there's an error.
           next unless option.required? && send(option.attribute_name).nil?
           if option.environment_variable
-            message = Clamp.message(:option_or_env_required, :option => option.switches.first, :env => option.environment_variable)
+            message = Clamp.message(:option_or_env_required,
+                                    :option => option.switches.first,
+                                    :env => option.environment_variable)
           else
-            message = Clamp.message(:option_required, :option => option.switches.first)
+            message = Clamp.message(:option_required,
+                                    :option => option.switches.first)
           end
           signal_usage_error message
         end

@@ -20,7 +20,7 @@ Clamp do
   private
 
   def default_password
-    terminal.ask("Password [#{user}]: ") { |q| q.echo = '*' }
+    terminal.ask("Password [#{user}]: ") { |q| q.echo = "*" }
   end
 
   def terminal
