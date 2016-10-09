@@ -238,13 +238,25 @@ describe Clamp::Command do
         end
       end
 
+      subcommand "say", "say it" do
+        subcommand "loud", "yell it" do
+          def execute
+            puts "#{thing.upcase}"
+          end
+        end
+      end
+
     end
 
     it "allows the parameter to be specified first" do
-
       command.run(["dummy", "spit"])
       expect(stdout.strip).to eql "spat the dummy"
+    end
 
+    it "passes the parameter down the stack" do
+      pending
+      command.run(["money", "say", "loud"])
+      expect(stdout.strip).to eql "MONEY"
     end
 
   end
