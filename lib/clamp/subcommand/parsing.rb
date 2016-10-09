@@ -1,4 +1,4 @@
-require 'clamp/subcommand/execution'
+require "clamp/subcommand/execution"
 
 module Clamp
   module Subcommand
@@ -9,7 +9,7 @@ module Clamp
 
       def parse_subcommand
         return false unless self.class.has_subcommands?
-        self.extend(Subcommand::Execution)
+        extend(Subcommand::Execution)
       end
 
       private

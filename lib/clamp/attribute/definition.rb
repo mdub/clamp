@@ -1,4 +1,4 @@
-require 'clamp/attribute/instance'
+require "clamp/attribute/instance"
 
 module Clamp
   module Attribute
@@ -6,18 +6,14 @@ module Clamp
     class Definition
 
       def initialize(options)
-        if options.has_key?(:attribute_name)
+        if options.key?(:attribute_name)
           @attribute_name = options[:attribute_name].to_s
         end
-        if options.has_key?(:default)
-          @default_value = options[:default]
-        end
-        if options.has_key?(:environment_variable)
+        @default_value = options[:default] if options.key?(:default)
+        if options.key?(:environment_variable)
           @environment_variable = options[:environment_variable]
         end
-        if options.has_key?(:hidden)
-          @hidden = options[:hidden]
-        end
+        @hidden = options[:hidden] if options.key?(:hidden)
       end
 
       attr_reader :description, :environment_variable
@@ -47,9 +43,7 @@ module Clamp
       end
 
       def append_method
-        if multivalued?
-          "append_to_#{attribute_name}"
-        end
+        "append_to_#{attribute_name}" if multivalued?
       end
 
       def multivalued?

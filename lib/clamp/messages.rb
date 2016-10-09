@@ -6,7 +6,7 @@ module Clamp
       messages.merge!(new_messages)
     end
 
-    def message(key, options={})
+    def message(key, options = {})
       format_string(messages.fetch(key), options)
     end
 
@@ -30,22 +30,20 @@ module Clamp
       :parameters_heading => "Parameters",
       :subcommands_heading => "Subcommands",
       :options_heading => "Options"
-    }
+    }.freeze
 
     def messages
-      unless defined?(@messages)
-        init_default_messages
-      end
+      init_default_messages unless defined?(@messages)
       @messages
     end
 
     def init_default_messages
-      @messages = DEFAULTS.clone
+      @messages = DEFAULTS.dup
     end
 
     begin
 
-      ("%{foo}" % {:foo => "bar"}) # test Ruby 1.9 string interpolation
+      ("%{foo}" % { :foo => "bar" }) # test Ruby 1.9 string interpolation
 
       def format_string(format, params = {})
         format % params
@@ -59,7 +57,7 @@ module Clamp
           name = name[0]
           params[name.to_s] || params[name.to_sym]
         end
-        format.gsub(/%[<]([^>]*)[>]/, '%').gsub(/%[{]([^}]*)[}]/, '%s') % array_params
+        format.gsub(/%[<]([^>]*)[>]/, "%").gsub(/%[{]([^}]*)[}]/, "%s") % array_params
       end
 
     end

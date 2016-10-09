@@ -1,12 +1,12 @@
-require 'clamp/messages'
-require 'clamp/errors'
-require 'clamp/help'
-require 'clamp/option/declaration'
-require 'clamp/option/parsing'
-require 'clamp/parameter/declaration'
-require 'clamp/parameter/parsing'
-require 'clamp/subcommand/declaration'
-require 'clamp/subcommand/parsing'
+require "clamp/messages"
+require "clamp/errors"
+require "clamp/help"
+require "clamp/option/declaration"
+require "clamp/option/parsing"
+require "clamp/parameter/declaration"
+require "clamp/parameter/parsing"
+require "clamp/subcommand/declaration"
+require "clamp/subcommand/parsing"
 
 module Clamp
 
@@ -39,9 +39,7 @@ module Clamp
 
     # @return [Array<String>] unconsumed command-line arguments
     #
-    def remaining_arguments
-      @remaining_arguments
-    end
+    attr_reader :remaining_arguments
 
     # Parse command-line arguments.
     #
@@ -128,22 +126,20 @@ module Clamp
       # @param [Array<String>] arguments command-line arguments
       # @param [Hash] context additional data the command may need
       #
-      def run(invocation_path = File.basename($0), arguments = ARGV, context = {})
-        begin
-          new(invocation_path, context).run(arguments)
-        rescue Clamp::UsageError => e
-          $stderr.puts "ERROR: #{e.message}"
-          $stderr.puts ""
-          $stderr.puts "See: '#{e.command.invocation_path} --help'"
-          exit(1)
-        rescue Clamp::HelpWanted => e
-          puts e.command.help
-        rescue Clamp::ExecutionError => e
-          $stderr.puts "ERROR: #{e.message}"
-          exit(e.status)
-        rescue SignalException => e
-          exit(128 + e.signo)
-        end
+      def run(invocation_path = File.basename($PROGRAM_NAME), arguments = ARGV, context = {})
+        new(invocation_path, context).run(arguments)
+      rescue Clamp::UsageError => e
+        $stderr.puts "ERROR: #{e.message}"
+        $stderr.puts ""
+        $stderr.puts "See: '#{e.command.invocation_path} --help'"
+        exit(1)
+      rescue Clamp::HelpWanted => e
+        puts e.command.help
+      rescue Clamp::ExecutionError => e
+        $stderr.puts "ERROR: #{e.message}"
+        exit(e.status)
+      rescue SignalException => e
+        exit(128 + e.signo)
       end
 
     end

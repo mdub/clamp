@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Clamp::Command do
 
@@ -305,21 +305,21 @@ describe Clamp::Command do
 
   context "with a subcommand, with options" do
 
-    given_command 'weeheehee' do
-      option '--json', 'JSON', 'a json blob' do |option|
+    given_command "weeheehee" do
+      option "--json", "JSON", "a json blob" do |option|
         print "parsing!"
         option
       end
 
-      subcommand 'woohoohoo', 'like weeheehee but with more o' do
+      subcommand "woohoohoo", "like weeheehee but with more o" do
         def execute
         end
       end
     end
 
     it "only parses options once" do
-      command.run(['--json', '{"a":"b"}', 'woohoohoo'])
-      expect(stdout).to eql 'parsing!'
+      command.run(["--json", '{"a":"b"}', "woohoohoo"])
+      expect(stdout).to eql "parsing!"
     end
 
   end

@@ -63,7 +63,7 @@ module Clamp
       def default_from_environment
         return if self.defined?
         return if attribute.environment_variable.nil?
-        return unless ENV.has_key?(attribute.environment_variable)
+        return unless ENV.key?(attribute.environment_variable)
         # Set the parameter value if it's environment variable is present
         value = ENV[attribute.environment_variable]
         begin

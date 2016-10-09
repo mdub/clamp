@@ -6,7 +6,6 @@ module Clamp
       protected
 
       def parse_parameters
-
         self.class.parameters.each do |parameter|
           begin
             parameter.consume(remaining_arguments).each do |value|
@@ -20,7 +19,6 @@ module Clamp
         self.class.parameters.each do |parameter|
           parameter.of(self).default_from_environment
         end
-
       end
 
     end

@@ -1,5 +1,5 @@
-require 'clamp/attribute/declaration'
-require 'clamp/parameter/definition'
+require "clamp/attribute/declaration"
+require "clamp/parameter/definition"
 
 module Clamp
   module Parameter

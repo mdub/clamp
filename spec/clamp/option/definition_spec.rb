@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Clamp::Option::Definition do
 
@@ -195,8 +195,8 @@ describe Clamp::Option::Definition do
       end
 
       it "can be overridden" do
-        option = described_class.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1,2,3])
-        expect(option.default_value).to eql [1,2,3]
+        option = described_class.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1, 2, 3])
+        expect(option.default_value).to eql [1, 2, 3]
       end
 
     end
@@ -234,7 +234,7 @@ describe Clamp::Option::Definition do
     describe "Command#help" do
 
       it "includes help for each option exactly once" do
-        subcommand = command_class.send(:find_subcommand, 'foo')
+        subcommand = command_class.send(:find_subcommand, "foo")
         subcommand_help = subcommand.subcommand_class.help("")
         expect(subcommand_help.lines.grep(/--bar BAR/).count).to eql 1
       end
@@ -247,7 +247,7 @@ describe Clamp::Option::Definition do
     it "rejects :default" do
       expect do
         described_class.new("--key-file", "FILE", "SSH identity",
-                          :required => true, :default => "hello")
+                            :required => true, :default => "hello")
       end.to raise_error(ArgumentError)
     end
 

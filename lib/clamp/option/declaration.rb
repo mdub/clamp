@@ -1,5 +1,5 @@
-require 'clamp/attribute/declaration'
-require 'clamp/option/definition'
+require "clamp/attribute/declaration"
+require "clamp/option/definition"
 
 module Clamp
   module Option
@@ -45,7 +45,7 @@ module Clamp
 
       def effective_options
         ancestors.inject([]) do |options, ancestor|
-          if ancestor.kind_of?(Clamp::Option::Declaration)
+          if ancestor.is_a?(Clamp::Option::Declaration)
             options + ancestor.declared_options
           else
             options

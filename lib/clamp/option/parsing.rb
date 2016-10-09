@@ -6,23 +6,22 @@ module Clamp
       protected
 
       def parse_options
-
-        while remaining_arguments.first =~ /\A-/
+        while remaining_arguments.first && remaining_arguments.first.start_with?("-")
 
           switch = remaining_arguments.shift
           break if switch == "--"
 
           case switch
           when /\A(-\w)(.+)\z/m # combined short options
-            switch = $1
+            switch = Regexp.last_match(1)
             if find_option(switch).flag?
-              remaining_arguments.unshift("-" + $2)
+              remaining_arguments.unshift("-" + Regexp.last_match(2))
             else
-              remaining_arguments.unshift($2)
+              remaining_arguments.unshift(Regexp.last_match(2))
             end
           when /\A(--[^=]+)=(.*)\z/m
-            switch = $1
-            remaining_arguments.unshift($2)
+            switch = Regexp.last_match(1)
+            remaining_arguments.unshift(Regexp.last_match(2))
           end
 
           option = find_option(switch)
@@ -44,14 +43,13 @@ module Clamp
         # Verify that all required options are present
         self.class.recognised_options.each do |option|
           # If this option is required and the value is nil, there's an error.
-          if option.required? and send(option.attribute_name).nil?
-            if option.environment_variable
-              message = Clamp.message(:option_or_env_required, :option => option.switches.first, :env => option.environment_variable)
-            else
-              message = Clamp.message(:option_required, :option => option.switches.first)
-            end
-            signal_usage_error message
+          next unless option.required? && send(option.attribute_name).nil?
+          if option.environment_variable
+            message = Clamp.message(:option_or_env_required, :option => option.switches.first, :env => option.environment_variable)
+          else
+            message = Clamp.message(:option_required, :option => option.switches.first)
           end
+          signal_usage_error message
         end
       end
 
@@ -59,7 +57,7 @@ module Clamp
 
       def find_option(switch)
         self.class.find_option(switch) ||
-        signal_usage_error(Clamp.message(:unrecognised_option, :switch => switch))
+          signal_usage_error(Clamp.message(:unrecognised_option, :switch => switch))
       end
 
     end
