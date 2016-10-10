@@ -334,6 +334,14 @@ describe Clamp::Command do
       end
     end
 
+    let(:subcommand_missing_with_return) do
+      Module.new do
+        def subcommand_missing(name)
+          self.class.recognised_subcommands.first
+        end
+      end
+    end
+
     let(:command_class) do
 
       Class.new(Clamp::Command) do
@@ -362,6 +370,12 @@ describe Clamp::Command do
       command.extend subcommand_missing
       expect{command.run(['foo'])}.to raise_error(SystemExit)
       expect(stderr).to match /there is no such thing/
+    end
+
+    it "should use the subcommand class returned from subcommand_missing" do
+      command.extend subcommand_missing_with_return
+      command.run(['foo'])
+      expect(stdout).to match /known subcommand/
     end
   end
 
