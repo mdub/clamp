@@ -336,4 +336,59 @@ describe Clamp::Command do
 
   end
 
+  context "with an unknown subcommand" do
+
+    let(:subcommand_missing) do
+      Module.new do
+        def subcommand_missing(name)
+          abort "there is no such thing"
+        end
+      end
+    end
+
+    let(:subcommand_missing_with_return) do
+      Module.new do
+        def subcommand_missing(name)
+          self.class.recognised_subcommands.first.subcommand_class
+        end
+      end
+    end
+
+    let(:command_class) do
+
+      Class.new(Clamp::Command) do
+        subcommand "test", "test subcommand" do
+          def execute
+            puts "known subcommand"
+          end
+        end
+
+        def execute
+        end
+      end
+    end
+
+    let(:command) do
+      command_class.new("foo")
+    end
+
+    it "should signal no such subcommand usage error" do
+      expect{command.run(['foo'])}.to raise_error(Clamp::UsageError) do |exception|
+        expect(exception.message).to eq "No such sub-command 'foo'"
+      end
+    end
+
+    it "should execute the subcommand missing method" do
+      command.extend subcommand_missing
+      expect{command.run(['foo'])}.to raise_error(SystemExit)
+      expect(stderr).to match /there is no such thing/
+    end
+
+    it "should use the subcommand class returned from subcommand_missing" do
+      command.extend subcommand_missing_with_return
+      command.run(['foo'])
+      expect(stdout).to match /known subcommand/
+    end
+  end
+
 end

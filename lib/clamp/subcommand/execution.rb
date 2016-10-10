@@ -25,8 +25,9 @@ module Clamp
       end
 
       def find_subcommand_class(name)
-        subcommand_def = self.class.find_subcommand(name) || signal_usage_error(Clamp.message(:no_such_subcommand, :name => name))
-        subcommand_def.subcommand_class
+        subcommand_def = self.class.find_subcommand(name)
+        return subcommand_def.subcommand_class if subcommand_def
+        subcommand_missing(name)
       end
 
     end

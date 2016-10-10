@@ -365,6 +365,19 @@ Options are inheritable, so any options declared for a command are supported by 
 
 Note that, if a subcommand accepts options, they must be specified on the command-line _after_ the subcommand name.
 
+You can define a `subcommand_missing` method that is called when user tries to run an unknown subcommand:
+
+```ruby
+Clamp do
+  def subcommand_missing(name)
+    if name == "foo"
+      return Object.const_get(:FooPlugin) if Object.const_defined?(:FooPlugin)
+      abort "Subcommand 'foo' requires plugin X"
+    end
+  end
+end
+```
+
 Getting help
 ------------
 
