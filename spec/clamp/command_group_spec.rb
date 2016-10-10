@@ -337,7 +337,7 @@ describe Clamp::Command do
     let(:subcommand_missing_with_return) do
       Module.new do
         def subcommand_missing(name)
-          self.class.recognised_subcommands.first
+          self.class.recognised_subcommands.first.subcommand_class
         end
       end
     end
