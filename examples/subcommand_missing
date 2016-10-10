@@ -13,6 +13,7 @@ Clamp do
     if name == 'bye'
       abort "Install bye plugin first"
     end
+    super
   end
 
   def execute
