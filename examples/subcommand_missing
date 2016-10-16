@@ -1,18 +1,16 @@
 #! /usr/bin/env ruby
 
-require 'clamp'
+require "clamp"
 
 Clamp do
-  subcommand 'hello', 'Say hello' do
+  subcommand "hello", "Say hello" do
     def execute
       puts "Hello"
     end
   end
 
   def subcommand_missing(name)
-    if name == 'bye'
-      abort "Install bye plugin first"
-    end
+    abort "Install bye plugin first" if name == "bye"
     super
   end
 

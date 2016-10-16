@@ -17,9 +17,8 @@ module Clamp
         subcommand_class = find_subcommand_class(name)
         subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
         self.class.inheritable_attributes.each do |attribute|
-          if attribute.of(self).defined?
-            attribute.of(subcommand).set(attribute.of(self).get)
-          end
+          next unless attribute.of(self).defined?
+          attribute.of(subcommand).set(attribute.of(self).get)
         end
         subcommand
       end

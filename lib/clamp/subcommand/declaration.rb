@@ -11,11 +11,8 @@ module Clamp
       end
 
       def subcommand(name, description, subcommand_class = self, &block)
+        subcommand_class = Class.new(subcommand_class, &block) if block
         declare_subcommand_parameters unless has_subcommands?
-        if block
-          # generate a anonymous sub-class
-          subcommand_class = Class.new(subcommand_class, &block)
-        end
         recognised_subcommands << Subcommand::Definition.new(name, description, subcommand_class)
       end
 

@@ -241,7 +241,7 @@ describe Clamp::Command do
       subcommand "say", "say it" do
         subcommand "loud", "yell it" do
           def execute
-            puts "#{thing.upcase}"
+            puts thing.upcase
           end
         end
       end
@@ -339,7 +339,7 @@ describe Clamp::Command do
 
     let(:subcommand_missing) do
       Module.new do
-        def subcommand_missing(name)
+        def subcommand_missing(_name)
           abort "there is no such thing"
         end
       end
@@ -347,7 +347,7 @@ describe Clamp::Command do
 
     let(:subcommand_missing_with_return) do
       Module.new do
-        def subcommand_missing(name)
+        def subcommand_missing(_name)
           self.class.recognised_subcommands.first.subcommand_class
         end
       end
@@ -372,21 +372,21 @@ describe Clamp::Command do
     end
 
     it "should signal no such subcommand usage error" do
-      expect{command.run(['foo'])}.to raise_error(Clamp::UsageError) do |exception|
+      expect { command.run(["foo"]) }.to raise_error(Clamp::UsageError) do |exception|
         expect(exception.message).to eq "No such sub-command 'foo'"
       end
     end
 
     it "should execute the subcommand missing method" do
       command.extend subcommand_missing
-      expect{command.run(['foo'])}.to raise_error(SystemExit)
-      expect(stderr).to match /there is no such thing/
+      expect { command.run(["foo"]) }.to raise_error(SystemExit)
+      expect(stderr).to match(/there is no such thing/)
     end
 
     it "should use the subcommand class returned from subcommand_missing" do
       command.extend subcommand_missing_with_return
-      command.run(['foo'])
-      expect(stdout).to match /known subcommand/
+      command.run(["foo"])
+      expect(stdout).to match(/known subcommand/)
     end
   end
 
