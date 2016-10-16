@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 (2016-10-17)
+
+* Add `#subcommand_missing`.
+* Fix issue#66: pass parameter values down to nested subcommands.
+* Drop support for Ruby 1.9 and 2.0.
+
 ## 1.0.1 (2016-10-01)
 
 * Minor bug-fixes.
