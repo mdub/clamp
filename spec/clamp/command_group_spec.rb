@@ -254,7 +254,6 @@ describe Clamp::Command do
     end
 
     it "passes the parameter down the stack" do
-      pending
       command.run(["money", "say", "loud"])
       expect(stdout.strip).to eql "MONEY"
     end

@@ -36,7 +36,7 @@ module Clamp
       end
 
       def inheritable_attributes
-        recognised_options + parameters.select(&:inheritable?)
+        recognised_options + inheritable_parameters
       end
 
       def default_subcommand=(name)
