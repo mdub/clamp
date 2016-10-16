@@ -15,13 +15,13 @@ module Clamp
 
       def instantiate_subcommand(name)
         subcommand_class = find_subcommand_class(name)
-        parent_attribute_values = {}
+        subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
         self.class.inheritable_attributes.each do |attribute|
           if attribute.of(self).defined?
-            parent_attribute_values[attribute] = attribute.of(self).get
+            attribute.of(subcommand).set(attribute.of(self).get)
           end
         end
-        subcommand_class.new("#{invocation_path} #{name}", context, parent_attribute_values)
+        subcommand
       end
 
       def find_subcommand_class(name)

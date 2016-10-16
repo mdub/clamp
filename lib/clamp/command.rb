@@ -25,12 +25,9 @@ module Clamp
     # @param [String] invocation_path the path used to invoke the command
     # @param [Hash] context additional data the command may need
     #
-    def initialize(invocation_path, context = {}, parent_attribute_values = {})
+    def initialize(invocation_path, context = {})
       @invocation_path = invocation_path
       @context = context
-      parent_attribute_values.each do |attribute, value|
-        attribute.of(self).set(value)
-      end
     end
 
     # @return [String] the path used to invoke this command
