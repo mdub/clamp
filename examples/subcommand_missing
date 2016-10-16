@@ -3,6 +3,7 @@
 require "clamp"
 
 Clamp do
+
   subcommand "hello", "Say hello" do
     def execute
       puts "Hello"
@@ -12,10 +13,6 @@ Clamp do
   def subcommand_missing(name)
     abort "Install bye plugin first" if name == "bye"
     super
-  end
-
-  def execute
-    puts "Why we need this?"
   end
 
 end
