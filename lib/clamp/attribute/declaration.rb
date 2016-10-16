@@ -5,7 +5,7 @@ module Clamp
 
       protected
 
-      def define_accessors_for(attribute, &block)
+      def declare_attribute(attribute, &block)
         define_reader_for(attribute)
         define_default_for(attribute)
         if attribute.multivalued?
@@ -15,6 +15,8 @@ module Clamp
           define_simple_writer_for(attribute, &block)
         end
       end
+
+      private
 
       def define_reader_for(attribute)
         define_method(attribute.read_method) do
