@@ -96,9 +96,7 @@ module Clamp
     attr_accessor :context
 
     def handle_remaining_arguments
-      unless remaining_arguments.empty?
-        signal_usage_error Clamp.message(:too_many_arguments)
-      end
+      signal_usage_error Clamp.message(:too_many_arguments) unless remaining_arguments.empty?
     end
 
     private

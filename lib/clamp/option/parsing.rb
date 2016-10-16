@@ -6,6 +6,14 @@ module Clamp
       protected
 
       def parse_options
+        set_options_from_command_line
+        default_options_from_environment
+        verify_required_options_are_set
+      end
+
+      private
+
+      def set_options_from_command_line
         while remaining_arguments.first && remaining_arguments.first.start_with?("-")
 
           switch = remaining_arguments.shift
@@ -34,13 +42,15 @@ module Clamp
           end
 
         end
+      end
 
-        # Fill in gap from environment
+      def default_options_from_environment
         self.class.recognised_options.each do |option|
           option.of(self).default_from_environment
         end
+      end
 
-        # Verify that all required options are present
+      def verify_required_options_are_set
         self.class.recognised_options.each do |option|
           # If this option is required and the value is nil, there's an error.
           next unless option.required? && send(option.attribute_name).nil?
@@ -55,8 +65,6 @@ module Clamp
           signal_usage_error message
         end
       end
-
-      private
 
       def find_option(switch)
         self.class.find_option(switch) ||

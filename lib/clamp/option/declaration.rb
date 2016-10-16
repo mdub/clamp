@@ -25,32 +25,33 @@ module Clamp
       end
 
       def recognised_options
-        declare_implicit_options
+        unless @implicit_options_declared
+          declare_implicit_help_option
+          @implicit_options_declared = true
+        end
         effective_options
       end
 
       private
 
-      def declare_implicit_options
-        return nil if defined?(@implicit_options_declared)
-        unless effective_options.find { |o| o.handles?("--help") }
-          help_switches = ["--help"]
-          help_switches.unshift("-h") unless effective_options.find { |o| o.handles?("-h") }
-          option help_switches, :flag, "print help" do
-            request_help
-          end
+      def declare_implicit_help_option
+        return false if effective_options.find { |o| o.handles?("--help") }
+        help_switches = ["--help"]
+        help_switches.unshift("-h") unless effective_options.find { |o| o.handles?("-h") }
+        option help_switches, :flag, "print help" do
+          request_help
         end
-        @implicit_options_declared = true
       end
 
       def effective_options
         ancestors.inject([]) do |options, ancestor|
-          if ancestor.is_a?(Clamp::Option::Declaration)
-            options + ancestor.declared_options
-          else
-            options
-          end
+          options + options_declared_on(ancestor)
         end
+      end
+
+      def options_declared_on(ancestor)
+        return [] unless ancestor.is_a?(Clamp::Option::Declaration)
+        ancestor.declared_options
       end
 
     end

@@ -13,9 +13,14 @@ module Clamp
         @required = options.fetch(:required) do
           (@name !~ OPTIONAL)
         end
+        @inheritable = options.fetch(:inheritable, true)
       end
 
       attr_reader :name
+
+      def inheritable?
+        @inheritable
+      end
 
       def help_lhs
         name

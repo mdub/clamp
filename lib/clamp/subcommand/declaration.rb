@@ -11,15 +11,7 @@ module Clamp
       end
 
       def subcommand(name, description, subcommand_class = self, &block)
-        unless has_subcommands?
-          if @default_subcommand
-            @subcommand_parameter = parameter "[SUBCOMMAND]", "subcommand", :attribute_name => :subcommand_name, :default => @default_subcommand
-          else
-            @subcommand_parameter = parameter "SUBCOMMAND", "subcommand", :attribute_name => :subcommand_name, :required => false
-          end
-          remove_method :default_subcommand_name
-          parameter "[ARG] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
-        end
+        declare_subcommand_parameters unless has_subcommands?
         if block
           # generate a anonymous sub-class
           subcommand_class = Class.new(subcommand_class, &block)
@@ -43,12 +35,8 @@ module Clamp
         end
       end
 
-      def parameters_before_subcommand
-        parameters.take_while { |p| p != @subcommand_parameter }
-      end
-
       def inheritable_attributes
-        recognised_options + parameters_before_subcommand
+        recognised_options + parameters.select(&:inheritable?)
       end
 
       def default_subcommand=(name)
@@ -67,6 +55,26 @@ module Clamp
           self.default_subcommand = args.first
           subcommand(*args, &block)
         end
+      end
+
+      private
+
+      def declare_subcommand_parameters
+        if @default_subcommand
+          parameter "[SUBCOMMAND]", "subcommand",
+                    :attribute_name => :subcommand_name,
+                    :default => @default_subcommand,
+                    :inheritable => false
+        else
+          parameter "SUBCOMMAND", "subcommand",
+                    :attribute_name => :subcommand_name,
+                    :required => false,
+                    :inheritable => false
+        end
+        remove_method :default_subcommand_name
+        parameter "[ARG] ...", "subcommand arguments",
+                  :attribute_name => :subcommand_arguments,
+                  :inheritable => false
       end
 
     end
