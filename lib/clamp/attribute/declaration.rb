@@ -5,7 +5,7 @@ module Clamp
 
       protected
 
-      def declare_attribute(attribute, &block)
+      def define_accessors_for(attribute, &block)
         define_reader_for(attribute)
         define_default_for(attribute)
         if attribute.multivalued?

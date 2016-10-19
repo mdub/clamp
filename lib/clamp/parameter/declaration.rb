@@ -18,7 +18,7 @@ module Clamp
 
       def parameter(name, description, options = {}, &block)
         Parameter::Definition.new(name, description, options).tap do |parameter|
-          declare_attribute(parameter, &block)
+          define_accessors_for(parameter, &block)
           parameters << parameter
         end
       end

@@ -1,5 +1,9 @@
 # Changelog
 
+## PENDING
+
+* Rename `.declare_attribute` back to `.define_accessors_for`.
+
 ## 1.1.0 (2016-10-17)
 
 * Add `#subcommand_missing`.

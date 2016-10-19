@@ -11,7 +11,7 @@ module Clamp
       def option(switches, type, description, opts = {}, &block)
         Option::Definition.new(switches, type, description, opts).tap do |option|
           block ||= option.default_conversion_block
-          declare_attribute(option, &block)
+          define_accessors_for(option, &block)
           declared_options << option
         end
       end
