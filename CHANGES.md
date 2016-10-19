@@ -1,6 +1,6 @@
 # Changelog
 
-## PENDING
+## 1.1.1 (2016-10-19)
 
 * Rename `.declare_attribute` back to `.define_accessors_for`.
 
