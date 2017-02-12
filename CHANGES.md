@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 (2017-02-12)
+
+* Improve usage help for commands with both parameters and subcommands.
+
 ## 1.1.1 (2016-10-19)
 
 * Rename `.declare_attribute` back to `.define_accessors_for`.

@@ -15,12 +15,17 @@ module Clamp
 
       def instantiate_subcommand(name)
         subcommand_class = find_subcommand_class(name)
-        subcommand = subcommand_class.new("#{invocation_path} #{name}", context)
+        subcommand = subcommand_class.new(invocation_path_for(name), context)
         self.class.inheritable_attributes.each do |attribute|
           next unless attribute.of(self).defined?
           attribute.of(subcommand).set(attribute.of(self).get)
         end
         subcommand
+      end
+
+      def invocation_path_for(name)
+        param_names = self.class.inheritable_parameters.map(&:name)
+        [invocation_path, *param_names, name].join(" ")
       end
 
       def find_subcommand_class(name)

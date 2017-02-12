@@ -258,6 +258,14 @@ describe Clamp::Command do
       expect(stdout.strip).to eql "MONEY"
     end
 
+    it "shows parameter in usage help" do
+      begin
+        command.run(["stuff", "say", "--help"])
+      rescue Clamp::HelpWanted => e
+        expect(e.command.invocation_path).to eql("with THING say")
+      end
+    end
+
   end
 
   describe "each subcommand" do

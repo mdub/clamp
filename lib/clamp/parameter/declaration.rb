@@ -23,8 +23,6 @@ module Clamp
         end
       end
 
-      protected
-
       def inheritable_parameters
         superclass_inheritable_parameters + parameters.select(&:inheritable?)
       end
