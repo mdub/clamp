@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-# An example of subcommands
+# An example of options and parameters
 
 require "clamp"
 

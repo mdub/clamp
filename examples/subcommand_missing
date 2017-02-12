@@ -1,5 +1,7 @@
 #! /usr/bin/env ruby
 
+# Demonstrate subcommand_missing
+
 require "clamp"
 
 Clamp do

@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-# An example of subcommands
+# An example of subcommands (including a default subcommand)
 
 require "clamp"
 require "clamp/version"
