@@ -1,0 +1,15 @@
+#! /usr/bin/env ruby
+
+# An example of subcommand defined as a hash instead of a class.
+
+require "clamp"
+
+Clamp do
+
+  subcommand "bar", "Bar related commands", "Clubhopping::BarCommand" => File.join(__dir__, 'clubhopping/bar_command')
+
+  def execute
+  end
+end
+
+

@@ -398,4 +398,48 @@ describe Clamp::Command do
     end
   end
 
+  context "with a subcommand defined as a proc" do
+
+    given_command 'foo' do
+
+      class BarCommand < Clamp::Command
+        def execute
+          puts "Bar closed"
+        end
+      end
+
+      subcommand 'bar', 'Go to the bar', proc { BarCommand }
+      def execute
+      end
+    end
+
+    it "calls the proc" do
+      command.run(['bar'])
+      expect(stdout).to match /Bar closed/
+    end
+
+    it "shows the subcommand in parent's help as usual" do
+      expect(command.help).to match /Go to the bar/
+    end
+  end
+
+  context "with a subcommand defined as a hash" do
+
+    given_command 'foo' do
+
+      subcommand 'bar', 'Go to the bar', "Example::BarCommand" => File.expand_path('../subcommand/example.rb', __FILE__)
+      def execute
+      end
+    end
+
+    it "loads the file and calls the class" do
+      command.run(['bar'])
+      expect(stdout).to match /Bar closed/
+    end
+
+    it "shows the subcommand in parent's help as usual" do
+      expect(command.help).to match /Go to the bar/
+    end
+  end
+
 end

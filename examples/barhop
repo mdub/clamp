@@ -1,0 +1,36 @@
+#! /usr/bin/env ruby
+
+# An example of subcommand defined as a proc instead of a class.
+#
+# This way you can for example require your subcommand class inside the
+# proc and it will only be loaded when the subcommand is accessed.
+
+require "clamp"
+
+module Bar
+  class ListCommand < Clamp::Command
+    def execute
+      puts "All bars closed by the health inspector"
+    end
+  end
+end
+
+class BarCommand < Clamp::Command
+
+  subcommand "list", "List open bars", proc {
+    ENV["DEBUG"] && puts("Called list subcommand proc on BarCommand")
+    Bar::ListCommand
+  }
+
+  def execute
+  end
+end
+
+Clamp do
+
+  subcommand "bar", "Bar related commands", proc { BarCommand }
+
+  def execute
+  end
+end
+
