@@ -15,6 +15,7 @@ module Clamp
           define_simple_writer_for(attribute, &block)
         end
       end
+      alias_method :define_accessors_for, :declare_attribute
 
       private
 
