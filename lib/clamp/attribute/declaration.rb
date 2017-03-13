@@ -16,6 +16,8 @@ module Clamp
         end
       end
 
+      private
+
       def define_reader_for(attribute)
         define_method(attribute.read_method) do
           attribute.of(self)._read

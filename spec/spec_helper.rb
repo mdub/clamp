@@ -1,6 +1,6 @@
 require "rspec"
 require "clamp"
-require 'stringio'
+require "stringio"
 
 RSpec.configure do |config|
 
@@ -11,7 +11,6 @@ end
 module OutputCapture
 
   def self.included(target)
-
     target.before do
       $stdout = @out = StringIO.new
       $stderr = @err = StringIO.new
@@ -21,7 +20,6 @@ module OutputCapture
       $stdout = STDOUT
       $stderr = STDERR
     end
-
   end
 
   def stdout

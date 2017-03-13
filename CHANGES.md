@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.2 (2017-02-12)
+
+* Improve usage help for commands with both parameters and subcommands.
+
+## 1.1.1 (2016-10-19)
+
+* Rename `.declare_attribute` back to `.define_accessors_for`.
+
+## 1.1.0 (2016-10-17)
+
+* Add `#subcommand_missing`.
+* Fix issue#66: pass parameter values down to nested subcommands.
+* Drop support for Ruby 1.9 and 2.0.
+
+## 1.0.1 (2016-10-01)
+
+* Minor bug-fixes.
+
 ## 1.0.0 (2015-06-08)
 
 * Allow options to be `:hidden`.

@@ -1,5 +1,5 @@
-require 'stringio'
-require 'clamp/messages'
+require "stringio"
+require "clamp/messages"
 
 module Clamp
 
@@ -15,8 +15,8 @@ module Clamp
     def description=(description)
       @description = description.dup
       if @description =~ /^\A\n*( +)/
-        indent = $1
-        @description.gsub!(/^#{indent}/, '')
+        indent = Regexp.last_match(1)
+        @description.gsub!(/^#{indent}/, "")
       end
       @description.strip!
     end
@@ -29,7 +29,7 @@ module Clamp
 
     def derived_usage_description
       parts = ["[OPTIONS]"]
-      parts += parameters.map { |a| a.name }
+      parts += parameters.map(&:name)
       parts.join(" ")
     end
 
@@ -69,21 +69,20 @@ module Clamp
       end
 
       def add_description(description)
-        if description
-          puts ""
-          puts description.gsub(/^/, "  ")
-        end
+        return unless description
+        puts ""
+        puts description.gsub(/^/, "  ")
       end
 
-      DETAIL_FORMAT = "    %-29s %s"
+      DETAIL_FORMAT = "    %-29s %s".freeze
 
       def add_list(heading, items)
         puts "\n#{heading}:"
         items.reject { |i| i.respond_to?(:hidden?) && i.hidden? }.each do |item|
           label, description = item.help
           description.each_line do |line|
-            puts DETAIL_FORMAT % [label, line]
-            label = ''
+            puts format(DETAIL_FORMAT, label, line)
+            label = ""
           end
         end
       end

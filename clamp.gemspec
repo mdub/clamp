@@ -1,5 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.push File.expand_path("../lib", __FILE__)
 require "clamp/version"
 
 Gem::Specification.new do |s|
@@ -11,9 +10,9 @@ Gem::Specification.new do |s|
   s.email         = "mdub@dogbiscuit.org"
   s.homepage      = "http://github.com/mdub/clamp"
 
-  s.license       = 'MIT'
+  s.license       = "MIT"
 
-  s.summary       = %q{a minimal framework for command-line utilities}
+  s.summary       = "a minimal framework for command-line utilities"
   s.description   = <<EOF
 Clamp provides an object-model for command-line utilities.
 It handles parsing of command-line options, and generation of usage help.

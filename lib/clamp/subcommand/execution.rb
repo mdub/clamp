@@ -15,22 +15,23 @@ module Clamp
 
       def instantiate_subcommand(name)
         subcommand_class = find_subcommand_class(name)
-        parent_attribute_values = {}
+        subcommand = subcommand_class.new(invocation_path_for(name), context)
         self.class.inheritable_attributes.each do |attribute|
-          if attribute.of(self).defined?
-            parent_attribute_values[attribute] = attribute.of(self).get
-          end
+          next unless attribute.of(self).defined?
+          attribute.of(subcommand).set(attribute.of(self).get)
         end
-        subcommand_class.new("#{invocation_path} #{name}", context, parent_attribute_values)
+        subcommand
+      end
+
+      def invocation_path_for(name)
+        param_names = self.class.inheritable_parameters.map(&:name)
+        [invocation_path, *param_names, name].join(" ")
       end
 
       def find_subcommand_class(name)
         subcommand_def = self.class.find_subcommand(name)
-        unless subcommand_def
-          subcommand_def = subcommand_missing(name) if self.respond_to?(:subcommand_missing)
-          signal_usage_error(Clamp.message(:no_such_subcommand, :name => name)) unless subcommand_def
-        end
-        subcommand_def.subcommand_class
+        return subcommand_def.subcommand_class if subcommand_def
+        subcommand_missing(name)
       end
 
     end

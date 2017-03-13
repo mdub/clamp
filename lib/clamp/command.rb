@@ -1,12 +1,12 @@
-require 'clamp/messages'
-require 'clamp/errors'
-require 'clamp/help'
-require 'clamp/option/declaration'
-require 'clamp/option/parsing'
-require 'clamp/parameter/declaration'
-require 'clamp/parameter/parsing'
-require 'clamp/subcommand/declaration'
-require 'clamp/subcommand/parsing'
+require "clamp/messages"
+require "clamp/errors"
+require "clamp/help"
+require "clamp/option/declaration"
+require "clamp/option/parsing"
+require "clamp/parameter/declaration"
+require "clamp/parameter/parsing"
+require "clamp/subcommand/declaration"
+require "clamp/subcommand/parsing"
 
 module Clamp
 
@@ -25,12 +25,9 @@ module Clamp
     # @param [String] invocation_path the path used to invoke the command
     # @param [Hash] context additional data the command may need
     #
-    def initialize(invocation_path, context = {}, parent_attribute_values = {})
+    def initialize(invocation_path, context = {})
       @invocation_path = invocation_path
       @context = context
-      parent_attribute_values.each do |attribute, value|
-        attribute.of(self).set(value)
-      end
     end
 
     # @return [String] the path used to invoke this command
@@ -39,9 +36,7 @@ module Clamp
 
     # @return [Array<String>] unconsumed command-line arguments
     #
-    def remaining_arguments
-      @remaining_arguments
-    end
+    attr_reader :remaining_arguments
 
     # Parse command-line arguments.
     #
@@ -82,6 +77,13 @@ module Clamp
       self.class.help(invocation_path)
     end
 
+    # Abort with subcommand missing usage error
+    #
+    # @ param [String] name subcommand_name
+    def subcommand_missing(name)
+      signal_usage_error(Clamp.message(:no_such_subcommand, :name => name))
+    end
+
     include Clamp::Option::Parsing
     include Clamp::Parameter::Parsing
     include Clamp::Subcommand::Parsing
@@ -91,9 +93,7 @@ module Clamp
     attr_accessor :context
 
     def handle_remaining_arguments
-      unless remaining_arguments.empty?
-        signal_usage_error Clamp.message(:too_many_arguments)
-      end
+      signal_usage_error Clamp.message(:too_many_arguments) unless remaining_arguments.empty?
     end
 
     private
@@ -128,22 +128,20 @@ module Clamp
       # @param [Array<String>] arguments command-line arguments
       # @param [Hash] context additional data the command may need
       #
-      def run(invocation_path = File.basename($0), arguments = ARGV, context = {})
-        begin
-          new(invocation_path, context).run(arguments)
-        rescue Clamp::UsageError => e
-          $stderr.puts "ERROR: #{e.message}"
-          $stderr.puts ""
-          $stderr.puts "See: '#{e.command.invocation_path} --help'"
-          exit(1)
-        rescue Clamp::HelpWanted => e
-          puts e.command.help
-        rescue Clamp::ExecutionError => e
-          $stderr.puts "ERROR: #{e.message}"
-          exit(e.status)
-        rescue SignalException => e
-          exit(128 + e.signo)
-        end
+      def run(invocation_path = File.basename($PROGRAM_NAME), arguments = ARGV, context = {})
+        new(invocation_path, context).run(arguments)
+      rescue Clamp::UsageError => e
+        $stderr.puts "ERROR: #{e.message}"
+        $stderr.puts ""
+        $stderr.puts "See: '#{e.command.invocation_path} --help'"
+        exit(1)
+      rescue Clamp::HelpWanted => e
+        puts e.command.help
+      rescue Clamp::ExecutionError => e
+        $stderr.puts "ERROR: #{e.message}"
+        exit(e.status)
+      rescue SignalException => e
+        exit(128 + e.signo)
       end
 
     end

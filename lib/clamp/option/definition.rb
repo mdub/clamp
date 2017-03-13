@@ -1,5 +1,5 @@
-require 'clamp/attribute/definition'
-require 'clamp/truthy'
+require "clamp/attribute/definition"
+require "clamp/truthy"
 
 module Clamp
   module Option
@@ -12,16 +12,11 @@ module Clamp
         @description = description
         super(options)
         @multivalued = options[:multivalued]
-        if options.has_key?(:required)
-          @required = options[:required]
-          # Do some light validation for conflicting settings.
-          if options.has_key?(:default)
-            raise ArgumentError, "Specifying a :default value also :required doesn't make sense"
-          end
-          if type == :flag
-            raise ArgumentError, "A required flag (boolean) doesn't make sense."
-          end
-        end
+        return unless options.key?(:required)
+        @required = options[:required]
+        # Do some light validation for conflicting settings.
+        raise ArgumentError, "Specifying a :default value with :required doesn't make sense" if options.key?(:default)
+        raise ArgumentError, "A required flag (boolean) doesn't make sense." if type == :flag
       end
 
       attr_reader :switches, :type
@@ -39,7 +34,7 @@ module Clamp
       end
 
       def flag_value(switch)
-        !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{$1}"))
+        !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{Regexp.last_match(1)}"))
       end
 
       def read_method
@@ -59,9 +54,7 @@ module Clamp
       end
 
       def default_conversion_block
-        if flag?
-          Clamp.method(:truthy?)
-        end
+        Clamp.method(:truthy?) if flag?
       end
 
       def help_lhs
@@ -75,7 +68,7 @@ module Clamp
       def recognised_switches
         switches.map do |switch|
           if switch =~ /^--\[no-\](.*)/
-            ["--#{$1}", "--no-#{$1}"]
+            ["--#{Regexp.last_match(1)}", "--no-#{Regexp.last_match(1)}"]
           else
             switch
           end
@@ -86,7 +79,7 @@ module Clamp
         unless long_switch
           raise Clamp::DeclarationError, "You must specify either a long-switch or an :attribute_value"
         end
-        inferred_name = long_switch.sub(/^--(\[no-\])?/, '').tr('-', '_')
+        inferred_name = long_switch.sub(/^--(\[no-\])?/, "").tr("-", "_")
         inferred_name += "_list" if multivalued?
         inferred_name
       end

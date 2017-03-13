@@ -1,4 +1,4 @@
-require 'clamp/attribute/definition'
+require "clamp/attribute/definition"
 
 module Clamp
   module Parameter
@@ -13,9 +13,14 @@ module Clamp
         @required = options.fetch(:required) do
           (@name !~ OPTIONAL)
         end
+        @inheritable = options.fetch(:inheritable, true)
       end
 
       attr_reader :name
+
+      def inheritable?
+        @inheritable
+      end
 
       def help_lhs
         name
@@ -34,7 +39,7 @@ module Clamp
       VALID_ATTRIBUTE_NAME = /^[a-z0-9_]+$/
 
       def infer_attribute_name
-        inferred_name = name.downcase.tr('-', '_').sub(ELLIPSIS_SUFFIX, '').sub(OPTIONAL) { $1 }
+        inferred_name = name.downcase.tr("-", "_").sub(ELLIPSIS_SUFFIX, "").sub(OPTIONAL) { Regexp.last_match(1) }
         unless inferred_name =~ VALID_ATTRIBUTE_NAME
           raise "cannot infer attribute_name from #{name.inspect}"
         end

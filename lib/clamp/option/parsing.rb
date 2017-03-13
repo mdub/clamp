@@ -6,7 +6,14 @@ module Clamp
       protected
 
       def parse_options
+        set_options_from_command_line
+        default_options_from_environment
+        verify_required_options_are_set
+      end
 
+      private
+
+      def set_options_from_command_line
         argument_stop_index = remaining_arguments.index('--')
         if argument_stop_index
           after_break_params = remaining_arguments.slice!(argument_stop_index..-1)
@@ -22,15 +29,15 @@ module Clamp
 
           case switch
           when /\A(-\w)(.+)\z/m # combined short options
-            switch = $1
+            switch = Regexp.last_match(1)
             if find_option(switch).flag?
-              remaining_arguments.unshift("-" + $2)
+              remaining_arguments.unshift("-" + Regexp.last_match(2))
             else
-              remaining_arguments.unshift($2)
+              remaining_arguments.unshift(Regexp.last_match(2))
             end
           when /\A(--[^=]+)=(.*)\z/m
-            switch = $1
-            remaining_arguments.unshift($2)
+            switch = Regexp.last_match(1)
+            remaining_arguments.unshift(Regexp.last_match(2))
           when /\A[^-]/
             remaining_params.push(switch)
             next
@@ -45,33 +52,35 @@ module Clamp
             signal_usage_error Clamp.message(:option_argument_error, :switch => switch, :message => e.message)
           end
         end
+      end
 
-        # Fill in gap from environment
+      def default_options_from_environment
         self.class.recognised_options.each do |option|
           option.of(self).default_from_environment
         end
+      end
 
-        # Verify that all required options are present
+      def verify_required_options_are_set
         self.class.recognised_options.each do |option|
           # If this option is required and the value is nil, there's an error.
-          if option.required? and send(option.attribute_name).nil?
-            if option.environment_variable
-              message = Clamp.message(:option_or_env_required, :option => option.switches.first, :env => option.environment_variable)
-            else
-              message = Clamp.message(:option_required, :option => option.switches.first)
-            end
-            signal_usage_error message
+          next unless option.required? && send(option.attribute_name).nil?
+          if option.environment_variable
+            message = Clamp.message(:option_or_env_required,
+                                    :option => option.switches.first,
+                                    :env => option.environment_variable)
+          else
+            message = Clamp.message(:option_required,
+                                    :option => option.switches.first)
           end
+          signal_usage_error message
         end
 
         remaining_arguments.replace(remaining_params + after_break_params)
       end
 
-      private
-
       def find_option(switch)
         self.class.find_option(switch) ||
-        signal_usage_error(Clamp.message(:unrecognised_option, :switch => switch))
+          signal_usage_error(Clamp.message(:unrecognised_option, :switch => switch))
       end
 
     end

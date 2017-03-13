@@ -1,5 +1,5 @@
-require 'clamp/attribute/declaration'
-require 'clamp/parameter/definition'
+require "clamp/attribute/declaration"
+require "clamp/parameter/definition"
 
 module Clamp
   module Parameter
@@ -18,9 +18,20 @@ module Clamp
 
       def parameter(name, description, options = {}, &block)
         Parameter::Definition.new(name, description, options).tap do |parameter|
-          parameters << parameter
           define_accessors_for(parameter, &block)
+          parameters << parameter
         end
+      end
+
+      def inheritable_parameters
+        superclass_inheritable_parameters + parameters.select(&:inheritable?)
+      end
+
+      private
+
+      def superclass_inheritable_parameters
+        return [] unless superclass.respond_to?(:inheritable_parameters, true)
+        superclass.inheritable_parameters
       end
 
     end

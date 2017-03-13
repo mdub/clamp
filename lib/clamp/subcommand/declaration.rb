@@ -1,5 +1,5 @@
-require 'clamp/errors'
-require 'clamp/subcommand/definition'
+require "clamp/errors"
+require "clamp/subcommand/definition"
 
 module Clamp
   module Subcommand
@@ -11,19 +11,8 @@ module Clamp
       end
 
       def subcommand(name, description, subcommand_class = self, &block)
-        unless has_subcommands?
-          @subcommand_parameter = if @default_subcommand
-            parameter "[SUBCOMMAND]", "subcommand", :attribute_name => :subcommand_name, :default => @default_subcommand
-          else
-            parameter "SUBCOMMAND", "subcommand", :attribute_name => :subcommand_name, :required => false
-          end
-          remove_method :default_subcommand_name
-          parameter "[ARG] ...", "subcommand arguments", :attribute_name => :subcommand_arguments
-        end
-        if block
-          # generate a anonymous sub-class
-          subcommand_class = Class.new(subcommand_class, &block)
-        end
+        subcommand_class = Class.new(subcommand_class, &block) if block
+        declare_subcommand_parameters unless has_subcommands?
         recognised_subcommands << Subcommand::Definition.new(name, description, subcommand_class)
       end
 
@@ -37,20 +26,14 @@ module Clamp
 
       def find_subcommand_class(*names)
         names.inject(self) do |command_class, name|
-          if command_class
-            if subcommand = command_class.find_subcommand(name)
-              subcommand.subcommand_class
-            end
-          end
+          return nil unless command_class
+          subcommand = command_class.find_subcommand(name)
+          subcommand.subcommand_class if subcommand
         end
       end
 
-      def parameters_before_subcommand
-        parameters.take_while { |p| p != @subcommand_parameter }
-      end
-
       def inheritable_attributes
-        recognised_options + parameters_before_subcommand
+        recognised_options + inheritable_parameters
       end
 
       def default_subcommand=(name)
@@ -69,6 +52,26 @@ module Clamp
           self.default_subcommand = args.first
           subcommand(*args, &block)
         end
+      end
+
+      private
+
+      def declare_subcommand_parameters
+        if @default_subcommand
+          parameter "[SUBCOMMAND]", "subcommand",
+                    :attribute_name => :subcommand_name,
+                    :default => @default_subcommand,
+                    :inheritable => false
+        else
+          parameter "SUBCOMMAND", "subcommand",
+                    :attribute_name => :subcommand_name,
+                    :required => false,
+                    :inheritable => false
+        end
+        remove_method :default_subcommand_name
+        parameter "[ARG] ...", "subcommand arguments",
+                  :attribute_name => :subcommand_arguments,
+                  :inheritable => false
       end
 
     end
