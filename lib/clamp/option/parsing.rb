@@ -52,6 +52,8 @@ module Clamp
             signal_usage_error Clamp.message(:option_argument_error, :switch => switch, :message => e.message)
           end
         end
+
+        remaining_arguments.replace(remaining_params + after_break_params)
       end
 
       def default_options_from_environment
@@ -74,8 +76,6 @@ module Clamp
           end
           signal_usage_error message
         end
-
-        remaining_arguments.replace(remaining_params + after_break_params)
       end
 
       def find_option(switch)
