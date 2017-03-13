@@ -7,10 +7,18 @@ module Clamp
 
       def parse_options
 
-        while remaining_arguments.first =~ /\A-/
+        argument_stop_index = remaining_arguments.index('--')
+        if argument_stop_index
+          after_break_params = remaining_arguments.slice!(argument_stop_index..-1)
+          after_break_params.shift
+        else
+          after_break_params = []
+        end
 
+        remaining_params = []
+
+        until remaining_arguments.empty?
           switch = remaining_arguments.shift
-          break if switch == "--"
 
           case switch
           when /\A(-\w)(.+)\z/m # combined short options
@@ -23,6 +31,9 @@ module Clamp
           when /\A(--[^=]+)=(.*)\z/m
             switch = $1
             remaining_arguments.unshift($2)
+          when /\A[^-]/
+            remaining_params.push(switch)
+            next
           end
 
           option = find_option(switch)
@@ -33,7 +44,6 @@ module Clamp
           rescue ArgumentError => e
             signal_usage_error Clamp.message(:option_argument_error, :switch => switch, :message => e.message)
           end
-
         end
 
         # Fill in gap from environment
@@ -53,6 +63,8 @@ module Clamp
             signal_usage_error message
           end
         end
+
+        remaining_arguments.replace(remaining_params + after_break_params)
       end
 
       private
