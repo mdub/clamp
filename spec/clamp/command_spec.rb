@@ -380,11 +380,12 @@ describe Clamp::Command do
 
       end
 
-      context "with option-like things beyond the arguments" do
+      context "with options after parameters" do
 
-        it "treats them as positional arguments" do
-          command.parse(%w(a b c --flavour strawberry))
-          expect(command.arguments).to eql %w(a b c --flavour strawberry)
+        it "treats them as options" do
+          command.parse(%w(a b --flavour strawberry c))
+          expect(command.arguments).to eql %w(a b c)
+          expect(command.flavour).to eql "strawberry"
         end
 
       end
