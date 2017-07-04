@@ -163,6 +163,16 @@ Declaring an option "`:hidden`" will cause it to be hidden from `--help` output.
 option "--some-option", "VALUE", "Just a little option", :hidden => true
 ```
 
+### Version option
+
+A common idiom is to have an option `--version` that outputs the command version and doesn't run any subcommands.  This can be acheived by:
+
+```ruby
+option "--version", :flag, "Show version" do
+  puts MyGem::VERSION
+  exit(0)
+end
+```
 
 Declaring parameters
 --------------------
