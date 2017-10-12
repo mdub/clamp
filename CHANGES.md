@@ -1,5 +1,9 @@
 # Changelog
 
+## PENDING
+
+* Add option to `Clamp.allow_options_after_parameters`.
+
 ## 1.1.2 (2017-02-12)
 
 * Improve usage help for commands with both parameters and subcommands.

@@ -1,4 +1,9 @@
 module Clamp
+
+  class << self
+    attr_accessor :allow_options_after_parameters
+  end
+
   module Option
 
     module Parsing
@@ -14,7 +19,17 @@ module Clamp
       private
 
       def set_options_from_command_line
-        while remaining_arguments.first && remaining_arguments.first.start_with?("-")
+        buffered_arguments = []
+        until remaining_arguments.empty?
+
+          unless remaining_arguments.first.start_with?("-")
+            if Clamp.allow_options_after_parameters
+              buffered_arguments << remaining_arguments.shift
+              next
+            else
+              break
+            end
+          end
 
           switch = remaining_arguments.shift
           break if switch == "--"
@@ -42,6 +57,7 @@ module Clamp
           end
 
         end
+        remaining_arguments.unshift(*buffered_arguments)
       end
 
       def default_options_from_environment
@@ -74,4 +90,5 @@ module Clamp
     end
 
   end
+
 end
