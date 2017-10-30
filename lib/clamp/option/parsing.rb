@@ -19,12 +19,13 @@ module Clamp
       private
 
       def set_options_from_command_line
-        buffered_arguments = []
+        argument_buffer = []
+        argument_buffer_limit = self.class.parameter_buffer_limit
         until remaining_arguments.empty?
 
           unless remaining_arguments.first.start_with?("-")
-            if Clamp.allow_options_after_parameters
-              buffered_arguments << remaining_arguments.shift
+            if argument_buffer.size < argument_buffer_limit
+              argument_buffer << remaining_arguments.shift
               next
             else
               break
@@ -57,7 +58,7 @@ module Clamp
           end
 
         end
-        remaining_arguments.unshift(*buffered_arguments)
+        remaining_arguments.unshift(*argument_buffer)
       end
 
       def default_options_from_environment
