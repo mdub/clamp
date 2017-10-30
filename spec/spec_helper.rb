@@ -6,6 +6,14 @@ RSpec.configure do |config|
 
   config.mock_with :rr
 
+  config.around(:each) do |example|
+    begin
+      example.run
+    rescue SystemExit => e
+      fail "Unexpected exit with status #{e.status}"
+    end
+  end
+
 end
 
 module OutputCapture
