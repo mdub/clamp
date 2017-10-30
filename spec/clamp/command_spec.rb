@@ -387,24 +387,6 @@ describe Clamp::Command do
           expect(command.arguments).to eql %w(a b c --flavour strawberry)
         end
 
-        context "when such things are explicitly allowed" do
-
-          before do
-            Clamp.allow_options_after_parameters = true
-          end
-
-          it "treats them as option arguments" do
-            command.parse(%w(a b --flavour strawberry c))
-            expect(command.flavour).to eql "strawberry"
-            expect(command.arguments).to eql %w(a b c)
-          end
-
-          after do
-            Clamp.allow_options_after_parameters = false
-          end
-
-        end
-
       end
 
       context "with multi-line arguments that look like options" do
