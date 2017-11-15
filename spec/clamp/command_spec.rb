@@ -60,7 +60,7 @@ describe Clamp::Command do
     context "with explicit :attribute_name" do
 
       before do
-        command.class.option "--foo", "FOO", "A foo", :attribute_name => :bar
+        command.class.option "--foo", "FOO", "A foo", attribute_name: :bar
       end
 
       it "uses the specified attribute_name name to name accessors" do
@@ -95,7 +95,7 @@ describe Clamp::Command do
     context "with :default value" do
 
       before do
-        command.class.option "--port", "PORT", "port to listen on", :default => 4321
+        command.class.option "--port", "PORT", "port to listen on", default: 4321
       end
 
       it "declares default method" do
@@ -115,7 +115,7 @@ describe Clamp::Command do
     context "with :multivalued" do
 
       before do
-        command.class.option "--flavour", "FLAVOUR", "flavour(s)", :multivalued => true, :attribute_name => :flavours
+        command.class.option "--flavour", "FLAVOUR", "flavour(s)", multivalued: true, attribute_name: :flavours
       end
 
       it "defaults to empty array" do
@@ -148,8 +148,8 @@ describe Clamp::Command do
 
       before do
         command.class.option "--port", "PORT", "port to listen on",
-                             :default => 4321,
-                             :environment_variable => "PORT",
+                             default: 4321,
+                             environment_variable: "PORT",
                              &:to_i
         set_env("PORT", environment_value)
         command.parse(args)
@@ -198,7 +198,7 @@ describe Clamp::Command do
       let(:environment_value) { nil }
 
       before do
-        command.class.option "--[no-]enable", :flag, "enable?", :default => false, :environment_variable => "ENABLE"
+        command.class.option "--[no-]enable", :flag, "enable?", default: false, environment_variable: "ENABLE"
         set_env("ENABLE", environment_value)
         command.parse([])
       end
@@ -244,7 +244,7 @@ describe Clamp::Command do
     context "with :required" do
 
       before do
-        command.class.option "--port", "PORT", "port to listen on", :required => true
+        command.class.option "--port", "PORT", "port to listen on", required: true
       end
 
       context "when no value is provided" do
@@ -295,12 +295,12 @@ describe Clamp::Command do
       command.class.option ["-f", "--flavour"], "FLAVOUR", "Flavour of the month"
       command.class.option ["-c", "--color"], "COLOR", "Preferred hue"
       command.class.option ["--scoops"], "N", "Number of scoops",
-                           :default => 1,
-                           :environment_variable => "DEFAULT_SCOOPS" do |arg|
+                           default: 1,
+                           environment_variable: "DEFAULT_SCOOPS" do |arg|
         Integer(arg)
       end
       command.class.option ["-n", "--[no-]nuts"], :flag, "Nuts (or not)\nMay include nuts"
-      command.class.parameter "[ARG] ...", "extra arguments", :attribute_name => :arguments
+      command.class.parameter "[ARG] ...", "extra arguments", attribute_name: :arguments
     end
 
     describe "#parse" do
@@ -552,7 +552,7 @@ describe Clamp::Command do
     context "with explicit :attribute_name" do
 
       before do
-        command.class.parameter "FOO", "a foo", :attribute_name => :bar
+        command.class.parameter "FOO", "a foo", attribute_name: :bar
       end
 
       it "uses the specified attribute_name name to name accessors" do
@@ -565,7 +565,7 @@ describe Clamp::Command do
     context "with :default value" do
 
       before do
-        command.class.parameter "[ORIENTATION]", "direction", :default => "west"
+        command.class.parameter "[ORIENTATION]", "direction", default: "west"
       end
 
       it "sets the specified default value" do
@@ -636,8 +636,8 @@ describe Clamp::Command do
     context "with :environment_variable" do
 
       before do
-        command.class.parameter "[FILE]", "a file", :environment_variable => "FILE",
-                                                    :default => "/dev/null"
+        command.class.parameter "[FILE]", "a file", environment_variable: "FILE",
+                                                    default: "/dev/null"
       end
 
       let(:args) { [] }
@@ -715,7 +715,7 @@ describe Clamp::Command do
     before do
       command.class.parameter "X", "x\nxx"
       command.class.parameter "Y", "y"
-      command.class.parameter "[Z]", "z", :default => "ZZZ"
+      command.class.parameter "[Z]", "z", default: "ZZZ"
     end
 
     describe "#parse" do
@@ -882,7 +882,7 @@ describe Clamp::Command do
             print context[:foo]
           end
         end
-        command.class.run("xyz", [], :foo => "bar")
+        command.class.run("xyz", [], foo: "bar")
         expect(stdout).to eql "bar"
       end
 
@@ -894,7 +894,7 @@ describe Clamp::Command do
 
         command.class.class_eval do
           def execute
-            signal_error "Oh crap!", :status => 456
+            signal_error "Oh crap!", status: 456
           end
         end
 

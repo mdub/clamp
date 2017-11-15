@@ -69,7 +69,7 @@ module Clamp
         begin
           take(value)
         rescue ArgumentError => e
-          command.send(:signal_usage_error, Clamp.message(:env_argument_error, :env => attribute.environment_variable, :message => e.message))
+          command.send(:signal_usage_error, Clamp.message(:env_argument_error, env: attribute.environment_variable, message: e.message))
         end
       end
 
