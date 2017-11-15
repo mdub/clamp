@@ -274,12 +274,12 @@ describe Clamp::Command do
 
       speed_options = Module.new do
         extend Clamp::Option::Declaration
-        option "--speed", "SPEED", "how fast", :default => "slowly"
+        option "--speed", "SPEED", "how fast", default: "slowly"
       end
 
       Class.new(Clamp::Command) do
 
-        option "--direction", "DIR", "which way", :default => "home"
+        option "--direction", "DIR", "which way", default: "home"
 
         include speed_options
 
@@ -315,7 +315,7 @@ describe Clamp::Command do
     end
 
     it "has access to command context" do
-      command = command_class.new("go", :motion => "wandering")
+      command = command_class.new("go", motion: "wandering")
       command.run(["move"])
       expect(stdout).to match(/wandering home/)
     end

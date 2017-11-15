@@ -27,7 +27,7 @@ describe Clamp::Parameter::Definition do
       end
 
       it "can be overridden" do
-        parameter = described_class.new("COLOR", "hue of choice", :attribute_name => "hue")
+        parameter = described_class.new("COLOR", "hue of choice", attribute_name: "hue")
         expect(parameter.attribute_name).to eql "hue"
       end
 
@@ -145,7 +145,7 @@ describe Clamp::Parameter::Definition do
     context "with a weird parameter name, and an explicit attribute_name" do
 
       let(:parameter) do
-        described_class.new("KEY=VALUE ...", "config-settings", :attribute_name => :config_settings)
+        described_class.new("KEY=VALUE ...", "config-settings", attribute_name: :config_settings)
       end
 
       describe "#attribute_name" do
@@ -197,7 +197,7 @@ describe Clamp::Parameter::Definition do
     context "with specified default value" do
 
       let(:parameter) do
-        described_class.new("[FILES] ...", "files to process", :default => %w(a b c))
+        described_class.new("[FILES] ...", "files to process", default: %w(a b c))
       end
 
       describe "#default_value" do

@@ -38,7 +38,7 @@ module Clamp
           begin
             option.of(self).take(value)
           rescue ArgumentError => e
-            signal_usage_error Clamp.message(:option_argument_error, :switch => switch, :message => e.message)
+            signal_usage_error Clamp.message(:option_argument_error, switch: switch, message: e.message)
           end
 
         end
@@ -56,11 +56,11 @@ module Clamp
           next unless option.required? && send(option.attribute_name).nil?
           if option.environment_variable
             message = Clamp.message(:option_or_env_required,
-                                    :option => option.switches.first,
-                                    :env => option.environment_variable)
+                                    option: option.switches.first,
+                                    env: option.environment_variable)
           else
             message = Clamp.message(:option_required,
-                                    :option => option.switches.first)
+                                    option: option.switches.first)
           end
           signal_usage_error message
         end
@@ -68,7 +68,7 @@ module Clamp
 
       def find_option(switch)
         self.class.find_option(switch) ||
-          signal_usage_error(Clamp.message(:unrecognised_option, :switch => switch))
+          signal_usage_error(Clamp.message(:unrecognised_option, switch: switch))
       end
 
     end
