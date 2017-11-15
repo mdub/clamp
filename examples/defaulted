@@ -8,10 +8,10 @@ require "highline"
 Clamp do
 
   option ["-U", "--user"], "USER", "user name",
-         :environment_variable => "THE_USER",
-         :default => "bob"
+         environment_variable: "THE_USER",
+         default: "bob"
   option ["-P", "--password"], "PASSWORD", "password",
-         :environment_variable => "THE_PASSWORD"
+         environment_variable: "THE_PASSWORD"
 
   def execute
     puts "User: #{user}, Password: #{password}"
