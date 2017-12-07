@@ -269,6 +269,34 @@ describe Clamp::Command do
 
     end
 
+    context "with :required and :multivalued" do
+
+      before do
+        command.class.option "--port", "PORT", "port to listen on", :required => true, :multivalued => true
+      end
+
+      context "when no value is provided" do
+
+        it "raises a UsageError" do
+          expect do
+            command.parse([])
+          end.to raise_error(Clamp::UsageError)
+        end
+
+      end
+
+      context "when a value is provided" do
+
+        it "does not raise an error" do
+          expect do
+            command.parse(["--port", "12345"])
+          end.not_to raise_error
+        end
+
+      end
+
+    end
+
     context "with a block" do
 
       before do
