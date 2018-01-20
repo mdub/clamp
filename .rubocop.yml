@@ -2,6 +2,15 @@ Eval:
   Exclude:
     - "Rakefile"
 
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
 Metrics/AbcSize:
   Enabled: false
 
@@ -11,8 +20,12 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 30
 
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Enabled: false
+
+Naming/FileName:
+  Exclude:
+    - "bin/*"
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: nested
@@ -24,22 +37,8 @@ Style/Documentation:
     - "lib/**/version.rb"
     - "spec/**/*"
 
-Style/EmptyLinesAroundBlockBody:
-  Enabled: false
-
-Style/EmptyLinesAroundClassBody:
-  EnforcedStyle: empty_lines
-
-Style/EmptyLinesAroundModuleBody:
-  Enabled: false
-
 Style/Encoding:
-  EnforcedStyle: when_needed
   Enabled: true
-
-Style/FileName:
-  Exclude:
-    - "bin/*"
 
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
@@ -50,7 +49,7 @@ Style/Lambda:
 Style/NumericLiterals:
   Enabled: false
 
-Style/PredicateName:
+Naming/PredicateName:
   Enabled: false
 
 Style/StringLiterals:
