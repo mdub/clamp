@@ -298,11 +298,13 @@ Clamp will check the specified envariables in the absence of values supplied on 
 
 ### Allowing options after parameters
 
-Many option-parsing libraries - notably [GNU `getopt(3)`](https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html) - allow option and parameter arguments to appear in any order on the command-line, e.g.
+By default, Clamp only recognises options _before_ positional parameters. 
+
+Some other option-parsing libraries - notably [GNU `getopt(3)`](https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html) - allow option and parameter arguments to appear in any order on the command-line, e.g.
 
     foobar --foo=bar something --fnord=snuffle another-thing
 
-By default, Clamp does not allow options and parameters to be "interspersed" in this way. If you want that behaviour, set:
+If you want Clamp to allow options and parameters to be "interspersed" in this way, set:
 
 ```ruby
 Clamp.allow_options_after_parameters = true
