@@ -71,8 +71,8 @@ module Clamp
         self.class.recognised_options.each do |option|
           # If this option is required and the value is nil (or [] for multivalued), there's an error.
           next unless option.required? &&
-		  (!option.multivalued? && send(option.attribute_name).nil?) ||
-		  (option.multivalued? && send(option.attribute_name).empty?)
+		  ((!option.multivalued? && send(option.attribute_name).nil?) ||
+		  (option.multivalued? && send(option.attribute_name).empty?))
           if option.environment_variable
             message = Clamp.message(:option_or_env_required,
                                     :option => option.switches.first,
