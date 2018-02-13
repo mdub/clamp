@@ -139,6 +139,12 @@ describe Clamp::Command do
         expect(command.flavours).to eql %w(mud pie)
       end
 
+      it "does not require a value" do
+        expect do
+          command.parse([])
+        end.not_to raise_error
+      end
+
     end
 
     context "with :environment_variable" do
