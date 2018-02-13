@@ -74,6 +74,17 @@ module Clamp
         Attribute::Instance.new(self, command)
       end
 
+      def option_missing_message
+        if environment_variable
+          Clamp.message(:option_or_env_required,
+                        :option => switches.first,
+                        :env => environment_variable)
+        else
+          Clamp.message(:option_required,
+                        :option => switches.first)
+        end
+      end
+
       private
 
       def default_description

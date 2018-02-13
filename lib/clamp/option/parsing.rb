@@ -69,27 +69,7 @@ module Clamp
 
       def verify_required_options_are_set
         self.class.recognised_options.each do |option|
-          # If this option is required and the value is nil (or [] for multivalued), there's an error.
-          next unless option_missing?(option)
-          if option.environment_variable
-            message = Clamp.message(:option_or_env_required,
-                                    :option => option.switches.first,
-                                    :env => option.environment_variable)
-          else
-            message = Clamp.message(:option_required,
-                                    :option => option.switches.first)
-          end
-          signal_usage_error message
-        end
-      end
-
-      def option_missing?(option)
-        return false unless option.required?
-        value = send(option.read_method)
-        if option.multivalued?
-          value.empty?
-        else
-          value.nil?
+          option.of(self).verify_not_missing
         end
       end
 

@@ -60,6 +60,10 @@ module Clamp
         end
       end
 
+      def signal_usage_error(*args)
+        command.send(:signal_usage_error, *args)
+      end
+
       def default_from_environment
         return if self.defined?
         return if attribute.environment_variable.nil?
@@ -69,8 +73,24 @@ module Clamp
         begin
           take(value)
         rescue ArgumentError => e
-          command.send(:signal_usage_error, Clamp.message(:env_argument_error, :env => attribute.environment_variable, :message => e.message))
+          signal_usage_error Clamp.message(:env_argument_error, :env => attribute.environment_variable, :message => e.message)
         end
+      end
+
+      def unset?
+        if attribute.multivalued?
+          read.empty?
+        else
+          read.nil?
+        end
+      end
+
+      def missing?
+        attribute.required? && unset?
+      end
+
+      def verify_not_missing
+        signal_usage_error attribute.option_missing_message if missing?
       end
 
     end
