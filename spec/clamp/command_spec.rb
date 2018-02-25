@@ -832,6 +832,20 @@ describe Clamp::Command do
 
   end
 
+  describe ".execute" do
+
+    it "provides an alternative way to declare execute method" do
+      command_class.class_eval do
+        execute do
+          puts "using execute DSL"
+        end
+      end
+      command.run([])
+      expect(stdout).to eq("using execute DSL\n")
+    end
+
+  end
+
   context "with explicit usage" do
 
     given_command("blah") do

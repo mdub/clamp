@@ -122,6 +122,11 @@ module Clamp
       include Clamp::Subcommand::Declaration
       include Help
 
+      # An alternative to "def execute"
+      def execute(&block)
+        define_method(:execute, &block)
+      end
+
       # Create an instance of this command class, and run it.
       #
       # @param [String] invocation_path the path used to invoke the command

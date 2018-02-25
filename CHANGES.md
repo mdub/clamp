@@ -1,5 +1,9 @@
 # Changelog
 
+## PENDING
+
+* Add `.execute` DSL method.
+
 ## 1.2.0 (2018-02-12)
 
 * Add option to `Clamp.allow_options_after_parameters`.
