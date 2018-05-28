@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform      = Gem::Platform::RUBY
   s.authors       = ["Mike Williams"]
   s.email         = "mdub@dogbiscuit.org"
-  s.homepage      = "http://github.com/mdub/clamp"
+  s.homepage      = "https://github.com/mdub/clamp"
 
   s.license       = "MIT"
 
