@@ -84,6 +84,10 @@ module Clamp
         inferred_name
       end
 
+      def required_indicator
+        "required" if required?
+      end
+
     end
 
   end

@@ -19,7 +19,10 @@ module Clamp
       attr_reader :description, :environment_variable
 
       def help_rhs
-        description + default_description
+        rhs = description
+        comments = required_indicator || default_description
+        rhs += " (#{comments})" if comments
+        rhs
       end
 
       def help
@@ -92,8 +95,8 @@ module Clamp
           ("$#{@environment_variable}" if defined?(@environment_variable)),
           (@default_value.inspect if defined?(@default_value))
         ].compact
-        return "" if default_sources.empty?
-        " (default: " + default_sources.join(", or ") + ")"
+        return nil if default_sources.empty?
+        "default: " + default_sources.join(", or ")
       end
 
     end

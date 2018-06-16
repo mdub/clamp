@@ -3,6 +3,7 @@
 ## PENDING
 
 * Add `.execute` DSL method.
+* Append "(required)" to the description of required options.
 * Fix issue#90: allow required options to be provided after subcommands.
 
 ## 1.2.0 (2018-02-12)
