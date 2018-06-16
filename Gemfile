@@ -4,6 +4,7 @@ gemspec
 
 group :development do
   gem "guard-rspec", "~> 4.6.5", :require => false
+  gem "highline"
   gem "listen", "~> 3.0.2"
   gem "rake", "~> 10.4"
   gem "rubocop", :require => false
