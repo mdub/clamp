@@ -48,6 +48,7 @@ module Clamp
       parse_options
       parse_parameters
       parse_subcommand
+      verify_required_options_are_set
       handle_remaining_arguments
     end
 

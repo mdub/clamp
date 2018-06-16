@@ -34,6 +34,10 @@ module Clamp
         subcommand_missing(name)
       end
 
+      def verify_required_options_are_set
+        # not required
+      end
+
     end
 
   end

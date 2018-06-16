@@ -396,6 +396,25 @@ describe Clamp::Command do
       command.run(["foo"])
       expect(stdout).to match(/known subcommand/)
     end
+
+  end
+
+  context "with a subcommand and required options" do
+
+    given_command "movements" do
+      option "--direction", "N|S|E|W", "bearing", :required => true
+      subcommand "hop", "Hop" do
+        def execute
+          puts "Hopping #{direction}"
+        end
+      end
+    end
+
+    it "allows options after the subcommand" do
+      command.run(%w(hop --direction south))
+      expect(stdout).to eql "Hopping south\n"
+    end
+
   end
 
 end

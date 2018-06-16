@@ -13,7 +13,6 @@ module Clamp
       def parse_options
         set_options_from_command_line
         default_options_from_environment
-        verify_required_options_are_set
       end
 
       private
