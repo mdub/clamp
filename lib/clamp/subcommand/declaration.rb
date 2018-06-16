@@ -68,7 +68,7 @@ module Clamp
                     :required => false,
                     :inheritable => false
         end
-        remove_method :default_subcommand_name
+        remove_method :default_subcommand_name if method_defined?(:default_subcommand_name)
         parameter "[ARG] ...", "subcommand arguments",
                   :attribute_name => :subcommand_arguments,
                   :inheritable => false

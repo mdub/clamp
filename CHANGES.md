@@ -3,6 +3,7 @@
 ## PENDING
 
 * Add `.execute` DSL method.
+* Fix issue#75: don't generate `default_XXX` method unless a default is specified.
 * Fix issue#90: allow required options to be provided after subcommands.
 
 ## 1.2.0 (2018-02-12)

@@ -27,7 +27,7 @@ module Clamp
       end
 
       def default
-        command.send(attribute.default_method)
+        command.send(attribute.default_method) if command.respond_to?(attribute.default_method, true)
       end
 
       # default implementation of read_method

@@ -112,6 +112,18 @@ describe Clamp::Command do
 
     end
 
+    context "without :default value" do
+
+      before do
+        command.class.option "--port", "PORT", "port to listen on"
+      end
+
+      it "does not declare default method" do
+        expect(command).to_not respond_to(:default_port)
+      end
+
+    end
+
     context "with :multivalued" do
 
       before do
