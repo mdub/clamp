@@ -4,8 +4,6 @@ require "stringio"
 
 RSpec.configure do |config|
 
-  config.mock_with :rr
-
   config.around(:each) do |example|
     begin
       example.run
