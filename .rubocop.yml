@@ -43,9 +43,6 @@ Style/Documentation:
 Style/Encoding:
   Enabled: true
 
-Style/HashSyntax:
-  EnforcedStyle: hash_rockets
-
 Style/Lambda:
   Enabled: false
 

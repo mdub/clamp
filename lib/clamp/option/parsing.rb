@@ -57,7 +57,7 @@ module Clamp
           begin
             option.of(self).take(value)
           rescue ArgumentError => e
-            signal_usage_error Clamp.message(:option_argument_error, :switch => switch, :message => e.message)
+            signal_usage_error Clamp.message(:option_argument_error, switch: switch, message: e.message)
           end
 
         end
@@ -78,7 +78,7 @@ module Clamp
 
       def find_option(switch)
         self.class.find_option(switch) ||
-          signal_usage_error(Clamp.message(:unrecognised_option, :switch => switch))
+          signal_usage_error(Clamp.message(:unrecognised_option, switch: switch))
       end
 
     end

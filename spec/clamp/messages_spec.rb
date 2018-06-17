@@ -7,8 +7,8 @@ describe Clamp::Messages do
   describe "message" do
     before do
       Clamp.messages = {
-        :too_many_arguments => "Way too many!",
-        :custom_message => "Say %<what>s to %<whom>s"
+        too_many_arguments: "Way too many!",
+        custom_message: "Say %<what>s to %<whom>s"
       }
     end
 
@@ -25,7 +25,7 @@ describe Clamp::Messages do
     end
 
     it "formats the message" do
-      expect(Clamp.message(:custom_message, :what => "hello", :whom => "Clamp")).to eql "Say hello to Clamp"
+      expect(Clamp.message(:custom_message, what: "hello", whom: "Clamp")).to eql "Say hello to Clamp"
     end
   end
 
@@ -34,7 +34,7 @@ describe Clamp::Messages do
       default_msg = Clamp.message(:too_many_arguments).clone
 
       Clamp.messages = {
-        :too_many_arguments => "Way too many!"
+        too_many_arguments: "Way too many!"
       }
       Clamp.clear_messages!
 

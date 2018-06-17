@@ -78,11 +78,11 @@ module Clamp
       def option_missing_message
         if environment_variable
           Clamp.message(:option_or_env_required,
-                        :option => switches.first,
-                        :env => environment_variable)
+                        option: switches.first,
+                        env: environment_variable)
         else
           Clamp.message(:option_required,
-                        :option => switches.first)
+                        option: switches.first)
         end
       end
 

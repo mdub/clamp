@@ -12,7 +12,7 @@ describe Clamp::Command do
 
       shared_options = Module.new do
         extend Clamp::Option::Declaration
-        option "--size", "SIZE", :default => 4
+        option "--size", "SIZE", default: 4
       end
 
       command_class = Class.new(Clamp::Command) do

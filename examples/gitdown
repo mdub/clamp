@@ -26,7 +26,7 @@ module GitDown
   class CloneCommand < AbstractCommand
 
     parameter "REPOSITORY", "repository to clone"
-    parameter "[DIR]", "working directory", :default => "."
+    parameter "[DIR]", "working directory", default: "."
 
     def execute
       say "cloning to #{dir}"

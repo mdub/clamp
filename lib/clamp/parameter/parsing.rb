@@ -21,7 +21,7 @@ module Clamp
               parameter.of(self).take(value)
             end
           rescue ArgumentError => e
-            signal_usage_error Clamp.message(:parameter_argument_error, :param => parameter.name, :message => e.message)
+            signal_usage_error Clamp.message(:parameter_argument_error, param: parameter.name, message: e.message)
           end
         end
       end

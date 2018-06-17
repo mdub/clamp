@@ -29,7 +29,7 @@ describe Clamp::Option::Definition do
       end
 
       it "can be overridden" do
-        option = described_class.new("--key-file", "FILE", "SSH identity", :attribute_name => "ssh_identity")
+        option = described_class.new("--key-file", "FILE", "SSH identity", attribute_name: "ssh_identity")
         expect(option.attribute_name).to eql "ssh_identity"
       end
 
@@ -51,7 +51,7 @@ describe Clamp::Option::Definition do
       end
 
       it "can be overridden" do
-        option = described_class.new("-n", "N", "iterations", :default => 1)
+        option = described_class.new("-n", "N", "iterations", default: 1)
         expect(option.default_value).to eql 1
       end
 
@@ -151,7 +151,7 @@ describe Clamp::Option::Definition do
   context "with an associated environment variable" do
 
     let(:option) do
-      described_class.new("-x", "X", "mystery option", :environment_variable => "APP_X")
+      described_class.new("-x", "X", "mystery option", environment_variable: "APP_X")
     end
 
     describe "#help" do
@@ -165,7 +165,7 @@ describe Clamp::Option::Definition do
     context "and a default value" do
 
       let(:option) do
-        described_class.new("-x", "X", "mystery option", :environment_variable => "APP_X", :default => "xyz")
+        described_class.new("-x", "X", "mystery option", environment_variable: "APP_X", default: "xyz")
       end
 
       describe "#help" do
@@ -183,7 +183,7 @@ describe Clamp::Option::Definition do
   context "multivalued" do
 
     let(:option) do
-      described_class.new(["-H", "--header"], "HEADER", "extra header", :multivalued => true)
+      described_class.new(["-H", "--header"], "HEADER", "extra header", multivalued: true)
     end
 
     it "is multivalued" do
@@ -197,7 +197,7 @@ describe Clamp::Option::Definition do
       end
 
       it "can be overridden" do
-        option = described_class.new("-H", "HEADER", "extra header", :multivalued => true, :default => [1, 2, 3])
+        option = described_class.new("-H", "HEADER", "extra header", multivalued: true, default: [1, 2, 3])
         expect(option.default_value).to eql [1, 2, 3]
       end
 
@@ -249,19 +249,19 @@ describe Clamp::Option::Definition do
     it "rejects :default" do
       expect do
         described_class.new("--key-file", "FILE", "SSH identity",
-                            :required => true, :default => "hello")
+                            required: true, default: "hello")
       end.to raise_error(ArgumentError)
     end
 
     it "rejects :flag options" do
       expect do
-        described_class.new("--awesome", :flag, "Be awesome?", :required => true)
+        described_class.new("--awesome", :flag, "Be awesome?", required: true)
       end.to raise_error(ArgumentError)
     end
   end
 
   describe "a hidden option" do
-    let(:option) { described_class.new("--unseen", :flag, "Something", :hidden => true) }
+    let(:option) { described_class.new("--unseen", :flag, "Something", hidden: true) }
     it "is hidden" do
       expect(option).to be_hidden
     end
@@ -270,7 +270,7 @@ describe Clamp::Option::Definition do
   describe "a hidden option in a command" do
     let(:command_class) do
       Class.new(Clamp::Command) do
-        option "--unseen", :flag, "Something", :hidden => true
+        option "--unseen", :flag, "Something", hidden: true
 
         def execute
           # this space intentionally left blank

@@ -84,7 +84,7 @@ module Clamp
     #
     # @ param [String] name subcommand_name
     def subcommand_missing(name)
-      signal_usage_error(Clamp.message(:no_such_subcommand, :name => name))
+      signal_usage_error(Clamp.message(:no_such_subcommand, name: name))
     end
 
     include Clamp::Option::Parsing

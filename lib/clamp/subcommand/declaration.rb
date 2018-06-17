@@ -59,19 +59,19 @@ module Clamp
       def declare_subcommand_parameters
         if @default_subcommand
           parameter "[SUBCOMMAND]", "subcommand",
-                    :attribute_name => :subcommand_name,
-                    :default => @default_subcommand,
-                    :inheritable => false
+                    attribute_name: :subcommand_name,
+                    default: @default_subcommand,
+                    inheritable: false
         else
           parameter "SUBCOMMAND", "subcommand",
-                    :attribute_name => :subcommand_name,
-                    :required => false,
-                    :inheritable => false
+                    attribute_name: :subcommand_name,
+                    required: false,
+                    inheritable: false
         end
         remove_method :default_subcommand_name if method_defined?(:default_subcommand_name)
         parameter "[ARG] ...", "subcommand arguments",
-                  :attribute_name => :subcommand_arguments,
-                  :inheritable => false
+                  attribute_name: :subcommand_arguments,
+                  inheritable: false
       end
 
     end

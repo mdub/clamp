@@ -19,22 +19,22 @@ module Clamp
     private
 
     DEFAULTS = {
-      :too_many_arguments => "too many arguments",
-      :option_required => "option '%<option>s' is required",
-      :option_or_env_required => "option '%<option>s' (or env %<env>s) is required",
-      :option_argument_error => "option '%<switch>s': %<message>s",
-      :parameter_argument_error => "parameter '%<param>s': %<message>s",
-      :env_argument_error => "$%<env>s: %<message>s",
-      :unrecognised_option => "Unrecognised option '%<switch>s'",
-      :no_such_subcommand => "No such sub-command '%<name>s'",
-      :no_value_provided => "no value provided",
-      :default => "default",
-      :or => "or",
-      :required => "required",
-      :usage_heading => "Usage",
-      :parameters_heading => "Parameters",
-      :subcommands_heading => "Subcommands",
-      :options_heading => "Options"
+      too_many_arguments: "too many arguments",
+      option_required: "option '%<option>s' is required",
+      option_or_env_required: "option '%<option>s' (or env %<env>s) is required",
+      option_argument_error: "option '%<switch>s': %<message>s",
+      parameter_argument_error: "parameter '%<param>s': %<message>s",
+      env_argument_error: "$%<env>s: %<message>s",
+      unrecognised_option: "Unrecognised option '%<switch>s'",
+      no_such_subcommand: "No such sub-command '%<name>s'",
+      no_value_provided: "no value provided",
+      default: "default",
+      or: "or",
+      required: "required",
+      usage_heading: "Usage",
+      parameters_heading: "Parameters",
+      subcommands_heading: "Subcommands",
+      options_heading: "Options"
     }.freeze
 
     def messages

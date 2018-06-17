@@ -25,7 +25,7 @@ describe Clamp::Command do
 
         option "--loud", :flag, "say it loud"
 
-        parameter "WORDS ...", "the thing to say", :attribute_name => :words
+        parameter "WORDS ...", "the thing to say", attribute_name: :words
 
         def execute
           message = words.join(" ")
