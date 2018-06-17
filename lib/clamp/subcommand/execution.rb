@@ -3,6 +3,11 @@
 module Clamp
   module Subcommand
 
+    # Support for subcommand execution.
+    #
+    # This module is mixed into command instances that have subcommands, overriding
+    # default behaviour in {Clamp::Command}.
+    #
     module Execution
 
       # override default Command behaviour

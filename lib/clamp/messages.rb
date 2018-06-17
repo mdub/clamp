@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-module Clamp
+module Clamp #:nodoc:
 
+  # Message lookup, to allow localization.
+  #
   module Messages
 
     def messages=(new_messages)

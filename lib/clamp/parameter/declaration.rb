@@ -6,6 +6,8 @@ require "clamp/parameter/definition"
 module Clamp
   module Parameter
 
+    # Parameter declaration methods.
+    #
     module Declaration
 
       include Clamp::Attribute::Declaration

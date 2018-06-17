@@ -279,7 +279,7 @@ describe Clamp::Option::Definition do
     end
 
     it "is not shown in the help" do
-      expect(command_class.help("foo")).not_to match /^ +--unseen +Something$/
+      expect(command_class.help("foo")).not_to match(/^ +--unseen +Something$/)
     end
 
     it "sets the expected accessor" do

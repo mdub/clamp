@@ -14,6 +14,10 @@ Layout/EmptyLinesAroundModuleBody:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+
 Metrics/LineLength:
   Max: 120
 
@@ -38,6 +42,7 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Exclude:
     - "lib/**/version.rb"
+    - "examples/*"
     - "spec/**/*"
 
 Style/Encoding:

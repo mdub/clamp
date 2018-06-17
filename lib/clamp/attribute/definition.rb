@@ -5,6 +5,8 @@ require "clamp/attribute/instance"
 module Clamp
   module Attribute
 
+    # Represents an attribute of a Clamp::Command class.
+    #
     class Definition
 
       def initialize(options)

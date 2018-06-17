@@ -909,12 +909,12 @@ describe Clamp::Command do
 
     given_command("punt") do
 
-      banner <<-EOF
+      banner <<-TEXT
         Punt is an example command.  It doesn't do much, really.
 
         The prefix at the beginning of this description should be normalised
         to two spaces.
-      EOF
+      TEXT
 
     end
 

@@ -3,7 +3,7 @@
 module Clamp
   module Attribute
 
-    # Represents an option/parameter of a Clamp::Command instance.
+    # Represents an attribute of a Clamp::Command instance.
     #
     class Instance
 

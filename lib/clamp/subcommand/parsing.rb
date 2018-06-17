@@ -5,6 +5,8 @@ require "clamp/subcommand/execution"
 module Clamp
   module Subcommand
 
+    # Subcommand parsing methods.
+    #
     module Parsing
 
       protected

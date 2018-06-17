@@ -2,9 +2,11 @@
 
 module Clamp
 
+  # raised to indicate invalid option/parameter declaration
   class DeclarationError < StandardError
   end
 
+  # abstract command runtime error
   class RuntimeError < StandardError
 
     def initialize(message, command)
@@ -16,10 +18,10 @@ module Clamp
 
   end
 
-  # raise to signal incorrect command usage
+  # raised to signal incorrect command usage
   class UsageError < RuntimeError; end
 
-  # raise to request usage help
+  # raised to request usage help
   class HelpWanted < RuntimeError
 
     def initialize(command)
@@ -28,7 +30,7 @@ module Clamp
 
   end
 
-  # raise to signal error during execution
+  # raised to signal error during execution
   class ExecutionError < RuntimeError
 
     def initialize(message, command, status = 1)

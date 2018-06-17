@@ -6,6 +6,8 @@ require "clamp/option/definition"
 module Clamp
   module Option
 
+    # Option declaration methods.
+    #
     module Declaration
 
       include Clamp::Attribute::Declaration

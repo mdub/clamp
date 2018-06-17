@@ -3,6 +3,8 @@
 module Clamp
   module Parameter
 
+    # Parameter parsing methods.
+    #
     module Parsing
 
       protected

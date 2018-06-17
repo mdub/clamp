@@ -3,6 +3,8 @@
 module Clamp
   module Attribute
 
+    # Methods to generate attribute accessors.
+    #
     module Declaration
 
       protected

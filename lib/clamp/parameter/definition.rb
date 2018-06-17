@@ -5,6 +5,8 @@ require "clamp/attribute/definition"
 module Clamp
   module Parameter
 
+    # Represents an parameter of a Clamp::Command class.
+    #
     class Definition < Attribute::Definition
 
       def initialize(name, description, options = {})

@@ -4,6 +4,6 @@ require "clamp/version"
 
 require "clamp/command"
 
-def Clamp(&block)
+def Clamp(&block) # rubocop:disable Naming/MethodName
   Class.new(Clamp::Command, &block).run
 end

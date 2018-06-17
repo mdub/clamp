@@ -6,6 +6,8 @@ require "clamp/truthy"
 module Clamp
   module Option
 
+    # Represents an option of a Clamp::Command class.
+    #
     class Definition < Attribute::Definition
 
       def initialize(switches, type, description, options = {})

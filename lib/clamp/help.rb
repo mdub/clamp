@@ -5,6 +5,8 @@ require "clamp/messages"
 
 module Clamp
 
+  # Command help generation.
+  #
   module Help
 
     def usage(usage)
@@ -49,6 +51,8 @@ module Clamp
       help.string
     end
 
+    # A builder for auto-generated help.
+    #
     class Builder
 
       def initialize

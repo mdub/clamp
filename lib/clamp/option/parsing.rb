@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Clamp
+module Clamp #:nodoc:
 
   class << self
 
@@ -10,6 +10,8 @@ module Clamp
 
   module Option
 
+    # Option parsing methods.
+    #
     module Parsing
 
       protected
@@ -27,12 +29,9 @@ module Clamp
         until remaining_arguments.empty?
 
           unless remaining_arguments.first.start_with?("-")
-            if argument_buffer.size < argument_buffer_limit
-              argument_buffer << remaining_arguments.shift
-              next
-            else
-              break
-            end
+            break unless argument_buffer.size < argument_buffer_limit
+            argument_buffer << remaining_arguments.shift
+            next
           end
 
           switch = remaining_arguments.shift

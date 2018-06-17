@@ -6,6 +6,8 @@ require "clamp/subcommand/definition"
 module Clamp
   module Subcommand
 
+    # Subcommand declaration methods.
+    #
     module Declaration
 
       def recognised_subcommands
@@ -48,7 +50,7 @@ module Clamp
           @default_subcommand
         else
           $stderr.puts "WARNING: Clamp default_subcommand syntax has changed; check the README."
-          $stderr.puts "  (from #{caller.first})"
+          $stderr.puts "  (from #{caller(1..1).first})"
           self.default_subcommand = args.first
           subcommand(*args, &block)
         end
