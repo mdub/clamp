@@ -29,11 +29,11 @@ require 'clamp'
 Clamp do
 
   option "--loud", :flag, "say it loud"
-  option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
+  option ["-n", "--iterations"], "N", "say it N times", default: 1 do |s|
     Integer(s)
   end
 
-  parameter "WORDS ...", "the thing to say", :attribute_name => :words
+  parameter "WORDS ...", "the thing to say", attribute_name: :words
 
   def execute
     the_truth = words.join(" ")
@@ -54,11 +54,11 @@ require 'clamp'
 class SpeakCommand < Clamp::Command
 
   option "--loud", :flag, "say it loud"
-  option ["-n", "--iterations"], "N", "say it N times", :default => 1 do |s|
+  option ["-n", "--iterations"], "N", "say it N times", default: 1 do |s|
     Integer(s)
   end
 
-  parameter "WORDS ...", "the thing to say", :attribute_name => :words
+  parameter "WORDS ...", "the thing to say", attribute_name: :words
 
   def execute
     the_truth = words.join(" ")
@@ -105,7 +105,7 @@ end
 If you don't like the inferred attribute name, you can override it:
 
 ```ruby
-option "--type", "TYPE", "type of widget", :attribute_name => :widget_type
+option "--type", "TYPE", "type of widget", attribute_name: :widget_type
                                            # to avoid clobbering Object#type
 ```
 
@@ -140,7 +140,7 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 Although "required option" is an oxymoron, Clamp lets you mark an option as required, and will verify that a value is provided:
 
 ```ruby
-option "--password", "PASSWORD", "the secret password", :required => true
+option "--password", "PASSWORD", "the secret password", required: true
 ```
 
 Note that it makes no sense to mark a `:flag` option, or one with a `:default`, as `:required`.
@@ -150,7 +150,7 @@ Note that it makes no sense to mark a `:flag` option, or one with a `:default`, 
 Declaring an option "`:multivalued`" allows it to be specified multiple times on the command line.
 
 ```ruby
-option "--format", "FORMAT", "output format", :multivalued => true
+option "--format", "FORMAT", "output format", multivalued: true
 ```
 
 The underlying attribute becomes an Array, and the suffix "`_list`" is appended to the default attribute name.  In this case, an attribute called "`format_list`" would be generated (unless you override the default by specifying an `:attribute_name`).
@@ -160,7 +160,7 @@ The underlying attribute becomes an Array, and the suffix "`_list`" is appended 
 Declaring an option "`:hidden`" will cause it to be hidden from `--help` output.
 
 ```ruby
-option "--some-option", "VALUE", "Just a little option", :hidden => true
+option "--some-option", "VALUE", "Just a little option", hidden: true
 ```
 
 ### Version option
@@ -203,7 +203,7 @@ parameter "[TARGET_DIR]", "target directory"
 Three dots at the end of a parameter name makes it "greedy" - it will consume all remaining command-line arguments.  For example:
 
 ```ruby
-parameter "FILE ...", "input files", :attribute_name => :files
+parameter "FILE ...", "input files", attribute_name: :files
 ```
 
 Like multivalued options, greedy parameters are backed by an Array attribute (named with a "`_list`" suffix, by default).
@@ -265,15 +265,15 @@ end
 Default values can be specified for options, and optional parameters:
 
 ```ruby
-option "--flavour", "FLAVOUR", "ice-cream flavour", :default => "chocolate"
+option "--flavour", "FLAVOUR", "ice-cream flavour", default: "chocolate"
 
-parameter "[HOST]", "server host", :default => "localhost"
+parameter "[HOST]", "server host", default: "localhost"
 ```
 
 For more advanced cases, you can also specify default values by defining a method called "`default_#{attribute_name}`":
 
 ```ruby
-option "--http-port", "PORT", "web-server port", :default => 9000
+option "--http-port", "PORT", "web-server port", default:  9000
 
 option "--admin-port", "PORT", "admin port"
 
@@ -287,11 +287,11 @@ end
 Options (and optional parameters) can also be associated with environment variables:
 
 ```ruby
-option "--port", "PORT", "the port to listen on", :environment_variable => "MYAPP_PORT" do |val|
+option "--port", "PORT", "the port to listen on", environment_variable: "MYAPP_PORT" do |val|
   val.to_i
 end
 
-parameter "[HOST]", "server address", :environment_variable => "MYAPP_HOST"
+parameter "[HOST]", "server address", environment_variable: "MYAPP_HOST"
 ```
 
 Clamp will check the specified envariables in the absence of values supplied on the command line, before looking for a default value.
@@ -431,10 +431,10 @@ Example usage:
 require 'gettext'
 
 Clamp.messages = {
-  :too_many_arguments =>       _("too many arguments"),
-  :option_required =>          _("option '%<option>s' is required"),
-  :option_or_env_required =>   _("option '%<option>s' (or env %<env>s) is required"),
-  :option_argument_error =>    _("option '%<switch>s': %<message>s")
+  too_many_arguments:        _("too many arguments"),
+  option_required:           _("option '%<option>s' is required"),
+  option_or_env_required:    _("option '%<option>s' (or env %<env>s) is required"),
+  option_argument_error:     _("option '%<switch>s': %<message>s")
   # ...
 }
 ```
