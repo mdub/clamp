@@ -1,4 +1,6 @@
-$LOAD_PATH.push File.expand_path("../lib", __FILE__)
+# frozen_string_literal: true
+
+$LOAD_PATH.push File.expand_path("lib", __dir__)
 require "clamp/version"
 
 Gem::Specification.new do |s|
@@ -13,10 +15,10 @@ Gem::Specification.new do |s|
   s.license       = "MIT"
 
   s.summary       = "a minimal framework for command-line utilities"
-  s.description   = <<EOF
-Clamp provides an object-model for command-line utilities.
-It handles parsing of command-line options, and generation of usage help.
-EOF
+  s.description   = <<~EOF
+    Clamp provides an object-model for command-line utilities.
+    It handles parsing of command-line options, and generation of usage help.
+  EOF
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

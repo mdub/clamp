@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Clamp::Command do
@@ -122,8 +124,7 @@ describe Clamp::Command do
 
         subcommand "bar", "Baaaa!" do
 
-          def self.this_is_bar
-          end
+          def self.this_is_bar; end
 
           def execute
             puts "FUBAR"
@@ -331,8 +332,7 @@ describe Clamp::Command do
       end
 
       subcommand "woohoohoo", "like weeheehee but with more o" do
-        def execute
-        end
+        def execute; end
       end
     end
 
@@ -370,8 +370,7 @@ describe Clamp::Command do
           end
         end
 
-        def execute
-        end
+        def execute; end
       end
     end
 
@@ -411,7 +410,7 @@ describe Clamp::Command do
     end
 
     it "allows options after the subcommand" do
-      command.run(%w(hop --direction south))
+      command.run(%w[hop --direction south])
       expect(stdout).to eql "Hopping south\n"
     end
 

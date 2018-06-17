@@ -27,6 +27,9 @@ Naming/FileName:
   Exclude:
     - "bin/*"
 
+Naming/PredicateName:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: nested
   Exclude:
@@ -49,7 +52,7 @@ Style/Lambda:
 Style/NumericLiterals:
   Enabled: false
 
-Naming/PredicateName:
+Style/StderrPuts:
   Enabled: false
 
 Style/StringLiterals:

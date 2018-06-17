@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "clamp/attribute/definition"
 
 module Clamp
@@ -40,9 +42,7 @@ module Clamp
 
       def infer_attribute_name
         inferred_name = name.downcase.tr("-", "_").sub(ELLIPSIS_SUFFIX, "").sub(OPTIONAL) { Regexp.last_match(1) }
-        unless inferred_name =~ VALID_ATTRIBUTE_NAME
-          raise "cannot infer attribute_name from #{name.inspect}"
-        end
+        raise "cannot infer attribute_name from #{name.inspect}" unless VALID_ATTRIBUTE_NAME.match?(inferred_name)
         inferred_name += "_list" if multivalued?
         inferred_name
       end

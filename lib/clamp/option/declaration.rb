@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "clamp/attribute/declaration"
 require "clamp/option/definition"
 

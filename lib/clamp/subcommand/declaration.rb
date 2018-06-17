@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "clamp/errors"
 require "clamp/subcommand/definition"
 
@@ -28,7 +30,7 @@ module Clamp
         names.inject(self) do |command_class, name|
           return nil unless command_class
           subcommand = command_class.find_subcommand(name)
-          subcommand.subcommand_class if subcommand
+          subcommand&.subcommand_class
         end
       end
 
@@ -37,9 +39,7 @@ module Clamp
       end
 
       def default_subcommand=(name)
-        if has_subcommands?
-          raise Clamp::DeclarationError, "default_subcommand must be defined before subcommands"
-        end
+        raise Clamp::DeclarationError, "default_subcommand must be defined before subcommands" if has_subcommands?
         @default_subcommand = name
       end
 

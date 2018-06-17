@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 module Clamp
 
   class << self
+
     attr_accessor :allow_options_after_parameters
+
   end
 
   module Option

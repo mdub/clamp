@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Clamp::Command do
@@ -37,17 +39,17 @@ describe Clamp::Command do
     end
 
     it "still works" do
-      command.run(%w(say foo))
+      command.run(%w[say foo])
       expect(stdout).to eql("foo\n")
     end
 
     it "honours options after positional arguments" do
-      command.run(%w(say blah --verbose))
+      command.run(%w[say blah --verbose])
       expect(stdout).to eql("blahblahblah\n")
     end
 
     it "honours options declared on subcommands" do
-      command.run(%w(say --loud blah))
+      command.run(%w[say --loud blah])
       expect(stdout).to eql("BLAH\n")
     end
 

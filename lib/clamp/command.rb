@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "clamp/messages"
 require "clamp/errors"
 require "clamp/help"

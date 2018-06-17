@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "stringio"
 require "clamp/messages"
 
@@ -41,12 +43,8 @@ module Clamp
       help = builder
       help.add_usage(invocation_path, usage_descriptions)
       help.add_description(description)
-      if has_parameters?
-        help.add_list(Clamp.message(:parameters_heading), parameters)
-      end
-      if has_subcommands?
-        help.add_list(Clamp.message(:subcommands_heading), recognised_subcommands)
-      end
+      help.add_list(Clamp.message(:parameters_heading), parameters) if has_parameters?
+      help.add_list(Clamp.message(:subcommands_heading), recognised_subcommands) if has_subcommands?
       help.add_list(Clamp.message(:options_heading), recognised_options)
       help.string
     end
@@ -74,7 +72,7 @@ module Clamp
         puts description.gsub(/^/, "  ")
       end
 
-      DETAIL_FORMAT = "    %-29s %s".freeze
+      DETAIL_FORMAT = "    %-29s %s"
 
       def add_list(heading, items)
         puts "\n#{heading}:"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require "spec_helper"
 
@@ -135,20 +136,20 @@ describe Clamp::Command do
       end
 
       it "supports multiple values" do
-        command.parse(%w(--flavour chocolate --flavour vanilla))
-        expect(command.flavours).to eql %w(chocolate vanilla)
+        command.parse(%w[--flavour chocolate --flavour vanilla])
+        expect(command.flavours).to eql %w[chocolate vanilla]
       end
 
       it "generates a single-value appender method" do
         command.append_to_flavours("mud")
         command.append_to_flavours("pie")
-        expect(command.flavours).to eql %w(mud pie)
+        expect(command.flavours).to eql %w[mud pie]
       end
 
       it "generates a multi-value setter method" do
         command.append_to_flavours("replaceme")
-        command.flavours = %w(mud pie)
-        expect(command.flavours).to eql %w(mud pie)
+        command.flavours = %w[mud pie]
+        expect(command.flavours).to eql %w[mud pie]
       end
 
       it "does not require a value" do
@@ -191,7 +192,7 @@ describe Clamp::Command do
 
         context "and a value is specified on the command-line" do
 
-          let(:args) { %w(--port 1500) }
+          let(:args) { %w[--port 1500] }
 
           it "uses command-line value" do
             expect(command.port).to eql 1500
@@ -229,7 +230,7 @@ describe Clamp::Command do
 
       end
 
-      %w(1 yes enable on true).each do |truthy_value|
+      %w[1 yes enable on true].each do |truthy_value|
 
         context "when environment variable is #{truthy_value.inspect}" do
 
@@ -243,7 +244,7 @@ describe Clamp::Command do
 
       end
 
-      %w(0 no disable off false).each do |falsey_value|
+      %w[0 no disable off false].each do |falsey_value|
 
         context "when environment variable is #{falsey_value.inspect}" do
 
@@ -363,7 +364,7 @@ describe Clamp::Command do
 
         it "raises a UsageError" do
           expect do
-            command.parse(%w(--foo bar))
+            command.parse(%w[--foo bar])
           end.to raise_error(Clamp::UsageError)
         end
 
@@ -372,7 +373,7 @@ describe Clamp::Command do
       context "with options" do
 
         before do
-          command.parse(%w(--flavour strawberry --nuts --color blue))
+          command.parse(%w[--flavour strawberry --nuts --color blue])
         end
 
         it "maps the option values onto the command object" do
@@ -386,7 +387,7 @@ describe Clamp::Command do
       context "with short options" do
 
         before do
-          command.parse(%w(-f strawberry -c blue))
+          command.parse(%w[-f strawberry -c blue])
         end
 
         it "recognises short options as aliases" do
@@ -399,7 +400,7 @@ describe Clamp::Command do
       context "with a value appended to a short option" do
 
         before do
-          command.parse(%w(-fstrawberry))
+          command.parse(%w[-fstrawberry])
         end
 
         it "works as though the value were separated" do
@@ -411,7 +412,7 @@ describe Clamp::Command do
       context "with combined short options" do
 
         before do
-          command.parse(%w(-nf strawberry))
+          command.parse(%w[-nf strawberry])
         end
 
         it "works as though the options were separate" do
@@ -424,7 +425,7 @@ describe Clamp::Command do
       context "with option arguments attached using equals sign" do
 
         before do
-          command.parse(%w(--flavour=strawberry --color=blue))
+          command.parse(%w[--flavour=strawberry --color=blue])
         end
 
         it "works as though the option arguments were separate" do
@@ -437,8 +438,8 @@ describe Clamp::Command do
       context "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
-          command.parse(%w(a b c --flavour strawberry))
-          expect(command.arguments).to eql %w(a b c --flavour strawberry)
+          command.parse(%w[a b c --flavour strawberry])
+          expect(command.arguments).to eql %w[a b c --flavour strawberry]
         end
 
       end
@@ -460,8 +461,8 @@ describe Clamp::Command do
       context "with an option terminator" do
 
         it "considers everything after the terminator to be an argument" do
-          command.parse(%w(--color blue -- --flavour strawberry))
-          expect(command.arguments).to eql %w(--flavour strawberry)
+          command.parse(%w[--color blue -- --flavour strawberry])
+          expect(command.arguments).to eql %w[--flavour strawberry]
         end
 
       end
@@ -469,7 +470,7 @@ describe Clamp::Command do
       context "with --flag" do
 
         before do
-          command.parse(%w(--nuts))
+          command.parse(%w[--nuts])
         end
 
         it "sets the flag" do
@@ -482,7 +483,7 @@ describe Clamp::Command do
 
         before do
           command.nuts = true
-          command.parse(%w(--no-nuts))
+          command.parse(%w[--no-nuts])
         end
 
         it "clears the flag" do
@@ -495,7 +496,7 @@ describe Clamp::Command do
 
         it "requests help" do
           expect do
-            command.parse(%w(--help))
+            command.parse(%w[--help])
           end.to raise_error(Clamp::HelpWanted)
         end
 
@@ -505,7 +506,7 @@ describe Clamp::Command do
 
         it "requests help" do
           expect do
-            command.parse(%w(-h))
+            command.parse(%w[-h])
           end.to raise_error(Clamp::HelpWanted)
         end
 
@@ -515,7 +516,7 @@ describe Clamp::Command do
 
         it "signals a UsageError" do
           expect do
-            command.parse(%w(--scoops reginald))
+            command.parse(%w[--scoops reginald])
           end.to raise_error(Clamp::UsageError, /^option '--scoops': invalid value for Integer/)
         end
 
@@ -561,14 +562,14 @@ describe Clamp::Command do
 
     it "does not generate implicit help option" do
       expect do
-        command.parse(%w(--help))
+        command.parse(%w[--help])
       end.to_not raise_error
       expect(command.help?).to be true
     end
 
     it "does not recognise -h" do
       expect do
-        command.parse(%w(-h))
+        command.parse(%w[-h])
       end.to raise_error(Clamp::UsageError)
     end
 
@@ -588,7 +589,7 @@ describe Clamp::Command do
 
     it "still recognises --help" do
       expect do
-        command.parse(%w(--help))
+        command.parse(%w[--help])
       end.to raise_error(Clamp::HelpWanted)
     end
 
@@ -661,8 +662,8 @@ describe Clamp::Command do
       end
 
       it "accepts multiple arguments" do
-        command.parse(%w(X Y Z))
-        expect(command.file_list).to eql %w(X Y Z)
+        command.parse(%w[X Y Z])
+        expect(command.file_list).to eql %w[X Y Z]
       end
 
     end
@@ -937,7 +938,7 @@ describe Clamp::Command do
           print word_list.inspect
         end
       end
-      @xyz = %w(x y z)
+      @xyz = %w[x y z]
       command.class.run("cmd", @xyz)
       expect(stdout).to eql @xyz.inspect
     end

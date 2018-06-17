@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "clamp/attribute/definition"
 require "clamp/truthy"
 
@@ -76,9 +78,7 @@ module Clamp
       end
 
       def infer_attribute_name
-        unless long_switch
-          raise Clamp::DeclarationError, "You must specify either a long-switch or an :attribute_value"
-        end
+        raise Clamp::DeclarationError, "You must specify either a long-switch or an :attribute_value" unless long_switch
         inferred_name = long_switch.sub(/^--(\[no-\])?/, "").tr("-", "_")
         inferred_name += "_list" if multivalued?
         inferred_name

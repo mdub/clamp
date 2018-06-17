@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Clamp::Parameter::Definition do
@@ -36,9 +38,9 @@ describe Clamp::Parameter::Definition do
     describe "#consume" do
 
       it "consumes one argument" do
-        arguments = %w(a b c)
+        arguments = %w[a b c]
         expect(parameter.consume(arguments)).to eql ["a"]
-        expect(arguments).to eql %w(b c)
+        expect(arguments).to eql %w[b c]
       end
 
       describe "with no arguments" do
@@ -77,9 +79,9 @@ describe Clamp::Parameter::Definition do
     describe "#consume" do
 
       it "consumes one argument" do
-        arguments = %w(a b c)
+        arguments = %w[a b c]
         expect(parameter.consume(arguments)).to eql ["a"]
-        expect(arguments).to eql %w(b c)
+        expect(arguments).to eql %w[b c]
       end
 
       describe "with no arguments" do
@@ -124,8 +126,8 @@ describe Clamp::Parameter::Definition do
     describe "#consume" do
 
       it "consumes all the remaining arguments" do
-        arguments = %w(a b c)
-        expect(parameter.consume(arguments)).to eql %w(a b c)
+        arguments = %w[a b c]
+        expect(parameter.consume(arguments)).to eql %w[a b c]
         expect(arguments).to eql []
       end
 
@@ -197,13 +199,13 @@ describe Clamp::Parameter::Definition do
     context "with specified default value" do
 
       let(:parameter) do
-        described_class.new("[FILES] ...", "files to process", :default => %w(a b c))
+        described_class.new("[FILES] ...", "files to process", :default => %w[a b c])
       end
 
       describe "#default_value" do
 
         it "is that specified" do
-          expect(parameter.default_value).to eql %w(a b c)
+          expect(parameter.default_value).to eql %w[a b c]
         end
 
       end
@@ -219,8 +221,8 @@ describe Clamp::Parameter::Definition do
       describe "#consume" do
 
         it "consumes all the remaining arguments" do
-          arguments = %w(a b c)
-          expect(parameter.consume(arguments)).to eql %w(a b c)
+          arguments = %w[a b c]
+          expect(parameter.consume(arguments)).to eql %w[a b c]
           expect(arguments).to eql []
         end
 

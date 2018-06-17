@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "clamp/attribute/instance"
 
 module Clamp
@@ -6,13 +8,9 @@ module Clamp
     class Definition
 
       def initialize(options)
-        if options.key?(:attribute_name)
-          @attribute_name = options[:attribute_name].to_s
-        end
+        @attribute_name = options[:attribute_name].to_s if options.key?(:attribute_name)
         @default_value = options[:default] if options.key?(:default)
-        if options.key?(:environment_variable)
-          @environment_variable = options[:environment_variable]
-        end
+        @environment_variable = options[:environment_variable] if options.key?(:environment_variable)
         @hidden = options[:hidden] if options.key?(:hidden)
       end
 

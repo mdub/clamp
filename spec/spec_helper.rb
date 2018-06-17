@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rspec"
 require "clamp"
 require "stringio"
@@ -8,7 +10,7 @@ RSpec.configure do |config|
     begin
       example.run
     rescue SystemExit => e
-      fail "Unexpected exit with status #{e.status}"
+      raise "Unexpected exit with status #{e.status}"
     end
   end
 
