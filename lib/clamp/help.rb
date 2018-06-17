@@ -76,7 +76,7 @@ module Clamp
         puts description.gsub(/^/, "  ")
       end
 
-      DETAIL_FORMAT = "    %-29s %s"
+      DETAIL_FORMAT = "    %-29s %s".freeze
 
       def add_list(heading, items)
         puts "\n#{heading}:"

@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license       = "MIT"
 
   s.summary       = "a minimal framework for command-line utilities"
-  s.description   = <<~TEXT
+  s.description   = <<-TEXT.gsub(/^\s+/, "")
     Clamp provides an object-model for command-line utilities.
     It handles parsing of command-line options, and generation of usage help.
   TEXT

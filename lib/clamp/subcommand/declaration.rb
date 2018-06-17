@@ -32,7 +32,7 @@ module Clamp
         names.inject(self) do |command_class, name|
           return nil unless command_class
           subcommand = command_class.find_subcommand(name)
-          subcommand&.subcommand_class
+          subcommand.subcommand_class if subcommand
         end
       end
 
