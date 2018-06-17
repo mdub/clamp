@@ -1,6 +1,6 @@
 # Changelog
 
-## PENDING
+## 1.3.0 (2018-06-17)
 
 * Add `.execute` DSL method.
 * Append '(required)' to the description of required options.

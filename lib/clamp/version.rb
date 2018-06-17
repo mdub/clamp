@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Clamp
-  VERSION = "1.2.1".freeze
+  VERSION = "1.3.0".freeze
 end
