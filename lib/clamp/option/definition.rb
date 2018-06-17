@@ -85,7 +85,7 @@ module Clamp
       end
 
       def required_indicator
-        "required" if required?
+        Clamp.message(:required) if required?
       end
 
     end
