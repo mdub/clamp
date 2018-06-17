@@ -47,6 +47,10 @@ module Clamp
         inferred_name
       end
 
+      def required_indicator
+        # implied by LHS
+      end
+
     end
 
   end

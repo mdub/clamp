@@ -84,6 +84,10 @@ module Clamp
         inferred_name
       end
 
+      def required_indicator
+        Clamp.message(:required) if required?
+      end
+
     end
 
   end

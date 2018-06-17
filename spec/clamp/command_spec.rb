@@ -265,6 +265,14 @@ describe Clamp::Command do
         command.class.option "--port", "PORT", "port to listen on", :required => true
       end
 
+      describe "#help" do
+
+        it "marks it as required" do
+          expect(command.help).to include("port to listen on (required)")
+        end
+
+      end
+
       context "when no value is provided" do
 
         it "raises a UsageError" do
