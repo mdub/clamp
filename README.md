@@ -1,5 +1,4 @@
-Clamp
-=====
+# Clamp
 
 [![Gem Version](https://badge.fury.io/rb/clamp.png)](http://badge.fury.io/rb/clamp)
 [![Build Status](https://secure.travis-ci.org/mdub/clamp.png?branch=master)](http://travis-ci.org/mdub/clamp)
@@ -8,8 +7,7 @@ Clamp
 
 It handles boring stuff like parsing the command-line, and generating help, so you can get on with making your command actually do stuff.
 
-Not another one!
-----------------
+## Not another one!
 
 Yeah, sorry.  There are a bunch of existing command-line parsing libraries out there, and Clamp draws inspiration from a variety of sources, including [Thor], [optparse], and [Clip].  In the end, though, I wanted a slightly rounder wheel.  (Although, Clamp has a _lot_ in common with Ara T. Howard's [main.rb]. Had I been aware of that project at the time, I might not have written Clamp.)
 
@@ -18,8 +16,7 @@ Yeah, sorry.  There are a bunch of existing command-line parsing libraries out t
 [Clip]: http://clip.rubyforge.org/
 [main.rb]: https://github.com/ahoward/main
 
-Quick Start
------------
+## Quick Start
 
 A typical Clamp script looks like this:
 
@@ -79,8 +76,7 @@ There are more examples demonstrating various features of Clamp [on Github][exam
 
 [examples]: https://github.com/mdub/clamp/tree/master/examples
 
-Declaring options
------------------
+## Declaring options
 
 Options are declared using the `option` method.  The three required arguments are:
 
@@ -174,8 +170,7 @@ option "--version", :flag, "Show version" do
 end
 ```
 
-Declaring parameters
---------------------
+## Declaring parameters
 
 Positional parameters can be declared using `parameter`, specifying
 
@@ -208,8 +203,7 @@ parameter "FILE ...", "input files", attribute_name: :files
 
 Like multivalued options, greedy parameters are backed by an Array attribute (named with a "`_list`" suffix, by default).
 
-Parsing and validation of options and parameters
-------------------------------------------------
+## Parsing and validation of options and parameters
 
 When you `#run` a command, it will first attempt to `#parse` command-line arguments, and map them onto the declared options and parameters, before invoking your `#execute` method.
 
@@ -298,7 +292,7 @@ Clamp will check the specified envariables in the absence of values supplied on 
 
 ### Allowing options after parameters
 
-By default, Clamp only recognises options _before_ positional parameters. 
+By default, Clamp only recognises options _before_ positional parameters.
 
 Some other option-parsing libraries - notably [GNU `getopt(3)`](https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html) - allow option and parameter arguments to appear in any order on the command-line, e.g.
 
@@ -310,8 +304,7 @@ If you want Clamp to allow options and parameters to be "interspersed" in this w
 Clamp.allow_options_after_parameters = true
 ```
 
-Declaring Subcommands
----------------------
+## Declaring Subcommands
 
 Subcommand support helps you wrap a number of related commands into a single script (ala tools like "`git`").  Clamp will inspect the first command-line argument (after options are parsed), and delegate to the named subcommand.
 
@@ -402,8 +395,7 @@ Clamp do
 end
 ```
 
-Getting help
-------------
+## Getting help
 
 All Clamp commands support a "`--help`" option, which outputs brief usage documentation, based on those seemingly useless extra parameters that you had to pass to `option` and `parameter`.
 
@@ -421,12 +413,12 @@ Options:
     -h, --help                    print help
 ```
 
-Localization
-------------
+## Localization
 
 Clamp comes with support for overriding strings with custom translations. You can use localization library of your choice and override the strings at startup.
 
 Example usage:
+
 ```ruby
 require 'gettext'
 
@@ -438,10 +430,10 @@ Clamp.messages = {
   # ...
 }
 ```
+
 See [messages.rb](https://github.com/mdub/clamp/blob/master/lib/clamp/messages.rb) for full list of available messages.
 
-License
--------
+## License
 
 Copyright (C) 2011 [Mike Williams](mailto:mdub@dogbiscuit.org)
 
@@ -462,7 +454,6 @@ THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Contributing to Clamp
----------------------
+## Contributing to Clamp
 
 Source-code for Clamp is [on Github](https://github.com/mdub/clamp).
