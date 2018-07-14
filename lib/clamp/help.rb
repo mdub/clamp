@@ -56,34 +56,55 @@ module Clamp
     class Builder
 
       def initialize
-        @out = StringIO.new
+        @lines = []
       end
 
       def string
-        @out.string
+        left_column_width = lines.grep(Array).map(&:first).map(&:size).max
+        StringIO.new.tap do |out|
+          lines.each do |line|
+            case line
+            when Array
+              line[0] = line[0].ljust(left_column_width)
+              line.unshift("")
+              out.puts(line.join("    "))
+            else
+              out.puts(line)
+            end
+          end
+        end.string
+      end
+
+      def line(text = "")
+        @lines << text
+      end
+
+      def row(lhs, rhs)
+        @lines << [lhs, rhs]
       end
 
       def add_usage(invocation_path, usage_descriptions)
-        puts Clamp.message(:usage_heading) + ":"
+        line Clamp.message(:usage_heading) + ":"
         usage_descriptions.each do |usage|
-          puts "    #{invocation_path} #{usage}".rstrip
+          line "    #{invocation_path} #{usage}".rstrip
         end
       end
 
       def add_description(description)
         return unless description
-        puts ""
-        puts description.gsub(/^/, "  ")
+        line
+        line description.gsub(/^/, "  ")
       end
 
       DETAIL_FORMAT = "    %-29s %s".freeze
 
       def add_list(heading, items)
-        puts "\n#{heading}:"
+        line
+        line "#{heading}:"
         items.reject { |i| i.respond_to?(:hidden?) && i.hidden? }.each do |item|
           label, description = item.help
           description.each_line do |line|
-            puts format(DETAIL_FORMAT, label, line)
+            row(label, line)
             label = ""
           end
         end
@@ -91,9 +112,7 @@ module Clamp
 
       private
 
-      def puts(*args)
-        @out.puts(*args)
-      end
+      attr_accessor :lines
 
     end
 
