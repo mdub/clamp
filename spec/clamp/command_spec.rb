@@ -435,6 +435,19 @@ describe Clamp::Command do
 
       end
 
+      context "with option arguments that look like options" do
+
+        before do
+          command.parse(%w[--flavour=-dashing- --scoops -1])
+        end
+
+        it "sets the options" do
+          expect(command.flavour).to eq("-dashing-")
+          expect(command.scoops).to eq(-1)
+        end
+
+      end
+
       context "with option-like things beyond the arguments" do
 
         it "treats them as positional arguments" do
