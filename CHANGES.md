@@ -1,5 +1,9 @@
 # Changelog
 
+## PENDING
+
+* Choose a sensible column width in generated help, based on content.
+
 ## 1.3.0 (2018-06-17)
 
 * Add `.execute` DSL method.
