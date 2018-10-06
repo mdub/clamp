@@ -161,7 +161,7 @@ option "--some-option", "VALUE", "Just a little option", hidden: true
 
 ### Version option
 
-A common idiom is to have an option `--version` that outputs the command version and doesn't run any subcommands.  This can be acheived by:
+A common idiom is to have an option `--version` that outputs the command version and doesn't run any subcommands.  This can be achieved by:
 
 ```ruby
 option "--version", :flag, "Show version" do
