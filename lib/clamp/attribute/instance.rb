@@ -66,6 +66,12 @@ module Clamp
         command.send(:signal_usage_error, *args)
       end
 
+      def default_from_option
+        return if self.defined?
+        return if attribute.default_value.nil?
+        take(attribute.default_value)
+      end
+
       def default_from_environment
         return if self.defined?
         return if attribute.environment_variable.nil?

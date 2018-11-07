@@ -19,6 +19,7 @@ module Clamp #:nodoc:
       def parse_options
         set_options_from_command_line
         default_options_from_environment
+        default_options_from_options
       end
 
       private
@@ -64,6 +65,12 @@ module Clamp #:nodoc:
           remaining_arguments.unshift(Regexp.last_match(2))
         end
         switch
+      end
+
+      def default_options_from_options
+        self.class.recognised_options.each do |option|
+          option.of(self).default_from_option
+        end
       end
 
       def default_options_from_environment
