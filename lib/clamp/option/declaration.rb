@@ -29,7 +29,7 @@ module Clamp
       end
 
       def recognised_options
-        unless @implicit_options_declared
+        unless @implicit_options_declared ||= false
           declare_implicit_help_option
           @implicit_options_declared = true
         end

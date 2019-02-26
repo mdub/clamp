@@ -59,7 +59,7 @@ module Clamp
       private
 
       def declare_subcommand_parameters
-        if @default_subcommand
+        if @default_subcommand ||= false
           parameter "[SUBCOMMAND]", "subcommand",
                     attribute_name: :subcommand_name,
                     default: @default_subcommand,

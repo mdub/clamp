@@ -11,7 +11,8 @@ module Clamp #:nodoc:
     end
 
     def message(key, options = {})
-      format(messages.fetch(key), options)
+      string = messages.fetch(key)
+      options.any? ? format(string, options) : format(string)
     end
 
     def clear_messages!
