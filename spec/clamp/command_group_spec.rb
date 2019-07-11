@@ -261,9 +261,9 @@ describe Clamp::Command do
 
     it "shows parameter in usage help" do
       begin
-        command.run(["stuff", "say", "--help"])
+        command.run(["stuff", "say", "loud", "--help"])
       rescue Clamp::HelpWanted => e
-        expect(e.command.invocation_path).to eql("with THING say")
+        expect(e.command.invocation_path).to eql("with THING say loud")
       end
     end
 

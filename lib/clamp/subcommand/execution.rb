@@ -31,7 +31,7 @@ module Clamp
       end
 
       def invocation_path_for(name)
-        param_names = self.class.inheritable_parameters.map(&:name)
+        param_names = self.class.parameters.select(&:inheritable?).map(&:name)
         [invocation_path, *param_names, name].join(" ")
       end
 
