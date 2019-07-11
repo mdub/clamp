@@ -3,6 +3,7 @@
 ## PENDING
 
 * Choose a sensible column width in generated help, based on content.
+* Fix issue#99: extraneous parameter names in subcommand help.
 
 ## 1.3.0 (2018-06-17)
 
