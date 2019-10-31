@@ -19,11 +19,11 @@ describe Clamp::Command do
 
     given_command("cmd") do
 
-      option ["-v", "--verbose"], :flag, "Be noisy"
+      option ["-v", "--verbose"], "Be noisy", flag: true
 
       subcommand "say", "Say something" do
 
-        option "--loud", :flag, "say it loud"
+        option "--loud", "say it loud", flag: true
 
         parameter "WORDS ...", "the thing to say", attribute_name: :words
 

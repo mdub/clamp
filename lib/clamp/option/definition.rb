@@ -10,9 +10,9 @@ module Clamp
     #
     class Definition < Attribute::Definition
 
-      def initialize(switches, type, description, options = {})
+      def initialize(switches, description, options = {})
         @switches = Array(switches)
-        @type = type
+        @flag = options.fetch(:flag, false)
         @description = description
         super(options)
         @multivalued = options[:multivalued]
@@ -20,10 +20,10 @@ module Clamp
         @required = options[:required]
         # Do some light validation for conflicting settings.
         raise ArgumentError, "Specifying a :default value with :required doesn't make sense" if options.key?(:default)
-        raise ArgumentError, "A required flag (boolean) doesn't make sense." if type == :flag
+        raise ArgumentError, "A required flag (boolean) doesn't make sense." if flag
       end
 
-      attr_reader :switches, :type
+      attr_reader :switches, :flag
 
       def long_switch
         switches.find { |switch| switch =~ /^--/ }
@@ -33,16 +33,12 @@ module Clamp
         recognised_switches.member?(switch)
       end
 
-      def flag?
-        @type == :flag
-      end
-
       def flag_value(switch)
         !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{Regexp.last_match(1)}"))
       end
 
       def read_method
-        if flag?
+        if flag
           super + "?"
         else
           super
@@ -50,7 +46,7 @@ module Clamp
       end
 
       def extract_value(switch, arguments)
-        if flag?
+        if flag
           flag_value(switch)
         else
           arguments.shift
@@ -58,12 +54,11 @@ module Clamp
       end
 
       def default_conversion_block
-        Clamp.method(:truthy?) if flag?
+        Clamp.method(:truthy?) if flag
       end
 
       def help_lhs
         lhs = switches.join(", ")
-        lhs += " " + type unless flag?
         lhs
       end
 

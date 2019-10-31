@@ -7,7 +7,7 @@ require "clamp"
 
 Clamp do
 
-  option ["-f", "--flavour"], "FLAVOUR", "flavour",
+  option ["-f", "--flavour"], "flavour",
          multivalued: true, default: ["chocolate"],
          attribute_name: :flavours
 

@@ -25,8 +25,8 @@ require 'clamp'
 
 Clamp do
 
-  option "--loud", :flag, "say it loud"
-  option ["-n", "--iterations"], "N", "say it N times", default: 1 do |s|
+  option "--loud", "say it loud", flag: true
+  option ["-n", "--iterations"], "say it N times", default: 1 do |s|
     Integer(s)
   end
 
@@ -50,8 +50,8 @@ require 'clamp'
 
 class SpeakCommand < Clamp::Command
 
-  option "--loud", :flag, "say it loud"
-  option ["-n", "--iterations"], "N", "say it N times", default: 1 do |s|
+  option "--loud", "say it loud", flag: true
+  option ["-n", "--iterations"], "say it N times", default: 1 do |s|
     Integer(s)
   end
 
@@ -81,13 +81,12 @@ There are more examples demonstrating various features of Clamp [on Github][exam
 Options are declared using the `option` method.  The three required arguments are:
 
   1. the option switch (or switches),
-  2. an option argument name
-  3. a short description
+  2. a short description
 
 For example:
 
 ```ruby
-option "--flavour", "FLAVOUR", "ice-cream flavour"
+option "--flavour", "ice-cream flavour"
 ```
 
 It works a little like `attr_accessor`, defining reader and writer methods on the command class.  The attribute name is inferred from the switch (in this case, "`flavour`").  When you pass options to your command, Clamp will populate the attributes, which are then available for use in your `#execute` method.
@@ -101,8 +100,8 @@ end
 If you don't like the inferred attribute name, you can override it:
 
 ```ruby
-option "--type", "TYPE", "type of widget", attribute_name: :widget_type
-                                           # to avoid clobbering Object#type
+option "--type", "type of widget", attribute_name: :widget_type
+                                   # to avoid clobbering Object#type
 ```
 
 ### Short/long option switches
@@ -110,15 +109,15 @@ option "--type", "TYPE", "type of widget", attribute_name: :widget_type
 The first argument to `option` can be an array, rather than a single string, in which case all the switches are treated as aliases:
 
 ```ruby
-option ["-s", "--subject"], "SUBJECT", "email subject line"
+option ["-s", "--subject"], "email subject line"
 ```
 
 ### Flag options
 
-Some options are just boolean flags.  Pass "`:flag`" as the second parameter to tell Clamp not to expect an option argument:
+Some options are just boolean flags.  Pass "`flag: true`" in the third parameter to tell Clamp not to expect an option argument:
 
 ```ruby
-option "--verbose", :flag, "be chatty"
+option "--verbose", "be chatty", flag: true
 ```
 
 For flag options, Clamp appends "`?`" to the generated reader method; ie. you get a method called "`#verbose?`", rather than just "`#verbose`".
@@ -126,7 +125,7 @@ For flag options, Clamp appends "`?`" to the generated reader method; ie. you ge
 Negatable flags are easy to generate, too:
 
 ```ruby
-option "--[no-]force", :flag, "be forceful (or not)"
+option "--[no-]force", "be forceful (or not)", flag: true
 ```
 
 Clamp will handle both "`--force`" and "`--no-force`" options, setting the value of "`#force?`" appropriately.
@@ -136,7 +135,7 @@ Clamp will handle both "`--force`" and "`--no-force`" options, setting the value
 Although "required option" is an oxymoron, Clamp lets you mark an option as required, and will verify that a value is provided:
 
 ```ruby
-option "--password", "PASSWORD", "the secret password", required: true
+option "--password", "the secret password", required: true
 ```
 
 Note that it makes no sense to mark a `:flag` option, or one with a `:default`, as `:required`.
@@ -146,7 +145,7 @@ Note that it makes no sense to mark a `:flag` option, or one with a `:default`, 
 Declaring an option "`:multivalued`" allows it to be specified multiple times on the command line.
 
 ```ruby
-option "--format", "FORMAT", "output format", multivalued: true
+option "--format", "output format", multivalued: true
 ```
 
 The underlying attribute becomes an Array, and the suffix "`_list`" is appended to the default attribute name.  In this case, an attribute called "`format_list`" would be generated (unless you override the default by specifying an `:attribute_name`).
@@ -156,7 +155,7 @@ The underlying attribute becomes an Array, and the suffix "`_list`" is appended 
 Declaring an option "`:hidden`" will cause it to be hidden from `--help` output.
 
 ```ruby
-option "--some-option", "VALUE", "Just a little option", hidden: true
+option "--some-option", "Just a little option", hidden: true
 ```
 
 ### Version option
@@ -164,7 +163,7 @@ option "--some-option", "VALUE", "Just a little option", hidden: true
 A common idiom is to have an option `--version` that outputs the command version and doesn't run any subcommands.  This can be achieved by:
 
 ```ruby
-option "--version", :flag, "Show version" do
+option "--version", "Show version", flag: true do
   puts MyGem::VERSION
   exit(0)
 end
@@ -217,7 +216,7 @@ called with the raw string argument, and is expected to validate it.  The value 
 For example:
 
 ```ruby
-option "--port", "PORT", "port to listen on" do |s|
+option "--port", "port to listen on" do |s|
   Integer(s)
 end
 ```
@@ -259,7 +258,7 @@ end
 Default values can be specified for options, and optional parameters:
 
 ```ruby
-option "--flavour", "FLAVOUR", "ice-cream flavour", default: "chocolate"
+option "--flavour", "ice-cream flavour", default: "chocolate"
 
 parameter "[HOST]", "server host", default: "localhost"
 ```
@@ -267,9 +266,9 @@ parameter "[HOST]", "server host", default: "localhost"
 For more advanced cases, you can also specify default values by defining a method called "`default_#{attribute_name}`":
 
 ```ruby
-option "--http-port", "PORT", "web-server port", default:  9000
+option "--http-port", "web-server port", default:  9000
 
-option "--admin-port", "PORT", "admin port"
+option "--admin-port", "admin port"
 
 def default_admin_port
    http_port + 1
@@ -281,7 +280,7 @@ end
 Options (and optional parameters) can also be associated with environment variables:
 
 ```ruby
-option "--port", "PORT", "the port to listen on", environment_variable: "MYAPP_PORT" do |val|
+option "--port", "the port to listen on", environment_variable: "MYAPP_PORT" do |val|
   val.to_i
 end
 
@@ -409,7 +408,7 @@ Arguments:
 
 Options:
     --loud                        say it loud
-    -n, --iterations N            say it N times (default: 1)
+    -n, --iterations              say it N times (default: 1)
     -h, --help                    print help
 ```
 

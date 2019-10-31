@@ -9,9 +9,9 @@ module GitDown
 
   class AbstractCommand < Clamp::Command
 
-    option ["-v", "--verbose"], :flag, "be verbose"
+    option ["-v", "--verbose"], "be verbose", flag: true
 
-    option "--version", :flag, "show version" do
+    option "--version", "show version", flag: true do
       puts "GitDown-0.0.0a"
       exit(0)
     end
@@ -36,7 +36,7 @@ module GitDown
 
   class PullCommand < AbstractCommand
 
-    option "--[no-]commit", :flag, "Perform the merge and commit the result."
+    option "--[no-]commit", "Perform the merge and commit the result.", flag: true
 
     def execute
       say "pulling"
@@ -46,7 +46,7 @@ module GitDown
 
   class StatusCommand < AbstractCommand
 
-    option ["-s", "--short"], :flag, "Give the output in the short-format."
+    option ["-s", "--short"], "Give the output in the short-format.", flag: true
 
     def execute
       if short?

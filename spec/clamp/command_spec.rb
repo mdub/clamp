@@ -39,16 +39,16 @@ describe Clamp::Command do
   describe ".option" do
 
     it "declares option argument accessors" do
-      command.class.option "--flavour", "FLAVOUR", "Flavour of the month"
+      command.class.option "--flavour", "Flavour of the month"
       expect(command.flavour).to eql nil
       command.flavour = "chocolate"
       expect(command.flavour).to eql "chocolate"
     end
 
-    context "with type :flag" do
+    context "with :flag option" do
 
       before do
-        command.class.option "--verbose", :flag, "Be heartier"
+        command.class.option "--verbose", "Be heartier", flag: true
       end
 
       it "declares a predicate-style reader" do
@@ -61,7 +61,7 @@ describe Clamp::Command do
     context "with explicit :attribute_name" do
 
       before do
-        command.class.option "--foo", "FOO", "A foo", attribute_name: :bar
+        command.class.option "--foo", "A foo", attribute_name: :bar
       end
 
       it "uses the specified attribute_name name to name accessors" do
@@ -79,7 +79,7 @@ describe Clamp::Command do
     context "with default method" do
 
       before do
-        command.class.option "--port", "PORT", "port"
+        command.class.option "--port", "port"
         command.class.class_eval do
           def default_port
             4321
@@ -96,7 +96,7 @@ describe Clamp::Command do
     context "with :default value" do
 
       before do
-        command.class.option "--port", "PORT", "port to listen on", default: 4321
+        command.class.option "--port", "port to listen on", default: 4321
       end
 
       it "declares default method" do
@@ -116,7 +116,7 @@ describe Clamp::Command do
     context "without :default value" do
 
       before do
-        command.class.option "--port", "PORT", "port to listen on"
+        command.class.option "--port", "port to listen on"
       end
 
       it "does not declare default method" do
@@ -128,7 +128,7 @@ describe Clamp::Command do
     context "with :multivalued" do
 
       before do
-        command.class.option "--flavour", "FLAVOUR", "flavour(s)", multivalued: true, attribute_name: :flavours
+        command.class.option "--flavour", "flavour(s)", multivalued: true, attribute_name: :flavours
       end
 
       it "defaults to empty array" do
@@ -166,7 +166,7 @@ describe Clamp::Command do
       let(:args) { [] }
 
       before do
-        command.class.option "--port", "PORT", "port to listen on",
+        command.class.option "--port", "port to listen on",
                              default: 4321,
                              environment_variable: "PORT",
                              &:to_i
@@ -212,12 +212,12 @@ describe Clamp::Command do
 
     end
 
-    context "with :environment_variable and type :flag" do
+    context "with :environment_variable and :flag option" do
 
       let(:environment_value) { nil }
 
       before do
-        command.class.option "--[no-]enable", :flag, "enable?", default: false, environment_variable: "ENABLE"
+        command.class.option "--[no-]enable", "enable?", flag: true, default: false, environment_variable: "ENABLE"
         set_env("ENABLE", environment_value)
         command.parse([])
       end
@@ -263,7 +263,7 @@ describe Clamp::Command do
     context "with :required" do
 
       before do
-        command.class.option "--port", "PORT", "port to listen on", required: true
+        command.class.option "--port", "port to listen on", required: true
       end
 
       describe "#help" do
@@ -299,7 +299,7 @@ describe Clamp::Command do
     context "with :required and :multivalued" do
 
       before do
-        command.class.option "--port", "PORT", "port to listen on", required: true, multivalued: true
+        command.class.option "--port", "port to listen on", required: true, multivalued: true
       end
 
       context "when no value is provided" do
@@ -327,7 +327,7 @@ describe Clamp::Command do
     context "with a block" do
 
       before do
-        command.class.option "--port", "PORT", "Port to listen on" do |port|
+        command.class.option "--port", "Port to listen on" do |port|
           Integer(port)
         end
       end
@@ -347,14 +347,14 @@ describe Clamp::Command do
   context "with options declared" do
 
     before do
-      command.class.option ["-f", "--flavour"], "FLAVOUR", "Flavour of the month"
-      command.class.option ["-c", "--color"], "COLOR", "Preferred hue"
-      command.class.option ["--scoops"], "N", "Number of scoops",
+      command.class.option ["-f", "--flavour"], "Flavour of the month"
+      command.class.option ["-c", "--color"], "Preferred hue"
+      command.class.option ["--scoops"], "Number of scoops",
                            default: 1,
                            environment_variable: "DEFAULT_SCOOPS" do |arg|
         Integer(arg)
       end
-      command.class.option ["-n", "--[no-]nuts"], :flag, "Nuts (or not)\nMay include nuts"
+      command.class.option ["-n", "--[no-]nuts"], "Nuts (or not)\nMay include nuts", flag: true
       command.class.parameter "[ARG] ...", "extra arguments", attribute_name: :arguments
     end
 
@@ -555,8 +555,8 @@ describe Clamp::Command do
       end
 
       it "includes option details" do
-        expect(command.help).to match(/--flavour FLAVOUR +Flavour of the month/)
-        expect(command.help).to match(/--color COLOR +Preferred hue/)
+        expect(command.help).to match(/--flavour +Flavour of the month/)
+        expect(command.help).to match(/--color +Preferred hue/)
       end
 
       it "handles new lines in option descriptions" do
@@ -570,7 +570,7 @@ describe Clamp::Command do
   context "with an explicit --help option declared" do
 
     before do
-      command.class.option ["--help"], :flag, "help wanted"
+      command.class.option ["--help"], "help wanted", flag: true
     end
 
     it "does not generate implicit help option" do
@@ -591,7 +591,7 @@ describe Clamp::Command do
   context "with an explicit -h option declared" do
 
     before do
-      command.class.option ["-h", "--humidity"], "PERCENT", "relative humidity" do |n|
+      command.class.option ["-h", "--humidity"], "relative humidity" do |n|
         Integer(n)
       end
     end
@@ -1046,10 +1046,10 @@ describe Clamp::Command do
 
     let(:command) do
       parent_command_class = Class.new(Clamp::Command) do
-        option "--verbose", :flag, "be louder"
+        option "--verbose", "be louder", flag: true
       end
       derived_command_class = Class.new(parent_command_class) do
-        option "--iterations", "N", "number of times to go around"
+        option "--iterations", "number of times to go around"
       end
       derived_command_class.new("cmd")
     end

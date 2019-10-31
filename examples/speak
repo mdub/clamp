@@ -11,8 +11,8 @@ Clamp do
     Say something.
   )
 
-  option "--loud", :flag, "say it loud"
-  option ["-n", "--iterations"], "N", "say it N times", default: 1 do |s|
+  option "--loud", "say it loud", flag: true
+  option ["-n", "--iterations"], "say it N times", default: 1 do |s|
     Integer(s)
   end
 

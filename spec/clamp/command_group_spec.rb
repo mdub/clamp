@@ -275,12 +275,12 @@ describe Clamp::Command do
 
       speed_options = Module.new do
         extend Clamp::Option::Declaration
-        option "--speed", "SPEED", "how fast", default: "slowly"
+        option "--speed", "how fast", default: "slowly"
       end
 
       Class.new(Clamp::Command) do
 
-        option "--direction", "DIR", "which way", default: "home"
+        option "--direction", "which way", default: "home"
 
         include speed_options
 
@@ -326,7 +326,7 @@ describe Clamp::Command do
   context "with a subcommand, with options" do
 
     given_command "weeheehee" do
-      option "--json", "JSON", "a json blob" do |option|
+      option "--json", "a json blob" do |option|
         print "parsing!"
         option
       end
@@ -401,7 +401,7 @@ describe Clamp::Command do
   context "with a subcommand and required options" do
 
     given_command "movements" do
-      option "--direction", "N|S|E|W", "bearing", required: true
+      option "--direction", "bearing", required: true
       subcommand "hop", "Hop" do
         def execute
           puts "Hopping #{direction}"

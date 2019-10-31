@@ -8,10 +8,10 @@ require "highline"
 
 Clamp do
 
-  option ["-U", "--user"], "USER", "user name",
+  option ["-U", "--user"], "user name",
          environment_variable: "THE_USER",
          default: "bob"
-  option ["-P", "--password"], "PASSWORD", "password",
+  option ["-P", "--password"], "password",
          environment_variable: "THE_PASSWORD"
 
   def execute

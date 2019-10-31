@@ -12,8 +12,8 @@ module Clamp
 
       include Clamp::Attribute::Declaration
 
-      def option(switches, type, description, opts = {}, &block)
-        Option::Definition.new(switches, type, description, opts).tap do |option|
+      def option(switches, description, opts = {}, &block)
+        Option::Definition.new(switches, description, opts).tap do |option|
           block ||= option.default_conversion_block
           define_accessors_for(option, &block)
           declared_options << option
@@ -42,7 +42,7 @@ module Clamp
         return false if effective_options.find { |o| o.handles?("--help") }
         help_switches = ["--help"]
         help_switches.unshift("-h") unless effective_options.find { |o| o.handles?("-h") }
-        option help_switches, :flag, "print help" do
+        option help_switches, "print help", flag: true do
           request_help
         end
       end

@@ -8,7 +8,7 @@ require "clamp/version"
 
 Clamp do
 
-  option ["--version", "-v"], :flag, "Show version" do
+  option ["--version", "-v"], "Show version", flag: true do
     puts "Powered by Clamp-#{Clamp::VERSION}"
     exit(0)
   end

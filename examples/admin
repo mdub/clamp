@@ -7,7 +7,7 @@ require "clamp"
 
 Clamp do
 
-  option "--timeout", "SECONDS", "connection timeout", default: 5, environment_variable: "MYAPP_TIMEOUT" do |x|
+  option "--timeout", "connection timeout", default: 5, environment_variable: "MYAPP_TIMEOUT" do |x|
     Integer(x)
   end
 

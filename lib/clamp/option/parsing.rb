@@ -54,7 +54,7 @@ module Clamp #:nodoc:
         case switch
         when /\A(-\w)(.+)\z/m # combined short options
           switch = Regexp.last_match(1)
-          if find_option(switch).flag?
+          if find_option(switch).flag
             remaining_arguments.unshift("-" + Regexp.last_match(2))
           else
             remaining_arguments.unshift(Regexp.last_match(2))
