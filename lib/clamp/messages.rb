@@ -11,7 +11,10 @@ module Clamp #:nodoc:
     end
 
     def message(key, options = {})
-      format(messages.fetch(key), options)
+      string = messages.fetch(key)
+      return string if options.empty?
+
+      format string, options
     end
 
     def clear_messages!
