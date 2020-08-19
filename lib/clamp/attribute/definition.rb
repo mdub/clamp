@@ -54,11 +54,11 @@ module Clamp
       end
 
       def required?
-        @required
+        @required ||= false
       end
 
       def hidden?
-        @hidden
+        @hidden ||= false
       end
 
       def attribute_name

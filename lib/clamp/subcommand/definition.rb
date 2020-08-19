@@ -3,15 +3,12 @@
 module Clamp
   module Subcommand
 
-    Definition = Struct.new(:name, :description, :subcommand_class) do
+    Definition = Struct.new(:names, :description, :subcommand_class) do
 
       def initialize(names, description, subcommand_class)
-        @names = Array(names)
-        @description = description
-        @subcommand_class = subcommand_class
+        names = Array(names)
+        super
       end
-
-      attr_reader :names, :description, :subcommand_class
 
       def is_called?(name)
         names.member?(name)

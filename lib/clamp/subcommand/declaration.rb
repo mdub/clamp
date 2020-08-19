@@ -47,7 +47,7 @@ module Clamp
 
       def default_subcommand(*args, &block)
         if args.empty?
-          @default_subcommand
+          @default_subcommand ||= false
         else
           $stderr.puts "WARNING: Clamp default_subcommand syntax has changed; check the README."
           $stderr.puts "  (from #{caller(1..1).first})"
@@ -59,10 +59,10 @@ module Clamp
       private
 
       def declare_subcommand_parameters
-        if @default_subcommand
+        if default_subcommand
           parameter "[SUBCOMMAND]", "subcommand",
                     attribute_name: :subcommand_name,
-                    default: @default_subcommand,
+                    default: default_subcommand,
                     inheritable: false
         else
           parameter "SUBCOMMAND", "subcommand",
