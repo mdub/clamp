@@ -1,6 +1,10 @@
 # Changelog
 
-## PENDING
+## 1.3.2 (2020-08-20)
+
+* Fix Ruby warnings.
+
+## 1.3.1 (2019-07-11)
 
 * Choose a sensible column width in generated help, based on content.
 * Fix issue#99: extraneous parameter names in subcommand help.
