@@ -29,11 +29,16 @@ module Clamp #:nodoc:
         until remaining_arguments.empty?
           unless remaining_arguments.first.start_with?("-")
             break unless argument_buffer.size < argument_buffer_limit
+
             argument_buffer << remaining_arguments.shift
+
             next
           end
+
           switch = remaining_arguments.shift
+
           break if switch == "--"
+
           handle_switch(switch)
         end
         remaining_arguments.unshift(*argument_buffer)
@@ -55,7 +60,7 @@ module Clamp #:nodoc:
         when /\A(-\w)(.+)\z/m # combined short options
           switch = Regexp.last_match(1)
           if find_option(switch).flag?
-            remaining_arguments.unshift("-" + Regexp.last_match(2))
+            remaining_arguments.unshift("-#{Regexp.last_match(2)}")
           else
             remaining_arguments.unshift(Regexp.last_match(2))
           end

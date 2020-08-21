@@ -16,7 +16,9 @@ module Clamp
         @description = description
         super(options)
         @multivalued = options[:multivalued]
+
         return unless options.key?(:required)
+
         @required = options[:required]
         # Do some light validation for conflicting settings.
         raise ArgumentError, "Specifying a :default value with :required doesn't make sense" if options.key?(:default)
@@ -43,7 +45,7 @@ module Clamp
 
       def read_method
         if flag?
-          super + "?"
+          "#{super}?"
         else
           super
         end
@@ -63,7 +65,7 @@ module Clamp
 
       def help_lhs
         lhs = switches.join(", ")
-        lhs += " " + type unless flag?
+        lhs += " #{type}" unless flag?
         lhs
       end
 
@@ -81,6 +83,7 @@ module Clamp
 
       def infer_attribute_name
         raise Clamp::DeclarationError, "You must specify either a long-switch or an :attribute_value" unless long_switch
+
         inferred_name = long_switch.sub(/^--(\[no-\])?/, "").tr("-", "_")
         inferred_name += "_list" if multivalued?
         inferred_name

@@ -40,6 +40,7 @@ module Clamp
 
       def declare_implicit_help_option
         return false if effective_options.find { |o| o.handles?("--help") }
+
         help_switches = ["--help"]
         help_switches.unshift("-h") unless effective_options.find { |o| o.handles?("-h") }
         option help_switches, :flag, "print help" do
@@ -55,6 +56,7 @@ module Clamp
 
       def options_declared_on(ancestor)
         return [] unless ancestor.is_a?(Clamp::Option::Declaration)
+
         ancestor.declared_options
       end
 

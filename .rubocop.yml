@@ -1,9 +1,9 @@
 AllCops:
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.4
+  NewCops: enable
 
-Eval:
-  Exclude:
-    - "Rakefile"
+Layout/LineLength:
+  Max: 120
 
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
@@ -20,9 +20,6 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
-
-Metrics/LineLength:
-  Max: 120
 
 Metrics/MethodLength:
   Max: 30
