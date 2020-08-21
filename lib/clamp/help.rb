@@ -41,8 +41,8 @@ module Clamp
 
     def help(invocation_path, builder = Builder.new)
       help = builder
-      help.add_usage(invocation_path, usage_descriptions)
       help.add_description(description)
+      help.add_usage(invocation_path, usage_descriptions)
       help.add_list(Clamp.message(:parameters_heading), parameters) if has_parameters?
       help.add_list(Clamp.message(:subcommands_heading), recognised_subcommands) if has_subcommands?
       help.add_list(Clamp.message(:options_heading), recognised_options)
@@ -91,8 +91,8 @@ module Clamp
       def add_description(description)
         return unless description
 
+        line description
         line
-        line description.gsub(/^/, "  ")
       end
 
       DETAIL_FORMAT = "    %-29s %s"

@@ -919,23 +919,21 @@ describe Clamp::Command do
   end
 
   context "with a banner" do
-
-    given_command("punt") do
-
-      banner <<-TEXT
+    banner_text =
+      <<~TEXT
         Punt is an example command.  It doesn't do much, really.
-
         The prefix at the beginning of this description should be normalised
         to two spaces.
       TEXT
 
+    given_command("punt") do
+      banner banner_text
     end
 
     describe "#help" do
 
       it "includes the banner" do
-        expect(command.help).to match(/^  Punt is an example command/)
-        expect(command.help).to match(/^  The prefix/)
+        expect(command.help).to match(/#{banner_text}\nUsage:\n/)
       end
 
     end
