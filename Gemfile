@@ -8,7 +8,7 @@ group :development do
   gem "guard-rspec", "~> 4.7", require: false
   gem "highline"
   gem "listen", "~> 3.0"
-  gem "rake", "~> 12.3"
+  gem "rake", "~> 13.0"
   gem "rubocop", "~> 0.89.0", require: false
 end
 
