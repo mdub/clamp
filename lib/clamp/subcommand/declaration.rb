@@ -33,7 +33,7 @@ module Clamp
           return nil unless command_class
 
           subcommand = command_class.find_subcommand(name)
-          subcommand&.subcommand_class if subcommand
+          subcommand&.subcommand_class
         end
       end
 
