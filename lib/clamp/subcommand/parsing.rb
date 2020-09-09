@@ -13,6 +13,7 @@ module Clamp
 
       def parse_subcommand
         return false unless self.class.has_subcommands?
+
         extend(Subcommand::Execution)
       end
 

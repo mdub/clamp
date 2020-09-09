@@ -33,7 +33,9 @@ module Clamp
 
       def parameter_buffer_limit
         return 0 unless Clamp.allow_options_after_parameters
+
         return Float::INFINITY if inheritable_parameters.any?(&:multivalued?)
+
         inheritable_parameters.size
       end
 
@@ -41,6 +43,7 @@ module Clamp
 
       def superclass_inheritable_parameters
         return [] unless superclass.respond_to?(:inheritable_parameters, true)
+
         superclass.inheritable_parameters
       end
 

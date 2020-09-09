@@ -14,7 +14,7 @@ module Clamp
       @declared_usage_descriptions << usage
     end
 
-    attr_reader :declared_usage_descriptions
+    attr_reader :declared_usage_descriptions, :description
 
     def description=(description)
       @description = description.dup
@@ -28,8 +28,6 @@ module Clamp
     def banner(description)
       self.description = description
     end
-
-    attr_reader :description
 
     def derived_usage_description
       parts = ["[OPTIONS]"]
@@ -84,7 +82,7 @@ module Clamp
       end
 
       def add_usage(invocation_path, usage_descriptions)
-        line Clamp.message(:usage_heading) + ":"
+        line "#{Clamp.message(:usage_heading)}:"
         usage_descriptions.each do |usage|
           line "    #{invocation_path} #{usage}".rstrip
         end
@@ -92,11 +90,12 @@ module Clamp
 
       def add_description(description)
         return unless description
+
         line
         line description.gsub(/^/, "  ")
       end
 
-      DETAIL_FORMAT = "    %-29s %s".freeze
+      DETAIL_FORMAT = "    %-29s %s"
 
       def add_list(heading, items)
         line
