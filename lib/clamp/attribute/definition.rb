@@ -95,7 +95,9 @@ module Clamp
           ("$#{@environment_variable}" if defined?(@environment_variable)),
           (@default_value.inspect if defined?(@default_value))
         ].compact
+
         return nil if default_sources.empty?
+
         "#{Clamp.message(:default)}: " + default_sources.join(", #{Clamp.message(:or)} ")
       end
 

@@ -70,6 +70,7 @@ module Clamp
         return if self.defined?
         return if attribute.environment_variable.nil?
         return unless ENV.key?(attribute.environment_variable)
+
         # Set the parameter value if it's environment variable is present
         value = ENV[attribute.environment_variable]
         begin

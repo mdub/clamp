@@ -9,7 +9,7 @@ group :development do
   gem "highline"
   gem "listen", "~> 3.0"
   gem "rake", "~> 12.3"
-  gem "rubocop", "~> 0.57.2", "<= 0.58", require: false
+  gem "rubocop", "~> 0.89.0", require: false
 end
 
 group :test do

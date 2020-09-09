@@ -30,6 +30,7 @@ module Clamp
 
       def define_default_for(attribute)
         return false if attribute.default_value.nil?
+
         define_method(attribute.default_method) do
           attribute.default_value
         end

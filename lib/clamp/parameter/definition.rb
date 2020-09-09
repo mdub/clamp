@@ -32,19 +32,22 @@ module Clamp
 
       def consume(arguments)
         raise ArgumentError, Clamp.message(:no_value_provided) if required? && arguments.empty?
+
         arguments.shift(multivalued? ? arguments.length : 1)
       end
 
       private
 
-      ELLIPSIS_SUFFIX = / \.\.\.$/
-      OPTIONAL = /^\[(.*)\]/
+      ELLIPSIS_SUFFIX = / \.\.\.$/.freeze
+      OPTIONAL = /^\[(.*)\]/.freeze
 
-      VALID_ATTRIBUTE_NAME = /^[a-z0-9_]+$/
+      VALID_ATTRIBUTE_NAME = /^[a-z0-9_]+$/.freeze
 
       def infer_attribute_name
         inferred_name = name.downcase.tr("-", "_").sub(ELLIPSIS_SUFFIX, "").sub(OPTIONAL) { Regexp.last_match(1) }
+
         raise "cannot infer attribute_name from #{name.inspect}" unless inferred_name =~ VALID_ATTRIBUTE_NAME
+
         inferred_name += "_list" if multivalued?
         inferred_name
       end
