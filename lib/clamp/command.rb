@@ -80,6 +80,14 @@ module Clamp
       self.class.help(invocation_path)
     end
 
+    # Get parsed options as Hash
+    #
+    def options
+      self.class.declared_options.map do |option|
+        [option.attribute_name.to_sym, public_send(option.read_method)]
+      end.to_h
+    end
+
     # Abort with subcommand missing usage error
     #
     # @ param [String] name subcommand_name
