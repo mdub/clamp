@@ -565,6 +565,22 @@ describe Clamp::Command do
 
     end
 
+    describe "#options" do
+      before do
+        command.parse(%w[--flavour strawberry --nuts --scoops 42 --color blue])
+      end
+
+      it "returns Hash of options" do
+        expect(command.options).to eq(
+          flavour: "strawberry",
+          nuts: true,
+          scoops: 42,
+          color: "blue",
+          help: nil
+        )
+      end
+    end
+
   end
 
   context "with an explicit --help option declared" do
