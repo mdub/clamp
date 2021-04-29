@@ -46,7 +46,7 @@ module Clamp
       def infer_attribute_name
         inferred_name = name.downcase.tr("-", "_").sub(ELLIPSIS_SUFFIX, "").sub(OPTIONAL) { Regexp.last_match(1) }
 
-        raise "cannot infer attribute_name from #{name.inspect}" unless inferred_name =~ VALID_ATTRIBUTE_NAME
+        raise "cannot infer attribute_name from #{name.inspect}" unless inferred_name.match? VALID_ATTRIBUTE_NAME
 
         inferred_name += "_list" if multivalued?
         inferred_name

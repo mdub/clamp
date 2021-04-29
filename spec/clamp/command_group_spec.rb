@@ -29,17 +29,27 @@ describe Clamp::Command do
 
     end
 
-    it "delegates to sub-commands" do
+    describe "flip command" do
+      before do
+        command.run(["flip"])
+      end
 
-      command.run(["flip"])
-      expect(stdout).to match(/FLIPPED/)
-
-      command.run(["flop"])
-      expect(stdout).to match(/FLOPPED/)
-
+      it "delegates to sub-commands" do
+        expect(stdout).to match(/FLIPPED/)
+      end
     end
 
-    context "executed with no subcommand" do
+    describe "flop command" do
+      before do
+        command.run(["flop"])
+      end
+
+      it "delegates to sub-commands" do
+        expect(stdout).to match(/FLOPPED/)
+      end
+    end
+
+    context "when executed with no subcommand" do
 
       it "triggers help" do
         expect do
@@ -56,10 +66,7 @@ describe Clamp::Command do
       end
 
       it "lists subcommands" do
-        help = command.help
-        expect(help).to match(/Subcommands:/)
-        expect(help).to match(/flip +flip it/)
-        expect(help).to match(/flop +flop it/)
+        expect(command.help).to match(/Subcommands:\n +flip +flip it\n +flop +flop it/)
       end
 
       it "handles new lines in subcommand descriptions" do
@@ -95,13 +102,27 @@ describe Clamp::Command do
 
     end
 
-    it "responds to both aliases" do
+    describe "the first alias" do
 
-      command.run(["say", "boo"])
-      expect(stdout).to match(/boo/)
+      before do
+        command.run(["say", "boo"])
+      end
 
-      command.run(["talk", "jive"])
-      expect(stdout).to match(/jive/)
+      it "responds to it" do
+        expect(stdout).to match(/boo/)
+      end
+
+    end
+
+    describe "the second alias" do
+
+      before do
+        command.run(["talk", "jive"])
+      end
+
+      it "responds to it" do
+        expect(stdout).to match(/jive/)
+      end
 
     end
 
@@ -167,7 +188,7 @@ describe Clamp::Command do
 
     end
 
-    context "executed with no subcommand" do
+    context "when executed with no subcommand" do
 
       it "invokes the default subcommand" do
         command.run([])
@@ -192,7 +213,7 @@ describe Clamp::Command do
 
     end
 
-    context "executed with no subcommand" do
+    context "when executed with no subcommand" do
 
       it "invokes the default subcommand" do
         command.run([])
@@ -203,24 +224,26 @@ describe Clamp::Command do
 
   end
 
-  context "declaring a default subcommand after subcommands" do
+  context "when declaring a default subcommand after subcommands" do
+
+    let(:command) do
+      Class.new(Clamp::Command) do
+
+        subcommand "status", "Show status" do
+
+          def execute
+            puts "All good!"
+          end
+
+        end
+
+      end
+    end
 
     it "is not supported" do
 
       expect do
-        Class.new(Clamp::Command) do
-
-          subcommand "status", "Show status" do
-
-            def execute
-              puts "All good!"
-            end
-
-          end
-
-          self.default_subcommand = "status"
-
-        end
+        command.default_subcommand = "status"
       end.to raise_error(/default_subcommand must be defined before subcommands/)
 
     end
@@ -251,18 +274,18 @@ describe Clamp::Command do
 
     it "allows the parameter to be specified first" do
       command.run(["dummy", "spit"])
-      expect(stdout.strip).to eql "spat the dummy"
+      expect(stdout.strip).to eq "spat the dummy"
     end
 
     it "passes the parameter down the stack" do
       command.run(["money", "say", "loud"])
-      expect(stdout.strip).to eql "MONEY"
+      expect(stdout.strip).to eq "MONEY"
     end
 
     it "shows parameter in usage help" do
       command.run(["stuff", "say", "loud", "--help"])
     rescue Clamp::HelpWanted => e
-      expect(e.command.invocation_path).to eql("with THING say loud")
+      expect(e.command.invocation_path).to eq "with THING say loud"
     end
 
   end
@@ -336,7 +359,7 @@ describe Clamp::Command do
 
     it "only parses options once" do
       command.run(["--json", '{"a":"b"}', "woohoohoo"])
-      expect(stdout).to eql "parsing!"
+      expect(stdout).to eq "parsing!"
     end
 
   end
@@ -376,19 +399,16 @@ describe Clamp::Command do
       command_class.new("foo")
     end
 
-    it "should signal no such subcommand usage error" do
-      expect { command.run(["foo"]) }.to raise_error(Clamp::UsageError) do |exception|
-        expect(exception.message).to eq "No such sub-command 'foo'"
-      end
+    it "signals no such subcommand usage error" do
+      expect { command.run(["foo"]) }.to raise_error(Clamp::UsageError, "No such sub-command 'foo'")
     end
 
-    it "should execute the subcommand missing method" do
+    it "executes the subcommand missing method" do
       command.extend subcommand_missing
-      expect { command.run(["foo"]) }.to raise_error(SystemExit)
-      expect(stderr).to match(/there is no such thing/)
+      expect { command.run(["foo"]) }.to raise_error(SystemExit, /there is no such thing/)
     end
 
-    it "should use the subcommand class returned from subcommand_missing" do
+    it "uses the subcommand class returned from subcommand_missing" do
       command.extend subcommand_missing_with_return
       command.run(["foo"])
       expect(stdout).to match(/known subcommand/)
@@ -409,7 +429,7 @@ describe Clamp::Command do
 
     it "allows options after the subcommand" do
       command.run(%w[hop --direction south])
-      expect(stdout).to eql "Hopping south\n"
+      expect(stdout).to eq "Hopping south\n"
     end
 
   end

@@ -7,7 +7,7 @@ require "pry-byebug"
 
 RSpec.configure do |config|
 
-  config.around(:each) do |example|
+  config.around do |example|
     example.run
   rescue SystemExit => e
     raise "Unexpected exit with status #{e.status}"

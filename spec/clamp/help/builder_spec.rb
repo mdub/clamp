@@ -30,32 +30,50 @@ describe Clamp::Help::Builder do
 
   context "with multiple rows" do
 
-    it "arranges them in two columns" do
+    before do
+
       builder.row("foo", "bar")
       builder.row("flibble", "blurk")
       builder.row("x", "y")
-      expect(output.lines).to eq [
+
+    end
+
+    let(:expected_output) do
+      [
         "    foo        bar\n",
         "    flibble    blurk\n",
         "    x          y\n"
       ]
     end
 
+    it "arranges them in two columns" do
+      expect(output.lines).to eq expected_output
+    end
+
   end
 
   context "with a mixture of lines and rows" do
 
-    it "still arranges them in two columns" do
+    before do
+
       builder.line("ABCDEFGHIJKLMNOP")
       builder.row("flibble", "blurk")
       builder.line("Another section heading")
       builder.row("x", "y")
-      expect(output.lines).to eq [
+
+    end
+
+    let(:expected_output) do
+      [
         "ABCDEFGHIJKLMNOP\n",
         "    flibble    blurk\n",
         "Another section heading\n",
         "    x          y\n"
       ]
+    end
+
+    it "still arranges them in two columns" do
+      expect(output.lines).to eq expected_output
     end
 
   end
