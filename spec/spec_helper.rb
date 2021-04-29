@@ -3,6 +3,7 @@
 require "rspec"
 require "clamp"
 require "stringio"
+require "pry-byebug"
 
 RSpec.configure do |config|
 
