@@ -18,13 +18,11 @@ module Clamp
 
       def set_parameters_from_command_line
         self.class.parameters.each do |parameter|
-          begin
-            parameter.consume(remaining_arguments).each do |value|
-              parameter.of(self).take(value)
-            end
-          rescue ArgumentError => e
-            signal_usage_error Clamp.message(:parameter_argument_error, param: parameter.name, message: e.message)
+          parameter.consume(remaining_arguments).each do |value|
+            parameter.of(self).take(value)
           end
+        rescue ArgumentError => e
+          signal_usage_error Clamp.message(:parameter_argument_error, param: parameter.name, message: e.message)
         end
       end
 
