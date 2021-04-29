@@ -2,6 +2,7 @@
 .bundle
 .markdownlint*
 .rvmrc
+.ruby-version
 .yardoc
 doc
 pkg/*

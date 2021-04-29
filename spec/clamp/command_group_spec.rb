@@ -260,11 +260,9 @@ describe Clamp::Command do
     end
 
     it "shows parameter in usage help" do
-      begin
-        command.run(["stuff", "say", "loud", "--help"])
-      rescue Clamp::HelpWanted => e
-        expect(e.command.invocation_path).to eql("with THING say loud")
-      end
+      command.run(["stuff", "say", "loud", "--help"])
+    rescue Clamp::HelpWanted => e
+      expect(e.command.invocation_path).to eql("with THING say loud")
     end
 
   end
