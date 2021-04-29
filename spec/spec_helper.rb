@@ -6,12 +6,10 @@ require "stringio"
 
 RSpec.configure do |config|
 
-  config.around(:each) do |example|
-    begin
-      example.run
-    rescue SystemExit => e
-      raise "Unexpected exit with status #{e.status}"
-    end
+  config.around do |example|
+    example.run
+  rescue SystemExit => e
+    raise "Unexpected exit with status #{e.status}"
   end
 
 end

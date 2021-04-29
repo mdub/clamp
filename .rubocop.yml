@@ -1,5 +1,10 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   NewCops: enable
 
 Layout/LineLength:
@@ -61,4 +66,7 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 
 Style/WordArray:
+  Enabled: false
+
+RSpec/NestedGroups:
   Enabled: false

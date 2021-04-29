@@ -40,17 +40,17 @@ describe Clamp::Command do
 
     it "still works" do
       command.run(%w[say foo])
-      expect(stdout).to eql("foo\n")
+      expect(stdout).to eq "foo\n"
     end
 
     it "honours options after positional arguments" do
       command.run(%w[say blah --verbose])
-      expect(stdout).to eql("blahblahblah\n")
+      expect(stdout).to eq "blahblahblah\n"
     end
 
     it "honours options declared on subcommands" do
       command.run(%w[say --loud blah])
-      expect(stdout).to eql("BLAH\n")
+      expect(stdout).to eq "BLAH\n"
     end
 
   end

@@ -4,52 +4,68 @@ require "spec_helper"
 
 describe Clamp::Parameter::Definition do
 
-  context "normal" do
+  context "when regular" do
 
     let(:parameter) do
       described_class.new("COLOR", "hue of choice")
     end
 
     it "has a name" do
-      expect(parameter.name).to eql "COLOR"
+      expect(parameter.name).to eq "COLOR"
     end
 
     it "has a description" do
-      expect(parameter.description).to eql "hue of choice"
+      expect(parameter.description).to eq "hue of choice"
     end
 
     it "is single-valued" do
-      expect(parameter).to_not be_multivalued
+      expect(parameter).not_to be_multivalued
     end
 
     describe "#attribute_name" do
 
       it "is derived from the name" do
-        expect(parameter.attribute_name).to eql "color"
+        expect(parameter.attribute_name).to eq "color"
       end
 
       it "can be overridden" do
         parameter = described_class.new("COLOR", "hue of choice", attribute_name: "hue")
-        expect(parameter.attribute_name).to eql "hue"
+        expect(parameter.attribute_name).to eq "hue"
       end
 
     end
 
     describe "#consume" do
 
-      it "consumes one argument" do
-        arguments = %w[a b c]
-        expect(parameter.consume(arguments)).to eql ["a"]
-        expect(arguments).to eql %w[b c]
+      subject(:consume) { parameter.consume(arguments) }
+
+      context "with arguments" do
+        let(:arguments) { %w[a b c] }
+
+        it "returns one consumed argument" do
+          expect(consume).to eq ["a"]
+        end
+
+        describe "arguments after consume" do
+
+          before do
+            consume
+          end
+
+          it "has only non-consumed" do
+            expect(arguments).to eq %w[b c]
+          end
+
+        end
+
       end
 
-      describe "with no arguments" do
+      context "without arguments" do
+
+        let(:arguments) { [] }
 
         it "raises an Argument error" do
-          arguments = []
-          expect do
-            parameter.consume(arguments)
-          end.to raise_error(ArgumentError)
+          expect { consume }.to raise_error(ArgumentError)
         end
 
       end
@@ -58,37 +74,55 @@ describe Clamp::Parameter::Definition do
 
   end
 
-  context "optional (name in square brackets)" do
+  context "when optional (name in square brackets)" do
 
     let(:parameter) do
       described_class.new("[COLOR]", "hue of choice")
     end
 
     it "is single-valued" do
-      expect(parameter).to_not be_multivalued
+      expect(parameter).not_to be_multivalued
     end
 
     describe "#attribute_name" do
 
       it "omits the brackets" do
-        expect(parameter.attribute_name).to eql "color"
+        expect(parameter.attribute_name).to eq "color"
       end
 
     end
 
     describe "#consume" do
 
-      it "consumes one argument" do
-        arguments = %w[a b c]
-        expect(parameter.consume(arguments)).to eql ["a"]
-        expect(arguments).to eql %w[b c]
+      subject(:consume) { parameter.consume(arguments) }
+
+      context "with arguments" do
+
+        let(:arguments) { %w[a b c] }
+
+        it "returns one consumed argument" do
+          expect(consume).to eq ["a"]
+        end
+
+        describe "arguments after consume" do
+
+          before do
+            consume
+          end
+
+          it "has only non-consumed" do
+            expect(arguments).to eq %w[b c]
+          end
+
+        end
       end
 
-      describe "with no arguments" do
+      context "without arguments" do
+
+        let(:arguments) { [] }
 
         it "consumes nothing" do
-          arguments = []
-          expect(parameter.consume(arguments)).to eql []
+          expect(consume).to be_empty
         end
 
       end
@@ -97,7 +131,7 @@ describe Clamp::Parameter::Definition do
 
   end
 
-  context "list (name followed by ellipsis)" do
+  context "when list (name followed by ellipsis)" do
 
     let(:parameter) do
       described_class.new("FILE ...", "files to process")
@@ -110,7 +144,7 @@ describe Clamp::Parameter::Definition do
     describe "#attribute_name" do
 
       it "gets a _list suffix" do
-        expect(parameter.attribute_name).to eql "file_list"
+        expect(parameter.attribute_name).to eq "file_list"
       end
 
     end
@@ -118,26 +152,43 @@ describe Clamp::Parameter::Definition do
     describe "#append_method" do
 
       it "is derived from the attribute_name" do
-        expect(parameter.append_method).to eql "append_to_file_list"
+        expect(parameter.append_method).to eq "append_to_file_list"
       end
 
     end
 
     describe "#consume" do
 
-      it "consumes all the remaining arguments" do
-        arguments = %w[a b c]
-        expect(parameter.consume(arguments)).to eql %w[a b c]
-        expect(arguments).to eql []
+      subject(:consume) { parameter.consume(arguments) }
+
+      context "with arguments" do
+
+        let(:arguments) { %w[a b c] }
+
+        it "returns all the consumed arguments" do
+          expect(consume).to eq %w[a b c]
+        end
+
+        describe "arguments after consume" do
+
+          before do
+            consume
+          end
+
+          it "empty" do
+            expect(arguments).to be_empty
+          end
+
+        end
+
       end
 
-      describe "with no arguments" do
+      describe "without arguments" do
+
+        let(:arguments) { [] }
 
         it "raises an Argument error" do
-          arguments = []
-          expect do
-            parameter.consume(arguments)
-          end.to raise_error(ArgumentError)
+          expect { consume }.to raise_error(ArgumentError)
         end
 
       end
@@ -153,7 +204,7 @@ describe Clamp::Parameter::Definition do
       describe "#attribute_name" do
 
         it "is the specified one" do
-          expect(parameter.attribute_name).to eql "config_settings"
+          expect(parameter.attribute_name).to eq "config_settings"
         end
 
       end
@@ -162,7 +213,7 @@ describe Clamp::Parameter::Definition do
 
   end
 
-  context "optional list" do
+  context "when optional list" do
 
     let(:parameter) do
       described_class.new("[FILES] ...", "files to process")
@@ -175,7 +226,7 @@ describe Clamp::Parameter::Definition do
     describe "#attribute_name" do
 
       it "gets a _list suffix" do
-        expect(parameter.attribute_name).to eql "files_list"
+        expect(parameter.attribute_name).to eq "files_list"
       end
 
     end
@@ -183,7 +234,7 @@ describe Clamp::Parameter::Definition do
     describe "#default_value" do
 
       it "is an empty list" do
-        expect(parameter.default_value).to eql []
+        expect(parameter.default_value).to be_empty
       end
 
     end
@@ -191,7 +242,7 @@ describe Clamp::Parameter::Definition do
     describe "#help" do
 
       it "does not include default" do
-        expect(parameter.help_rhs).to_not include("default:")
+        expect(parameter.help_rhs).not_to include("default:")
       end
 
     end
@@ -205,7 +256,7 @@ describe Clamp::Parameter::Definition do
       describe "#default_value" do
 
         it "is that specified" do
-          expect(parameter.default_value).to eql %w[a b c]
+          expect(parameter.default_value).to eq %w[a b c]
         end
 
       end
@@ -220,17 +271,36 @@ describe Clamp::Parameter::Definition do
 
       describe "#consume" do
 
-        it "consumes all the remaining arguments" do
-          arguments = %w[a b c]
-          expect(parameter.consume(arguments)).to eql %w[a b c]
-          expect(arguments).to eql []
+        subject(:consume) { parameter.consume(arguments) }
+
+        context "with arguments" do
+
+          let(:arguments) { %w[a b c] }
+
+          it "returns all the consumed arguments" do
+            expect(consume).to eq %w[a b c]
+          end
+
+          describe "arguments after consume" do
+
+            before do
+              consume
+            end
+
+            it "empty" do
+              expect(arguments).to be_empty
+            end
+
+          end
+
         end
 
-        context "with no arguments" do
+        context "without arguments" do
+
+          let(:arguments) { [] }
 
           it "don't override defaults" do
-            arguments = []
-            expect(parameter.consume(arguments)).to eql []
+            expect(consume).to be_empty
           end
 
         end

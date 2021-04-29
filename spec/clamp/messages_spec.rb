@@ -17,28 +17,33 @@ describe Clamp::Messages do
     end
 
     it "allows setting custom messages" do
-      expect(Clamp.message(:too_many_arguments)).to eql "Way too many!"
+      expect(Clamp.message(:too_many_arguments)).to eq "Way too many!"
     end
 
     it "fallbacks to a default message" do
-      expect(Clamp.message(:no_value_provided)).to eql "no value provided"
+      expect(Clamp.message(:no_value_provided)).to eq "no value provided"
     end
 
     it "formats the message" do
-      expect(Clamp.message(:custom_message, what: "hello", whom: "Clamp")).to eql "Say hello to Clamp"
+      expect(Clamp.message(:custom_message, what: "hello", whom: "Clamp")).to eq "Say hello to Clamp"
     end
   end
 
   describe "clear_messages!" do
-    it "clears messages to the defualt state" do
-      default_msg = Clamp.message(:too_many_arguments).clone
+    let!(:default_msg) { Clamp.message(:too_many_arguments).clone }
+
+    before do
 
       Clamp.messages = {
         too_many_arguments: "Way too many!"
       }
+
       Clamp.clear_messages!
 
-      expect(Clamp.message(:too_many_arguments)).to eql default_msg
+    end
+
+    it "clears messages to the defualt state" do
+      expect(Clamp.message(:too_many_arguments)).to eq default_msg
     end
   end
 

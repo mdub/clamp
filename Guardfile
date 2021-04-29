@@ -7,7 +7,7 @@
 # directories %w(app lib config test spec features) \
 #  .select{|d| Dir.exists?(d) ? d : UI.warning("Directory #{d} does not exist")}
 
-## Note: if you are using the `directories` clause above and you are not
+## NOTE: if you are using the `directories` clause above and you are not
 ## watching the project directory ('.'), then you will want to move
 ## the Guardfile to a watched dir and symlink it back, e.g.
 #
@@ -17,7 +17,7 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
-# Note: The cmd option is now required due to the increasing number of ways
+# NOTE: The cmd option is now required due to the increasing number of ways
 #       rspec may be run, below are examples of the most common uses.
 #  * bundler: 'bundle exec rspec'
 #  * bundler binstubs: 'bin/rspec'
