@@ -24,5 +24,5 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.required_ruby_version = "~> 2.4"
+  s.required_ruby_version = ">= 2.4", "< 4"
 end
