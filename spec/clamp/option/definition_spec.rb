@@ -178,6 +178,22 @@ describe Clamp::Option::Definition do
 
     end
 
+    context "and is required" do
+
+      let(:option) do
+        described_class.new("-x", "X", "mystery option", environment_variable: "APP_X", required: true)
+      end
+
+      describe "#help" do
+
+        it "describes the environment variable as the default" do
+          expect(option.help).to eql ["-x X", %{mystery option (required, default: $APP_X)}]
+        end
+
+      end
+
+    end
+
   end
 
   context "multivalued" do

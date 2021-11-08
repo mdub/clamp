@@ -20,8 +20,8 @@ module Clamp
 
       def help_rhs
         rhs = description
-        comments = required_indicator || default_description
-        rhs += " (#{comments})" if comments
+        comments = [required_indicator, default_description].compact
+        rhs += " (#{comments.join(', ')})" unless comments.empty?
         rhs
       end
 
