@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Clamp #:nodoc:
+module Clamp # :nodoc:
 
   TRUTHY_VALUES = %w[1 yes enable on true].freeze
 

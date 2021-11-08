@@ -213,7 +213,7 @@ describe Clamp::Option::Definition do
 
     end
 
-    context "and is required" do
+    context "when it is required" do
 
       let(:option) do
         described_class.new("-x", "X", "mystery option", environment_variable: "APP_X", required: true)
