@@ -113,6 +113,49 @@ describe Clamp::Command do
 
     end
 
+    context "with :allowed values" do
+      before do
+        command.class.option "--port", "PORT", "port to listen on", allowed: [4321, "4322", :'5433']
+      end
+
+      describe "#help" do
+        it "describes the allowed values" do
+          expect(command.help).to include("port to listen on (allowed: 4321, \"4322\", :\"5433\")")
+        end
+      end
+
+      context "when value is allowed" do
+        before do
+          command.parse(%w[--port 5433])
+        end
+
+        it "recognizes value" do
+          expect(command.port).to eql :'5433'
+        end
+      end
+
+      context "when value is not allowed" do
+        before do
+          command.class.run("cmd", %w[--port 4320])
+        rescue SystemExit => e
+          @system_exit = e
+        end
+
+        it "outputs the error message" do
+          expect(stderr).to include "ERROR: option '--port': '4320' is not allowed value!"
+        end
+
+        it "outputs help" do
+          expect(stderr).to include "See: 'cmd --help'"
+        end
+
+        it "exits with a non-zero status" do
+          expect(@system_exit).to_not be_nil
+          expect(@system_exit.status).to eql 1
+        end
+      end
+    end
+
     context "without :default value" do
 
       before do
@@ -648,6 +691,49 @@ describe Clamp::Command do
 
       end
 
+    end
+
+    context "with :allowed values" do
+      before do
+        command.class.parameter "[ORIENTATION]", "direction", allowed: ["west", :south, "east", :north]
+      end
+
+      describe "#help" do
+        it "describes the allowed values" do
+          expect(command.help).to include("direction (allowed: \"west\", :south, \"east\", :north)")
+        end
+      end
+
+      context "when value is allowed" do
+        before do
+          command.parse(%w[south])
+        end
+
+        it "recognizes value" do
+          expect(command.orientation).to eql :south
+        end
+      end
+
+      context "when value is not allowed" do
+        before do
+          command.class.run("cmd", %w[up])
+        rescue SystemExit => e
+          @system_exit = e
+        end
+
+        it "outputs the error message" do
+          expect(stderr).to include "ERROR: parameter '[ORIENTATION]': 'up' is not allowed value!"
+        end
+
+        it "outputs help" do
+          expect(stderr).to include "See: 'cmd --help'"
+        end
+
+        it "exits with a non-zero status" do
+          expect(@system_exit).to_not be_nil
+          expect(@system_exit.status).to eql 1
+        end
+      end
     end
 
     context "with a block" do

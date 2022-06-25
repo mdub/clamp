@@ -55,6 +55,14 @@ module Clamp
       end
 
       def take(value)
+        if attribute.allowed_values&.any?
+          unless (coerced_value = attribute.allowed_values.find { |allowed_value| allowed_value.to_s == value })
+            raise ArgumentError, "'#{value}' is not allowed value!"
+          end
+
+          value = coerced_value
+        end
+
         if attribute.multivalued?
           command.send(attribute.append_method, value)
         else

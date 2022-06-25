@@ -33,6 +33,7 @@ module Clamp #:nodoc:
       unrecognised_option: "Unrecognised option '%<switch>s'",
       no_such_subcommand: "No such sub-command '%<name>s'",
       no_value_provided: "no value provided",
+      allowed: "allowed",
       default: "default",
       or: "or",
       required: "required",

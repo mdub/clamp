@@ -11,16 +11,24 @@ module Clamp
 
       def initialize(options)
         @attribute_name = options[:attribute_name].to_s if options.key?(:attribute_name)
+        @allowed_values = options[:allowed] if options.key?(:allowed)
         @default_value = options[:default] if options.key?(:default)
         @environment_variable = options[:environment_variable] if options.key?(:environment_variable)
         @hidden = options[:hidden] if options.key?(:hidden)
+
+        ## TODO: Test it
+        return unless @allowed_values && @default_value
+
+        return if @default_value.in?(@allowed_values)
+
+        raise ArgumentError, "Specifying a :default value outside :allowed doesn't make sense"
       end
 
-      attr_reader :description, :environment_variable
+      attr_reader :description, :environment_variable, :allowed_values
 
       def help_rhs
         rhs = description
-        comments = [required_indicator, default_description].compact
+        comments = [required_indicator, allowed_description, default_description].compact
         rhs += " (#{comments.join(', ')})" unless comments.empty?
         rhs
       end
@@ -89,6 +97,14 @@ module Clamp
       end
 
       private
+
+      def allowed_description
+        return nil unless @allowed_values
+
+        allowed_sources = @allowed_values.map(&:inspect)
+
+        "#{Clamp.message(:allowed)}: " + allowed_sources.join(", ")
+      end
 
       def default_description
         default_sources = [
