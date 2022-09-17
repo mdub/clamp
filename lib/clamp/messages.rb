@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Clamp #:nodoc:
+module Clamp # :nodoc:
 
   # Message lookup, to allow localization.
   #
