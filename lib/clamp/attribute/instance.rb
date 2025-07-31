@@ -72,7 +72,7 @@ module Clamp
         return unless ENV.key?(attribute.environment_variable)
 
         # Set the parameter value if it's environment variable is present
-        value = ENV[attribute.environment_variable]
+        value = ENV.fetch(attribute.environment_variable, nil)
         begin
           take(value)
         rescue ArgumentError => e

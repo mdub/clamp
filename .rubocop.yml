@@ -1,5 +1,4 @@
-require:
-  - rubocop-performance
+plugins:
   - rubocop-rake
   - rubocop-rspec
 
@@ -36,7 +35,7 @@ Naming/FileName:
   Exclude:
     - "bin/*"
 
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Enabled: false
 
 Style/ClassAndModuleChildren:

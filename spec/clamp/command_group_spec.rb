@@ -296,6 +296,7 @@ describe Clamp::Command do
 
       speed_options = Module.new do
         extend Clamp::Option::Declaration
+
         option "--speed", "SPEED", "how fast", default: "slowly"
       end
 

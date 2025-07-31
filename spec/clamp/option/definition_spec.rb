@@ -129,17 +129,17 @@ describe Clamp::Option::Definition do
       end
     end
 
-    describe "#flag_value" do
+    describe "#flag_set?" do
 
       describe "positive variant" do
         it "returns true" do
-          expect(option.flag_value("--force")).to be true
+          expect(option.flag_set?("--force")).to be true
         end
       end
 
       describe "negative variant" do
         it "returns false" do
-          expect(option.flag_value("--no-force")).to be false
+          expect(option.flag_set?("--no-force")).to be false
         end
       end
 

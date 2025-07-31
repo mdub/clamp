@@ -21,8 +21,6 @@ module Clamp # :nodoc:
       init_default_messages
     end
 
-    private
-
     DEFAULTS = {
       too_many_arguments: "too many arguments",
       option_required: "option '%<option>s' is required",
@@ -41,6 +39,8 @@ module Clamp # :nodoc:
       subcommands_heading: "Subcommands",
       options_heading: "Options"
     }.freeze
+
+    private
 
     def messages
       init_default_messages unless defined?(@messages)

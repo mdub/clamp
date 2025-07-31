@@ -39,8 +39,8 @@ module Clamp
         @type == :flag
       end
 
-      def flag_value(switch)
-        !(switch =~ /^--no-(.*)/ && switches.member?("--\[no-\]#{Regexp.last_match(1)}"))
+      def flag_set?(switch)
+        !(switch =~ /^--no-(.*)/ && switches.member?("--[no-]#{Regexp.last_match(1)}"))
       end
 
       def read_method
@@ -53,9 +53,10 @@ module Clamp
 
       def extract_value(switch, arguments)
         if flag?
-          flag_value(switch)
+          flag_set?(switch)
         else
           raise ArgumentError, Clamp.message(:no_value_provided) if arguments.empty?
+
           arguments.shift
         end
       end

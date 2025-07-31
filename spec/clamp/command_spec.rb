@@ -884,7 +884,7 @@ describe Clamp::Command do
       context "when neither argument nor environment variable are present" do
 
         it "uses the default" do
-          expect(command.file).to eq "/dev/null"
+          expect(command.file).to eq File::NULL
         end
 
       end
@@ -906,7 +906,7 @@ describe Clamp::Command do
           let(:args) { ["/dev/null"] }
 
           it "uses the argument" do
-            expect(command.file).to eq "/dev/null"
+            expect(command.file).to eq File::NULL
           end
 
         end
@@ -1205,7 +1205,7 @@ describe Clamp::Command do
 
       end
 
-      it "outputs the error message and exits with the specified status" do
+      it "outputs the error message and exits with the specified status" do # rubocop:disable RSpec/ExampleLength
         expect { command.class.run("cmd", []) }
           .to raise_error(
             an_instance_of(SystemExit).and(having_attributes(status: 456))
@@ -1234,7 +1234,7 @@ describe Clamp::Command do
 
       end
 
-      it "outputs the error message and help" do
+      it "outputs the error message and help" do # rubocop:disable RSpec/ExampleLength
         expect { command.class.run("cmd", []) }
           .to raise_error(
             an_instance_of(SystemExit).and(having_attributes(status: 1))

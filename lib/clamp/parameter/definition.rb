@@ -36,12 +36,12 @@ module Clamp
         arguments.shift(multivalued? ? arguments.length : 1)
       end
 
-      private
-
       ELLIPSIS_SUFFIX = / \.\.\.$/.freeze
       OPTIONAL = /^\[(.*)\]/.freeze
 
       VALID_ATTRIBUTE_NAME = /^[a-z0-9_]+$/.freeze
+
+      private
 
       def infer_attribute_name
         inferred_name = name.downcase.tr("-", "_").sub(ELLIPSIS_SUFFIX, "").sub(OPTIONAL) { Regexp.last_match(1) }
