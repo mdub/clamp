@@ -623,6 +623,16 @@ describe Clamp::Command do
 
       end
 
+      context "when no option value is provided" do
+
+        it "signals a UsageError" do
+          expect do
+            command.parse(%w[--flavour])
+          end.to raise_error(Clamp::UsageError, /^option '--flavour': no value provided/)
+        end
+
+      end
+
       context "when a bad option value is specified on the command-line" do
 
         it "signals a UsageError" do

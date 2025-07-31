@@ -1,5 +1,9 @@
 # Changelog
 
+## NEXT
+
+* Raise an error if no value is provided for a non-flag switch.
+
 ## 1.3.2 (2020-08-20)
 
 * Fix Ruby warnings.

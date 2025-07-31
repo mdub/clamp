@@ -55,6 +55,7 @@ module Clamp
         if flag?
           flag_value(switch)
         else
+          raise ArgumentError, Clamp.message(:no_value_provided) if arguments.empty?
           arguments.shift
         end
       end

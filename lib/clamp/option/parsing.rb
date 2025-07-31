@@ -47,8 +47,8 @@ module Clamp # :nodoc:
       def handle_switch(switch)
         switch = split_trailing_switches(switch)
         option = find_option(switch)
-        value = option.extract_value(switch, remaining_arguments)
         begin
+          value = option.extract_value(switch, remaining_arguments)
           option.of(self).take(value)
         rescue ArgumentError => e
           signal_usage_error Clamp.message(:option_argument_error, switch: switch, message: e.message)
