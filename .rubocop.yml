@@ -69,3 +69,6 @@ Style/WordArray:
 
 RSpec/NestedGroups:
   Enabled: false
+
+RSpec/Output:
+  Enabled: false
