@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0 (2026-02-09)
+
+* Add support for Ruby 4.0.
+* Set up GitHub Actions for CI.
+
 ## 1.3.3 (2025-07-31)
 
 * Raise an error if no value is provided for a non-flag switch.
