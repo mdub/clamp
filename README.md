@@ -1,6 +1,7 @@
 # Clamp
 
 [![Gem Version](https://badge.fury.io/rb/clamp.png)](http://badge.fury.io/rb/clamp)
+[![CI](https://github.com/mdub/clamp/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mdub/clamp/actions/workflows/ci.yml)
 
 "Clamp" is a minimal framework for command-line utilities.
 
