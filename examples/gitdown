@@ -68,4 +68,15 @@ module GitDown
 
 end
 
+# Generate shell completion scripts:
+#   gitdown --completion bash
+#   gitdown --completion fish
+#   gitdown --completion zsh
+if ARGV.first == "--completion"
+  require "clamp/completion"
+  shell = (ARGV[1] || ENV.fetch("SHELL", "bash")[/\w+$/]).to_sym
+  puts GitDown::MainCommand.generate_completion(shell, "gitdown")
+  exit
+end
+
 GitDown::MainCommand.run
