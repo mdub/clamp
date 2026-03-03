@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
     It handles parsing of command-line options, and generation of usage help.
   TEXT
 
-  s.files         = `git ls-files`.split("\n")
+  s.files = Dir["lib/**/*", "examples/**/*", "spec/**/*", "*.md", "LICENSE", "Rakefile", "Gemfile", "#{s.name}.gemspec"]
   s.require_paths = ["lib"]
 
   s.required_ruby_version = ">= 2.5", "< 5"
