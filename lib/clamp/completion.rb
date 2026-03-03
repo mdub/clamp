@@ -2,7 +2,6 @@
 
 require "clamp/command"
 require "clamp/completion/fish_generator"
-require "clamp/completion/command"
 
 module Clamp
 

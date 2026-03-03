@@ -64,7 +64,6 @@ module GitDown
     subcommand "clone", "Clone a remote repository.", CloneCommand
     subcommand "pull", "Fetch and merge updates.", PullCommand
     subcommand "status", "Display status of local repository.", StatusCommand
-    subcommand "completion", "Generate shell completions.", Clamp::Completion::Command
 
   end
 
