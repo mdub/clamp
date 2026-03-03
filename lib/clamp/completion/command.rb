@@ -11,14 +11,16 @@ module Clamp
     #
     class Command < Clamp::Command
 
-      parameter "SHELL", "shell type (bash, fish, zsh)"
+      parameter "[SHELL]", "shell type or path (e.g. bash, /usr/bin/fish)",
+                default: "NONE", environment_variable: "SHELL"
 
       def execute
         root_class = context.fetch(:root_command_class) do
           raise "Clamp::Completion::Command requires 'clamp/completion' to be loaded before .run is called"
         end
         executable_name = invocation_path.split.first
-        puts root_class.generate_completion(shell.to_sym, executable_name)
+        shell_name = File.basename(shell).to_sym
+        puts root_class.generate_completion(shell_name, executable_name)
       end
 
     end
