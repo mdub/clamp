@@ -13,6 +13,16 @@ RSpec::Matchers.define :be_valid_fish_syntax do
   end
 end
 
+RSpec::Matchers.define :be_valid_zsh_syntax do
+  match do |script|
+    Tempfile.open(["completion", ".zsh"]) do |f|
+      f.write(script)
+      f.flush
+      system("zsh", "-n", f.path, out: File::NULL, err: File::NULL)
+    end
+  end
+end
+
 RSpec::Matchers.define :be_valid_bash_syntax do
   match do |script|
     Tempfile.open(["completion", ".bash"]) do |f|
@@ -160,6 +170,73 @@ describe Clamp::Completion do
     it "passes bash syntax validation" do
       skip "bash not available" unless system("bash", "--version", out: File::NULL, err: File::NULL)
       expect(script).to be_valid_bash_syntax
+    end
+
+  end
+
+  describe "zsh" do
+
+    let(:script) { command_class.generate_completion(:zsh, "myapp") }
+
+    it "returns a string" do
+      expect(script).to be_a(String)
+    end
+
+    it "includes compdef header" do
+      expect(script).to include("#compdef myapp")
+    end
+
+    it "includes option specs with mutual exclusion" do
+      expect(script).to include("(-v --verbose)")
+    end
+
+    it "includes brace expansion for short and long switches" do
+      expect(script).to include("{-v,--verbose}")
+    end
+
+    it "includes option descriptions" do
+      expect(script).to include("[be verbose]")
+    end
+
+    it "marks valued options as requiring an argument" do
+      expect(script).to match(/--format\[output format\]:/)
+    end
+
+    it "excludes hidden options" do
+      expect(script).not_to include("secret")
+    end
+
+    it "includes help option" do
+      expect(script).to include("--help")
+    end
+
+    it "includes subcommand names with descriptions" do
+      expect(script).to include("remote:manage remotes")
+    end
+
+    it "includes subcommand aliases" do
+      expect(script).to include("rm:remove a remote")
+    end
+
+    it "generates per-subcommand functions" do
+      expect(script).to include("_myapp_remote()")
+    end
+
+    it "generates nested subcommand functions" do
+      expect(script).to include("_myapp_remote_add()")
+    end
+
+    it "includes nested subcommand options" do
+      expect(script).to include("[set up tracking]")
+    end
+
+    it "uses _describe for subcommand listing" do
+      expect(script).to include("_describe")
+    end
+
+    it "passes zsh syntax validation" do
+      skip "zsh not available" unless system("zsh", "--version", out: File::NULL, err: File::NULL)
+      expect(script).to be_valid_zsh_syntax
     end
 
   end

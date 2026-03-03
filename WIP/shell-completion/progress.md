@@ -63,3 +63,19 @@
 - Added `CountAsOne: ['array']` to `.rubocop.yml` for `Metrics/ClassLength` —
   array literals containing bash template strings are conceptually one unit.
 - 36 specs, 253 total suite — all passing, rubocop clean.
+
+## Increment 3: zsh generator
+
+- Created `lib/clamp/completion/zsh_generator.rb` with:
+  - `#compdef myapp` header.
+  - Per-node functions: `_myapp`, `_myapp_remote`, `_myapp_remote_add`, etc.
+  - Subcommand nodes use `_arguments -C` with `->commands`/`->args` state dispatch.
+  - Leaf nodes use plain `_arguments` with option specs.
+  - `_describe 'command' cmds` for subcommand listings with descriptions.
+  - Option specs use zsh brace expansion and mutual exclusion:
+    `'(-v --verbose){-v,--verbose}[be verbose]'`.
+  - Valued options marked with `:type:` suffix for argument completion.
+  - Subcommand aliases listed individually in `_describe`, grouped with `|`
+    in `case` dispatch.
+- Extracted `switch_pattern` helper to keep `option_spec` under complexity limit.
+- 51 specs, 268 total suite — all passing, rubocop clean.

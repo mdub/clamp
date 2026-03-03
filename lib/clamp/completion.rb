@@ -3,6 +3,7 @@
 require "clamp/command"
 require "clamp/completion/bash_generator"
 require "clamp/completion/fish_generator"
+require "clamp/completion/zsh_generator"
 
 module Clamp
 
@@ -12,7 +13,8 @@ module Clamp
 
     GENERATORS = {
       bash: Clamp::Completion::BashGenerator,
-      fish: Clamp::Completion::FishGenerator
+      fish: Clamp::Completion::FishGenerator,
+      zsh: Clamp::Completion::ZshGenerator
     }.freeze
 
     # Raised when --completion is used; caught by Command.run.
