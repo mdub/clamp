@@ -43,3 +43,23 @@
 - Accepts full shell paths: `myapp --completion /usr/bin/fish`.
 - Hidden from help output and from generated completions.
 - 25 specs, 242 total suite — all passing, rubocop clean.
+
+## Increment 2: bash generator
+
+- Created `lib/clamp/completion/bash_generator.rb` with:
+  - `complete -F _<name> <name>` registration.
+  - Main completion function walks `COMP_WORDS` to find current subcommand path
+    (using `::` separator, e.g. `"remote::add"`).
+  - `case` statement mapping each subcommand path to its options + subcommand names.
+  - `__<name>_takes_value` helper function that knows which options require
+    arguments, used to skip option values when walking the word list and to
+    suppress completions after a valued option.
+  - `__<name>_find_subcmd` helper that walks `COMP_WORDS` to determine the
+    current subcommand path.
+  - Fallback for `_init_completion` (for systems without bash-completion).
+- Refactored: extracted `walk_command_tree` and `collect_subcommand_names` into
+  the shared `Completion` module. These are generic command-tree walkers reusable
+  by all generators.
+- Added `CountAsOne: ['array']` to `.rubocop.yml` for `Metrics/ClassLength` —
+  array literals containing bash template strings are conceptually one unit.
+- 36 specs, 253 total suite — all passing, rubocop clean.

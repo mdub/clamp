@@ -13,6 +13,16 @@ RSpec::Matchers.define :be_valid_fish_syntax do
   end
 end
 
+RSpec::Matchers.define :be_valid_bash_syntax do
+  match do |script|
+    Tempfile.open(["completion", ".bash"]) do |f|
+      f.write(script)
+      f.flush
+      system("bash", "-n", f.path, out: File::NULL, err: File::NULL)
+    end
+  end
+end
+
 describe Clamp::Completion do
 
   let(:command_class) do
@@ -87,6 +97,69 @@ describe Clamp::Completion do
     rescue SystemExit # rubocop:disable Lint/SuppressedException
     ensure
       expect(stderr).to include("unsupported shell")
+    end
+
+  end
+
+  describe "bash" do
+
+    let(:script) { command_class.generate_completion(:bash, "myapp") }
+
+    it "returns a string" do
+      expect(script).to be_a(String)
+    end
+
+    it "includes long option switches" do
+      expect(script).to include("--verbose")
+    end
+
+    it "includes valued option switches" do
+      expect(script).to include("--format")
+    end
+
+    it "includes short switches" do
+      expect(script).to include("-v")
+    end
+
+    it "excludes hidden options" do
+      expect(script).not_to include("secret")
+    end
+
+    it "includes help option" do
+      expect(script).to include("--help")
+    end
+
+    it "includes subcommand names" do
+      expect(script).to include("remote")
+    end
+
+    it "includes other subcommand names" do
+      expect(script).to include("status")
+    end
+
+    it "includes subcommand aliases" do
+      expect(script).to include("rm")
+    end
+
+    it "includes nested subcommand options" do
+      expect(script).to include("--tracking")
+    end
+
+    it "registers the completion function" do
+      expect(script).to include("complete -F _myapp myapp")
+    end
+
+    it "lists valued options in takes_value function" do
+      expect(script).to include("--format) return 0")
+    end
+
+    it "excludes flags from takes_value function" do
+      expect(script).not_to include("--verbose) return 0")
+    end
+
+    it "passes bash syntax validation" do
+      skip "bash not available" unless system("bash", "--version", out: File::NULL, err: File::NULL)
+      expect(script).to be_valid_bash_syntax
     end
 
   end

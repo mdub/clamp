@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "clamp/command"
+require "clamp/completion/bash_generator"
 require "clamp/completion/fish_generator"
 
 module Clamp
@@ -10,6 +11,7 @@ module Clamp
   module Completion
 
     GENERATORS = {
+      bash: Clamp::Completion::BashGenerator,
       fish: Clamp::Completion::FishGenerator
     }.freeze
 
@@ -50,6 +52,32 @@ module Clamp
     # Options visible in completion (excludes hidden).
     def visible_options(command_class)
       command_class.recognised_options.reject(&:hidden?)
+    end
+
+    # Walk the command tree depth-first, yielding (command_class, path) pairs.
+    # Tracks visited classes to handle reuse (e.g. subcommands without a block).
+    def walk_command_tree(command_class, path = "", visited = Set.new, &block)
+      return if visited.include?(command_class)
+
+      visited |= [command_class]
+      yield command_class, path
+      return unless command_class.has_subcommands?
+
+      command_class.recognised_subcommands.each do |sub|
+        sub.names.each do |name|
+          sub_path = path.empty? ? name : "#{path}::#{name}"
+          walk_command_tree(sub.subcommand_class, sub_path, visited, &block)
+        end
+      end
+    end
+
+    # Collect all subcommand names across the command tree.
+    def collect_subcommand_names(command_class)
+      names = []
+      walk_command_tree(command_class) do |cmd, _path|
+        cmd.recognised_subcommands.each { |sub| names.concat(sub.names) } if cmd.has_subcommands?
+      end
+      names.uniq
     end
 
   end
