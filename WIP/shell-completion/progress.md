@@ -79,3 +79,17 @@
     in `case` dispatch.
 - Extracted `switch_pattern` helper to keep `option_spec` under complexity limit.
 - 51 specs, 268 total suite — all passing, rubocop clean.
+
+## Increment 4a: refactor fish generator to use shared walk_command_tree
+
+- Redesigned `walk_command_tree` in the shared `Completion` module:
+  - Path is now an array of `Subcommand::Definition` objects (was string).
+  - Always yields, even for revisited classes (with `has_children=false`).
+  - Yields 3 args: `(command_class, path, has_children)`.
+- Rewrote `FishGenerator#generate` to use `walk_command_tree`, removing
+  the private `generate_command` and `generate_subcommands` methods.
+  `condition_for` now takes definition objects and calls `.names` on each.
+- Updated `BashGenerator` (`completions_case`, `takes_value_function`) to
+  use the new 3-arg yield, deriving the `::` path string from definitions.
+- `ZshGenerator` has its own traversal and was not affected.
+- 51 specs, 268 total suite — all passing, rubocop clean.

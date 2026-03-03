@@ -91,10 +91,11 @@ module Clamp
 
       def completions_case(var)
         entries = {}
-        Completion.walk_command_tree(@command_class) do |cmd, path|
+        Completion.walk_command_tree(@command_class) do |cmd, path, has_children|
+          path_str = path.map { |sub| sub.names.first }.join("::")
           words = Completion.visible_options(cmd).flat_map { |o| Completion.expanded_switches(o) }
-          cmd.recognised_subcommands.each { |sub| words.concat(sub.names) } if cmd.has_subcommands?
-          entries[path] = words.join(" ")
+          cmd.recognised_subcommands.each { |sub| words.concat(sub.names) } if has_children
+          entries[path_str] = words.join(" ")
         end
         lines = ["    case \"#{var}\" in"]
         entries.each do |path, words|
@@ -109,9 +110,10 @@ module Clamp
 
       def takes_value_function
         entries = {}
-        Completion.walk_command_tree(@command_class) do |cmd, path|
-          entries[path] = Completion.visible_options(cmd).reject(&:flag?)
-                                    .flat_map { |o| Completion.expanded_switches(o) }
+        Completion.walk_command_tree(@command_class) do |cmd, path, _has_children|
+          path_str = path.map { |sub| sub.names.first }.join("::")
+          entries[path_str] = Completion.visible_options(cmd).reject(&:flag?)
+                                        .flat_map { |o| Completion.expanded_switches(o) }
         end
         lines = [
           "__#{function_name}_takes_value() {",

@@ -56,28 +56,26 @@ module Clamp
       command_class.recognised_options.reject(&:hidden?)
     end
 
-    # Walk the command tree depth-first, yielding (command_class, path) pairs.
-    # Tracks visited classes to handle reuse (e.g. subcommands without a block).
-    def walk_command_tree(command_class, path = "", visited = Set.new, &block)
-      return if visited.include?(command_class)
-
+    # Walk the command tree depth-first, yielding (command_class, path, has_children).
+    # Path is an array of Subcommand::Definition objects.
+    # Always yields, even for revisited classes (with has_children=false).
+    def walk_command_tree(command_class, path = [], visited = Set.new, &block)
+      fresh = !visited.include?(command_class)
       visited |= [command_class]
-      yield command_class, path
-      return unless command_class.has_subcommands?
+      has_children = command_class.has_subcommands? && fresh
+      yield command_class, path, has_children
+      return unless has_children
 
       command_class.recognised_subcommands.each do |sub|
-        sub.names.each do |name|
-          sub_path = path.empty? ? name : "#{path}::#{name}"
-          walk_command_tree(sub.subcommand_class, sub_path, visited, &block)
-        end
+        walk_command_tree(sub.subcommand_class, path + [sub], visited, &block)
       end
     end
 
     # Collect all subcommand names across the command tree.
     def collect_subcommand_names(command_class)
       names = []
-      walk_command_tree(command_class) do |cmd, _path|
-        cmd.recognised_subcommands.each { |sub| names.concat(sub.names) } if cmd.has_subcommands?
+      walk_command_tree(command_class) do |cmd, _path, has_children|
+        cmd.recognised_subcommands.each { |sub| names.concat(sub.names) } if has_children
       end
       names.uniq
     end
