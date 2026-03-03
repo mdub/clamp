@@ -13,6 +13,7 @@ We're working in TDD increments. Each increment:
 - Consider refactoring
 - Fix Rubocop warnings
 - Append notes to `progress.md`
+- Check with user
 - Commit to the feature branch
 
 ## Files

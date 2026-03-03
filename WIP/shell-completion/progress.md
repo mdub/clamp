@@ -31,3 +31,15 @@
 - Updated `examples/gitdown` to use the subcommand approach instead of the
   manual `--completion` flag.
 - 18 specs, 235 total suite — all passing, rubocop clean.
+
+## Increment 1c: implicit --completion option
+
+- Added `--completion SHELL` as a hidden option on all commands, following
+  the `--help` pattern: option raises `Clamp::Completion::Wanted`, caught
+  by `.run`.
+- Prepends `WithCompletionOption` onto `Clamp::Option::Declaration`, hooking
+  into `declare_implicit_help_option` to also declare `--completion`.
+- Works on commands without subcommands: `myapp --completion fish`.
+- Accepts full shell paths: `myapp --completion /usr/bin/fish`.
+- Hidden from help output and from generated completions.
+- 25 specs, 242 total suite — all passing, rubocop clean.

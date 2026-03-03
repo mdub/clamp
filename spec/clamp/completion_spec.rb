@@ -41,6 +41,56 @@ describe Clamp::Completion do
 
   end
 
+  describe "--shell-completions option" do
+
+    include OutputCapture
+
+    let(:simple_command) do
+      Class.new(Clamp::Command) do
+        option ["-v", "--verbose"], :flag, "be verbose"
+        parameter "FILE", "input file"
+        def execute; end
+      end
+    end
+
+    it "generates completions for a command without subcommands" do
+      simple_command.run("myapp", ["--shell-completions", "fish"])
+      expect(stdout).to include("complete -c myapp")
+    end
+
+    it "includes the command's options" do
+      simple_command.run("myapp", ["--shell-completions", "fish"])
+      expect(stdout).to include("-l verbose")
+    end
+
+    it "accepts a full shell path" do
+      simple_command.run("myapp", ["--shell-completions", "/usr/bin/fish"])
+      expect(stdout).to include("complete -c myapp")
+    end
+
+    it "is hidden from help output" do
+      expect(simple_command.help("myapp")).not_to include("--shell-completions")
+    end
+
+    it "does not include itself in generated completions" do
+      simple_command.run("myapp", ["--shell-completions", "fish"])
+      expect(stdout).not_to include("--shell-completions")
+    end
+
+    it "exits for unsupported shells" do
+      expect { simple_command.run("myapp", ["--shell-completions", "powershell"]) }
+        .to raise_error(SystemExit)
+    end
+
+    it "reports unsupported shells to stderr" do
+      simple_command.run("myapp", ["--shell-completions", "powershell"])
+    rescue SystemExit # rubocop:disable Lint/SuppressedException
+    ensure
+      expect(stderr).to include("unsupported shell")
+    end
+
+  end
+
   describe Clamp::Completion::Command do
 
     include OutputCapture

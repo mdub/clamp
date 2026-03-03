@@ -14,6 +14,20 @@ module Clamp
       fish: Clamp::Completion::FishGenerator
     }.freeze
 
+    # Raised when --completion is used; caught by Command.run.
+    #
+    class Wanted < StandardError
+
+      def initialize(command, shell)
+        super("completion requested")
+        @command = command
+        @shell = shell
+      end
+
+      attr_reader :command, :shell
+
+    end
+
     module_function
 
     def generate(command_class, shell, executable_name)
@@ -52,24 +66,71 @@ module Clamp
       Clamp::Completion.generate(self, shell, executable_name)
     end
 
-    # Stash the root command class in context,
-    # so that Completion::Command can find it at execution time.
+    # Adds --completion option and handles the Wanted exception.
     #
-    module RunWithCompletionContext
+    module RunWithCompletion
 
       def run(invocation_path = File.basename($PROGRAM_NAME), arguments = ARGV, context = {})
         context[:root_command_class] ||= self
         super
+      rescue Clamp::Completion::Wanted => e
+        shell_name = File.basename(e.shell).to_sym
+        begin
+          puts generate_completion(shell_name, invocation_path)
+        rescue ArgumentError => ex
+          $stderr.puts "ERROR: #{ex.message}"
+          exit(1)
+        end
       end
 
     end
 
     class << self
 
-      prepend RunWithCompletionContext
+      prepend RunWithCompletion
 
     end
 
   end
 
+end
+
+module Clamp
+  module Option
+
+    # Adds implicit --shell-completions option to all commands.
+    #
+    module Declaration
+
+      # Declares --shell-completions alongside other implicit options.
+      #
+      module WithCompletionOption
+
+        def recognised_options
+          unless @implicit_completion_option_declared
+            @implicit_completion_option_declared = true
+            declare_implicit_completion_option
+          end
+          super
+        end
+
+        private
+
+        def declare_implicit_completion_option
+          return if effective_options.find { |o| o.handles?("--shell-completions") }
+
+          option "--shell-completions", "SHELL",
+                 "generate shell completion script",
+                 hidden: true do |shell|
+            raise Clamp::Completion::Wanted.new(self, shell)
+          end
+        end
+
+      end
+
+      prepend WithCompletionOption
+
+    end
+
+  end
 end
