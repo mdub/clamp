@@ -41,6 +41,35 @@ describe Clamp::Completion do
 
   end
 
+  describe Clamp::Completion::Command do
+
+    include OutputCapture
+
+    let(:root_class) do
+      Class.new(Clamp::Command) do
+        option ["-v", "--verbose"], :flag, "be verbose"
+        subcommand "completion", "Generate shell completions", Clamp::Completion::Command
+        subcommand "status", "show status"
+      end
+    end
+
+    it "generates fish completions via subcommand" do
+      root_class.run("myapp", ["completion", "fish"])
+      expect(stdout).to include("complete -c myapp")
+    end
+
+    it "generates completions for the root command, not just the completion subcommand" do
+      root_class.run("myapp", ["completion", "fish"])
+      expect(stdout).to include("-l verbose")
+    end
+
+    it "includes sibling subcommands" do
+      root_class.run("myapp", ["completion", "fish"])
+      expect(stdout).to match(/-a status\b/)
+    end
+
+  end
+
   describe "fish" do
 
     let(:script) { command_class.generate_completion(:fish, "myapp") }

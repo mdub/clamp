@@ -2,6 +2,7 @@
 
 require "clamp/command"
 require "clamp/completion/fish_generator"
+require "clamp/completion/command"
 
 module Clamp
 
@@ -43,12 +44,30 @@ end
 
 module Clamp
 
-  # Reopened to add completion generation.
+  # Reopened to add completion support.
   #
   class Command
 
     def self.generate_completion(shell, executable_name)
       Clamp::Completion.generate(self, shell, executable_name)
+    end
+
+    # Stash the root command class in context,
+    # so that Completion::Command can find it at execution time.
+    #
+    module RunWithCompletionContext
+
+      def run(invocation_path = File.basename($PROGRAM_NAME), arguments = ARGV, context = {})
+        context[:root_command_class] ||= self
+        super
+      end
+
+    end
+
+    class << self
+
+      prepend RunWithCompletionContext
+
     end
 
   end

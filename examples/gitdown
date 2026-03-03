@@ -4,6 +4,7 @@
 # Demonstrate how subcommands can be declared as classes
 
 require "clamp"
+require "clamp/completion"
 
 module GitDown
 
@@ -63,20 +64,10 @@ module GitDown
     subcommand "clone", "Clone a remote repository.", CloneCommand
     subcommand "pull", "Fetch and merge updates.", PullCommand
     subcommand "status", "Display status of local repository.", StatusCommand
+    subcommand "completion", "Generate shell completions.", Clamp::Completion::Command
 
   end
 
-end
-
-# Generate shell completion scripts:
-#   gitdown --completion bash
-#   gitdown --completion fish
-#   gitdown --completion zsh
-if ARGV.first == "--completion"
-  require "clamp/completion"
-  shell = (ARGV[1] || ENV.fetch("SHELL", "bash")[/\w+$/]).to_sym
-  puts GitDown::MainCommand.generate_completion(shell, "gitdown")
-  exit
 end
 
 GitDown::MainCommand.run
