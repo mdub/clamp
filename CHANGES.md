@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 (2026-03-03)
+
+* Add `--shell-completions` support.
+
 ## 1.4.0 (2026-02-09)
 
 * Add support for Ruby 4.0.
