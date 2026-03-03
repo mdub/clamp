@@ -413,6 +413,50 @@ Options:
     -h, --help                    print help
 ```
 
+## Shell completion
+
+Clamp can generate shell completion scripts for bash, zsh, and fish. This is an opt-in feature:
+
+```ruby
+require 'clamp/completion'
+```
+
+This adds a hidden `--shell-completions` option to all commands. Use it to generate a completion script:
+
+```sh
+$ myapp --shell-completions bash   # or: zsh, fish
+```
+
+### Activating completions
+
+For **bash**, add to your `~/.bashrc`:
+
+```sh
+eval "$(myapp --shell-completions bash)"
+```
+
+For **zsh**, add to your `~/.zshrc`:
+
+```sh
+eval "$(myapp --shell-completions zsh)"
+```
+
+For **fish**, add to your `~/.config/fish/config.fish`:
+
+```sh
+myapp --shell-completions fish | source
+```
+
+### Programmatic API
+
+You can also generate completion scripts programmatically:
+
+```ruby
+script = MyCommand.generate_completion(:fish, "myapp")
+```
+
+This returns the completion script as a string, which you can write to a file or use however you like.
+
 ## Localization
 
 Clamp comes with support for overriding strings with custom translations. You can use localization library of your choice and override the strings at startup.

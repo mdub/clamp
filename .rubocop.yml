@@ -21,6 +21,10 @@ Layout/EmptyLinesAroundModuleBody:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/ClassLength:
+  CountAsOne:
+    - array
+
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"

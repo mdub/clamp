@@ -4,6 +4,7 @@
 # Demonstrate how subcommands can be declared as classes
 
 require "clamp"
+require "clamp/completion"
 
 module GitDown
 
