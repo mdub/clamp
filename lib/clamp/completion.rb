@@ -4,6 +4,9 @@ require "clamp/command"
 require "clamp/completion/fish_generator"
 
 module Clamp
+
+  # Shell completion script generation.
+  #
   module Completion
 
     GENERATORS = {
@@ -38,8 +41,16 @@ module Clamp
   end
 end
 
-class Clamp::Command
-  def self.generate_completion(shell, executable_name)
-    Clamp::Completion.generate(self, shell, executable_name)
+module Clamp
+
+  # Reopened to add completion generation.
+  #
+  class Command
+
+    def self.generate_completion(shell, executable_name)
+      Clamp::Completion.generate(self, shell, executable_name)
+    end
+
   end
+
 end

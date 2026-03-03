@@ -7,12 +7,13 @@ generation for Clamp (issue #45).
 
 We're working in TDD increments. Each increment:
 
-1. Discuss next steps
-2. Write tests
-3. Write code to get tests passing
-4. Consider refactoring
-5. Append notes to `progress.md`
-6. Commit to the feature branch
+- Discuss next steps
+- Write tests
+- Write code to get tests passing
+- Consider refactoring
+- Fix Rubocop warnings
+- Append notes to `progress.md`
+- Commit to the feature branch
 
 ## Files
 

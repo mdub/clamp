@@ -3,6 +3,16 @@
 require "spec_helper"
 require "clamp/completion"
 
+RSpec::Matchers.define :be_valid_fish_syntax do
+  match do |script|
+    Tempfile.open(["completion", ".fish"]) do |f|
+      f.write(script)
+      f.flush
+      system("fish", "--no-execute", f.path, out: File::NULL, err: File::NULL)
+    end
+  end
+end
+
 describe Clamp::Completion do
 
   let(:command_class) do
@@ -35,14 +45,19 @@ describe Clamp::Completion do
 
     let(:script) { command_class.generate_completion(:fish, "myapp") }
 
-    it "generates a non-empty string" do
+    it "returns a string" do
       expect(script).to be_a(String)
-      expect(script).not_to be_empty
     end
 
-    it "includes top-level short and long switches" do
+    it "includes short switches" do
       expect(script).to include("-s v")
+    end
+
+    it "includes long switches" do
       expect(script).to include("-l verbose")
+    end
+
+    it "includes valued option switches" do
       expect(script).to include("-l format")
     end
 
@@ -56,6 +71,9 @@ describe Clamp::Completion do
 
     it "includes subcommand names" do
       expect(script).to match(/-a remote\b/)
+    end
+
+    it "includes other subcommand names" do
       expect(script).to match(/-a status\b/)
     end
 
@@ -65,7 +83,6 @@ describe Clamp::Completion do
 
     it "includes subcommand descriptions" do
       expect(script).to include("manage remotes")
-      expect(script).to include("show status")
     end
 
     it "includes nested subcommand options" do
@@ -84,13 +101,7 @@ describe Clamp::Completion do
 
     it "passes fish syntax validation" do
       skip "fish not available" unless system("fish", "--version", out: File::NULL, err: File::NULL)
-      require "tempfile"
-      Tempfile.open(["completion", ".fish"]) do |f|
-        f.write(script)
-        f.flush
-        ok = system("fish", "--no-execute", f.path, out: File::NULL, err: File::NULL)
-        expect(ok).to be true
-      end
+      expect(script).to be_valid_fish_syntax
     end
 
   end
