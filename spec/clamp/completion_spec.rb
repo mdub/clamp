@@ -39,6 +39,7 @@ describe Clamp::Completion do
     Class.new(Clamp::Command) do
       option ["-v", "--verbose"], :flag, "be verbose"
       option "--format", "FORMAT", "output format"
+      option "--[no-]color", :flag, "use color"
       option "--secret", :flag, "secret option", hidden: true
 
       subcommand "remote", "manage remotes" do
@@ -131,6 +132,14 @@ describe Clamp::Completion do
       expect(script).to include("-v")
     end
 
+    it "expands --[no-] options to positive form" do
+      expect(script).to include("--color")
+    end
+
+    it "expands --[no-] options to negative form" do
+      expect(script).to include("--no-color")
+    end
+
     it "excludes hidden options" do
       expect(script).not_to include("secret")
     end
@@ -202,6 +211,14 @@ describe Clamp::Completion do
       expect(script).to match(/--format\[output format\]:/)
     end
 
+    it "expands --[no-] options to positive form" do
+      expect(script).to include("--color")
+    end
+
+    it "expands --[no-] options to negative form" do
+      expect(script).to include("--no-color")
+    end
+
     it "excludes hidden options" do
       expect(script).not_to include("secret")
     end
@@ -259,6 +276,14 @@ describe Clamp::Completion do
 
     it "includes valued option switches" do
       expect(script).to include("-l format")
+    end
+
+    it "expands --[no-] options to positive form" do
+      expect(script).to include("-l color")
+    end
+
+    it "expands --[no-] options to negative form" do
+      expect(script).to include("-l no-color")
     end
 
     it "excludes hidden options" do
