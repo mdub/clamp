@@ -17,7 +17,7 @@ module Clamp
       zsh: Clamp::Completion::ZshGenerator
     }.freeze
 
-    # Raised when --completion is used; caught by Command.run.
+    # Raised when --shell-completions is used; caught by Command.run.
     #
     class Wanted < StandardError
 
@@ -93,7 +93,7 @@ module Clamp
       Clamp::Completion.generate(self, shell, executable_name)
     end
 
-    # Adds --completion option and handles the Wanted exception.
+    # Adds --shell-completions option and handles the Wanted exception.
     #
     module RunWithCompletion
 
