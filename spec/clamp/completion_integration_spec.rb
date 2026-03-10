@@ -21,6 +21,12 @@ describe Clamp::Completion do
       end
 
       subcommand "status", "show status"
+
+      subcommand ["deploy", "d"], "deploy stuff" do
+        parameter "TARGET", "deploy target"
+        subcommand "start", "start deploy"
+        subcommand "rollback", "rollback deploy"
+      end
     end
   end
 
@@ -52,6 +58,22 @@ describe Clamp::Completion do
 
     it "excludes hidden options" do
       expect(complete("myapp --s")).not_to include("--secret")
+    end
+
+    it "does not offer subcommands before required parameters are filled" do
+      expect(complete("myapp deploy ")).not_to include("start")
+    end
+
+    it "does not offer subcommands before required parameters are filled, via alias" do
+      expect(complete("myapp d ")).not_to include("start")
+    end
+
+    it "offers subcommands after required parameters are filled, via alias" do
+      expect(complete("myapp d target ")).to include("start")
+    end
+
+    it "completes nested subcommand options via alias" do
+      expect(complete("myapp remote rm --h")).to include("--help")
     end
 
   end

@@ -71,6 +71,11 @@ module Clamp
       end
     end
 
+    # Count required, non-multivalued parameters for a command.
+    def required_parameter_count(command_class)
+      command_class.parameters.count { |p| p.required? && !p.multivalued? }
+    end
+
     # Collect all subcommand names across the command tree.
     def collect_subcommand_names(command_class)
       names = []

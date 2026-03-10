@@ -19,6 +19,10 @@ module Clamp
           "",
           takes_value_function,
           "",
+          param_count_function,
+          "",
+          canonical_function,
+          "",
           completion_function,
           "",
           "complete -F _#{function_name} #{@executable_name}"
@@ -43,13 +47,19 @@ module Clamp
           '        prev="${COMP_WORDS[COMP_CWORD-1]}"',
           "    fi",
           "",
-          "    local subcmd",
-          "    subcmd=$(__#{fn}_find_subcmd)",
+          "    local subcmd_info subcmd params_remaining",
+          "    subcmd_info=$(__#{fn}_find_subcmd)",
+          '    subcmd="${subcmd_info%% *}"',
+          '    params_remaining="${subcmd_info##* }"',
           "    if __#{fn}_takes_value \"$prev\" \"$subcmd\"; then",
           "        return",
           "    fi",
           "",
-          completions_case("$subcmd"),
+          options_case("$subcmd"),
+          "",
+          '    if [ "$params_remaining" -eq 0 ]; then',
+          subcommands_case("$subcmd"),
+          "    fi",
           "}",
           "",
           find_subcmd_function
@@ -58,10 +68,10 @@ module Clamp
 
       def find_subcmd_function
         fn = function_name
-        subcmds = Completion.collect_subcommand_names(@command_class).join("|")
         [
           "__#{fn}_find_subcmd() {",
-          "    local i=1 word subcmd",
+          "    local i=1 word subcmd skip",
+          "    skip=$(__#{fn}_param_count \"\")",
           '    while [ "$i" -lt "$COMP_CWORD" ]; do',
           '        word="${COMP_WORDS[$i]}"',
           '        case "$word" in',
@@ -71,40 +81,98 @@ module Clamp
           "                fi",
           "                ;;",
           "            *)",
-          '                case "$word" in',
-          "                    #{subcmds})",
-          '                        if [ -z "$subcmd" ]; then',
-          '                            subcmd="$word"',
-          "                        else",
-          '                            subcmd="${subcmd}::${word}"',
-          "                        fi",
-          "                        ;;",
-          "                esac",
+          find_subcmd_match_word(fn),
           "                ;;",
           "        esac",
           "        ((i++))",
           "    done",
-          '    echo "$subcmd"',
+          '    echo "$subcmd $skip"',
           "}"
         ].join("\n")
       end
 
-      def completions_case(var)
+      def find_subcmd_match_word(func)
+        subcmds = Completion.collect_subcommand_names(@command_class).join("|")
+        [
+          '                if [ "$skip" -gt 0 ]; then',
+          "                    ((skip--))",
+          "                else",
+          '                    case "$word" in',
+          "                        #{subcmds})",
+          "                            local canonical=$(__#{func}_canonical \"$word\")",
+          '                            if [ -z "$subcmd" ]; then',
+          '                                subcmd="$canonical"',
+          "                            else",
+          '                                subcmd="${subcmd}::${canonical}"',
+          "                            fi",
+          "                            skip=$(__#{func}_param_count \"$subcmd\")",
+          "                            ;;",
+          "                    esac",
+          "                fi"
+        ].join("\n")
+      end
+
+      def options_case(var)
+        build_case(var, "    ", "COMPREPLY=") do |cmd, _has_children|
+          Completion.visible_options(cmd).flat_map { |o| Completion.expanded_switches(o) }
+        end
+      end
+
+      def subcommands_case(var)
+        build_case(var, "        ", "COMPREPLY+=") do |cmd, has_children|
+          cmd.recognised_subcommands.flat_map(&:names) if has_children
+        end
+      end
+
+      def build_case(var, indent, assign)
         entries = {}
         Completion.walk_command_tree(@command_class) do |cmd, path, has_children|
+          words = yield(cmd, has_children)
+          next if words.nil? || words.empty?
+
           path_str = path.map { |sub| sub.names.first }.join("::")
-          words = Completion.visible_options(cmd).flat_map { |o| Completion.expanded_switches(o) }
-          cmd.recognised_subcommands.each { |sub| words.concat(sub.names) } if has_children
           entries[path_str] = words.join(" ")
         end
-        lines = ["    case \"#{var}\" in"]
+        lines = ["#{indent}case \"#{var}\" in"]
         entries.each do |path, words|
           pattern = path.empty? ? '""' : "\"#{path}\""
-          lines << "        #{pattern})"
-          lines << "            COMPREPLY=($(compgen -W \"#{words}\" -- \"$cur\"))"
-          lines << "            ;;"
+          lines << "#{indent}    #{pattern})"
+          lines << "#{indent}        #{assign}($(compgen -W \"#{words}\" -- \"$cur\"))"
+          lines << "#{indent}        ;;"
         end
-        lines << "    esac"
+        lines << "#{indent}esac"
+        lines.join("\n")
+      end
+
+      def param_count_function
+        entries = {}
+        Completion.walk_command_tree(@command_class) do |cmd, path, has_children|
+          next unless has_children
+
+          entries[path.map { |s| s.names.first }.join("::")] = Completion.required_parameter_count(cmd)
+        end
+        build_lookup_function("param_count", entries, "echo", default: "echo 0")
+      end
+
+      def canonical_function
+        aliases = {}
+        Completion.walk_command_tree(@command_class) do |cmd, _path, has_children|
+          next unless has_children
+
+          cmd.recognised_subcommands.each do |sub|
+            sub.names.drop(1).each { |name| aliases[name] = sub.names.first }
+          end
+        end
+        build_lookup_function("canonical", aliases, "echo", default: 'echo "$1"')
+      end
+
+      def build_lookup_function(suffix, entries, verb, default:)
+        lines = ["__#{function_name}_#{suffix}() {", '    case "$1" in']
+        entries.each do |key, value|
+          pattern = key.empty? ? '""' : key
+          lines << "        #{pattern}) #{verb} #{value.is_a?(String) ? "\"#{value}\"" : value} ;;"
+        end
+        lines.push("        *) #{default} ;;", "    esac", "}")
         lines.join("\n")
       end
 
