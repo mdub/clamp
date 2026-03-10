@@ -22,7 +22,7 @@ module Clamp
       private
 
       def function_name
-        @executable_name.gsub(/[^a-zA-Z0-9_]/, "_")
+        @executable_name
       end
 
       def generate_functions(lines, command_class, path, visited)

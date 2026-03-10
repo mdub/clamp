@@ -9,7 +9,7 @@ describe Clamp::Completion do
   let(:command_class) do
     Class.new(Clamp::Command) do
       option ["-v", "--verbose"], :flag, "be verbose"
-      option "--format", "FORMAT", "output format"
+      option ["-f", "--format"], "FORMAT", "output format"
       option "--[no-]color", :flag, "use color"
       option "--secret", :flag, "secret option", hidden: true
 
@@ -74,6 +74,22 @@ describe Clamp::Completion do
 
     it "completes nested subcommand options via alias" do
       expect(complete("myapp remote rm --h")).to include("--help")
+    end
+
+    it "does not treat a long option value as a subcommand" do
+      expect(complete("myapp --format yaml ")).to include("remote")
+    end
+
+    it "does not treat a long option=value as a subcommand" do
+      expect(complete("myapp --format=yaml ")).to include("remote")
+    end
+
+    it "does not treat a short option value as a subcommand" do
+      expect(complete("myapp -f yaml ")).to include("remote")
+    end
+
+    it "does not treat a compact short option value as a subcommand" do
+      expect(complete("myapp -fyaml ")).to include("remote")
     end
 
   end

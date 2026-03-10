@@ -76,6 +76,19 @@ module Clamp
       command_class.parameters.count { |p| p.required? && !p.multivalued? }
     end
 
+    # Return fish argparse optspecs for an option.
+    def argparse_specs_for(option)
+      switches = expanded_switches(option)
+      suffix = option.flag? ? "" : "="
+      short = switches.find { |s| s.match?(/^-[^-]$/) }
+      longs = switches.select { |s| s.start_with?("--") }
+      if short && longs.length == 1
+        ["#{short.delete_prefix('-')}/#{longs.first.delete_prefix('--')}#{suffix}"]
+      else
+        longs.map { |l| "#{l.delete_prefix('--')}#{suffix}" }
+      end
+    end
+
     # Collect all subcommand names across the command tree.
     def collect_subcommand_names(command_class)
       names = []

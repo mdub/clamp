@@ -287,8 +287,8 @@ describe Clamp::Completion do
       expect(script).to include("-l no-color")
     end
 
-    it "excludes hidden options" do
-      expect(script).not_to include("secret")
+    it "excludes --shell-completions from completions" do
+      expect(script).not_to match(/^complete\b.*shell-completions/)
     end
 
     it "includes help option" do
