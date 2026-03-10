@@ -34,7 +34,7 @@ module Clamp
           generate_subcommand_node(lines, command_class, path, func_name, visited)
         else
           lines << "#{func_name}() {"
-          specs = Completion.visible_options(command_class).map { |o| option_spec(o) }
+          specs = Completion.visible_options(command_class).flat_map { |o| option_specs(o) }
           generate_arguments_call(lines, specs) if specs.any?
           lines << "}"
           lines << ""
@@ -46,7 +46,7 @@ module Clamp
         lines << "  local context state state_descr line"
         lines << "  typeset -A opt_args"
         lines << ""
-        specs = Completion.visible_options(command_class).map { |o| option_spec(o) }
+        specs = Completion.visible_options(command_class).flat_map { |o| option_specs(o) }
         specs << "'1:command:->commands'"
         specs << "'*::args:->args'"
         lines << "  _arguments -C \\"
@@ -97,19 +97,20 @@ module Clamp
         lines << "  esac"
       end
 
-      def option_spec(option)
+      def option_specs(option)
         expanded = Completion.expanded_switches(option)
-        desc = "[#{escape(option.description)}]"
-        arg_spec = option.flag? ? "" : ":#{option.type.to_s.downcase}:"
-        exclusion = expanded.length > 1 ? "(#{expanded.join(' ')})" : ""
+        suffix = "[#{escape(option.description)}]"
+        suffix += ":#{option.type.to_s.downcase}:" unless option.flag?
+        exclusion = expanded.length > 1 ? "'(#{expanded.join(' ')})'" : ""
+        short = expanded.find { |s| s.match?(/^-[^-]/) }
+        longs = expanded.grep(/^--/)
 
-        "'#{exclusion}#{switch_pattern(option.switches)}#{desc}#{arg_spec}'"
-      end
-
-      def switch_pattern(switches)
-        short = switches.find { |s| s =~ /^-[^-]/ }
-        long = switches.find { |s| s =~ /^--/ }
-        short && long ? "{#{short},#{long}}" : (long || short).to_s
+        if short && longs.length == 1
+          # Braces outside quotes for zsh brace expansion
+          ["#{exclusion}{#{short},#{longs.first}}'#{suffix}'"]
+        else
+          expanded.map { |sw| "#{exclusion}'#{sw}#{suffix}'" }
+        end
       end
 
       def escape(str)

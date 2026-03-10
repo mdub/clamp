@@ -5,6 +5,8 @@ plugins:
 AllCops:
   TargetRubyVersion: 2.5
   NewCops: enable
+  Exclude:
+    - "**/*.zsh"
 
 Layout/LineLength:
   Max: 120

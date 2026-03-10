@@ -3,6 +3,7 @@
 require "spec_helper"
 require "clamp/completion"
 require "open3"
+require "tempfile"
 
 describe Clamp::Completion do
 
@@ -60,15 +61,15 @@ describe Clamp::Completion do
       expect(complete("myapp --s")).not_to include("--secret")
     end
 
-    it "does not offer subcommands before required parameters are filled" do
+    it "does not offer subcommands before required parameters are filled", :required_params do
       expect(complete("myapp deploy ")).not_to include("start")
     end
 
-    it "does not offer subcommands before required parameters are filled, via alias" do
+    it "does not offer subcommands before required parameters are filled, via alias", :required_params do
       expect(complete("myapp d ")).not_to include("start")
     end
 
-    it "offers subcommands after required parameters are filled, via alias" do
+    it "offers subcommands after required parameters are filled, via alias", :required_params do
       expect(complete("myapp d target ")).to include("start")
     end
 
@@ -80,7 +81,7 @@ describe Clamp::Completion do
       expect(complete("myapp --format yaml ")).to include("remote")
     end
 
-    it "does not treat a long option=value as a subcommand" do
+    it "does not treat a long option=value as a subcommand", :compact_option_values do
       expect(complete("myapp --format=yaml ")).to include("remote")
     end
 
@@ -88,7 +89,7 @@ describe Clamp::Completion do
       expect(complete("myapp -f yaml ")).to include("remote")
     end
 
-    it "does not treat a compact short option value as a subcommand" do
+    it "does not treat a compact short option value as a subcommand", :compact_option_values do
       expect(complete("myapp -fyaml ")).to include("remote")
     end
 
@@ -139,6 +140,38 @@ describe Clamp::Completion do
       raise "fish failed: #{status}" unless status.success?
 
       stdout.split("\n").map { |line| line.split("\t").first }.reject(&:empty?)
+    end
+
+    it_behaves_like "auto-completion script"
+
+  end
+
+  describe "zsh auto-completion script" do
+
+    before do
+      skip "zsh not available" unless system("zsh", "--version", out: File::NULL, err: File::NULL)
+    end
+
+    before(:example, :required_params) do
+      skip "zsh generator does not yet handle required parameters before subcommands"
+    end
+
+    before(:example, :compact_option_values) do
+      skip "zsh _arguments handles compact option values (--opt=val, -oval) internally"
+    end
+
+    let(:script) { command_class.generate_completion(:zsh, "myapp") }
+
+    def complete(command_line)
+      Tempfile.open(["completion", ".zsh"]) do |f|
+        f.write(script)
+        f.flush
+        driver = File.expand_path("../support/zsh_complete.zsh", __dir__)
+        stdout, status = Open3.capture2("zsh", driver, f.path, command_line)
+        raise "zsh failed: #{status}" unless status.success?
+
+        stdout.split("\n").reject(&:empty?).map { |line| line.split(" -- ").first }
+      end
     end
 
     it_behaves_like "auto-completion script"
