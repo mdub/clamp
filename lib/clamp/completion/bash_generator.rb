@@ -23,22 +23,21 @@ module Clamp
           "",
           canonical_function,
           "",
-          completion_function,
+          main_function,
           "",
-          "complete -F _#{function_name} #{@executable_name}"
+          "complete -F #{completion_function} #{@executable_name}"
         ].push("").join("\n")
       end
 
       private
 
-      def function_name
-        @executable_name
+      def completion_function
+        "_clamp_complete_#{Completion.encode_name(@executable_name)}"
       end
 
-      def completion_function
-        fn = function_name
+      def main_function
         [
-          "_#{fn}() {",
+          "#{completion_function}() {",
           "    local cur prev",
           "    if type _init_completion &>/dev/null; then",
           "        _init_completion",
@@ -48,10 +47,10 @@ module Clamp
           "    fi",
           "",
           "    local subcmd_info subcmd params_remaining",
-          "    subcmd_info=$(__#{fn}_find_subcmd)",
+          "    subcmd_info=$(#{completion_function}_find_subcmd)",
           '    subcmd="${subcmd_info%% *}"',
           '    params_remaining="${subcmd_info##* }"',
-          "    if __#{fn}_takes_value \"$prev\" \"$subcmd\"; then",
+          "    if #{completion_function}_takes_value \"$prev\" \"$subcmd\"; then",
           "        return",
           "    fi",
           "",
@@ -67,21 +66,20 @@ module Clamp
       end
 
       def find_subcmd_function
-        fn = function_name
         [
-          "__#{fn}_find_subcmd() {",
+          "#{completion_function}_find_subcmd() {",
           "    local i=1 word subcmd skip",
-          "    skip=$(__#{fn}_param_count \"\")",
+          "    skip=$(#{completion_function}_param_count \"\")",
           '    while [ "$i" -lt "$COMP_CWORD" ]; do',
           '        word="${COMP_WORDS[$i]}"',
           '        case "$word" in',
           "            -*)",
-          "                if __#{fn}_takes_value \"$word\" \"$subcmd\"; then",
+          "                if #{completion_function}_takes_value \"$word\" \"$subcmd\"; then",
           "                    ((i++))",
           "                fi",
           "                ;;",
           "            *)",
-          find_subcmd_match_word(fn),
+          find_subcmd_match_word,
           "                ;;",
           "        esac",
           "        ((i++))",
@@ -91,7 +89,7 @@ module Clamp
         ].join("\n")
       end
 
-      def find_subcmd_match_word(func)
+      def find_subcmd_match_word
         subcmds = Completion.collect_subcommand_names(@command_class).join("|")
         [
           '                if [ "$skip" -gt 0 ]; then',
@@ -99,13 +97,13 @@ module Clamp
           "                else",
           '                    case "$word" in',
           "                        #{subcmds})",
-          "                            local canonical=$(__#{func}_canonical \"$word\")",
+          "                            local canonical=$(#{completion_function}_canonical \"$word\")",
           '                            if [ -z "$subcmd" ]; then',
           '                                subcmd="$canonical"',
           "                            else",
           '                                subcmd="${subcmd}::${canonical}"',
           "                            fi",
-          "                            skip=$(__#{func}_param_count \"$subcmd\")",
+          "                            skip=$(#{completion_function}_param_count \"$subcmd\")",
           "                            ;;",
           "                    esac",
           "                fi"
@@ -167,7 +165,7 @@ module Clamp
       end
 
       def build_lookup_function(suffix, entries, verb, default:)
-        lines = ["__#{function_name}_#{suffix}() {", '    case "$1" in']
+        lines = ["#{completion_function}_#{suffix}() {", '    case "$1" in']
         entries.each do |key, value|
           pattern = key.empty? ? '""' : key
           lines << "        #{pattern}) #{verb} #{value.is_a?(String) ? "\"#{value}\"" : value} ;;"
@@ -184,7 +182,7 @@ module Clamp
                                         .flat_map { |o| Completion.expanded_switches(o) }
         end
         lines = [
-          "__#{function_name}_takes_value() {",
+          "#{completion_function}_takes_value() {",
           '    local option="$1"',
           '    local subcmd="$2"',
           '    case "$subcmd" in'

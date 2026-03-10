@@ -53,25 +53,23 @@ module Clamp
       end
 
       def condition_for(path, child_names)
-        fn = function_name
         if path.empty?
-          "not #{fn}_subcmd_args >/dev/null"
+          "not #{completion_function}_subcmd_args >/dev/null"
         else
-          parts = path.map { |sub| "#{fn}_seen_subcommand_from #{sub.names.join(' ')}" }
-          parts << "not #{fn}_seen_subcommand_from #{child_names.join(' ')}" if child_names.any?
+          parts = path.map { |sub| "#{completion_function}_seen_subcommand_from #{sub.names.join(' ')}" }
+          parts << "not #{completion_function}_seen_subcommand_from #{child_names.join(' ')}" if child_names.any?
           parts.join("; and ")
         end
       end
 
-      def function_name
-        "__#{@executable_name}"
+      def completion_function
+        "_clamp_complete_#{@executable_name}"
       end
 
       def subcmd_args_function
         optspecs = argparse_optspecs(@command_class)
-        fn = function_name
         lines = [
-          "function #{fn}_subcmd_args",
+          "function #{completion_function}_subcmd_args",
           "    set -l tokens (commandline -opc)",
           "    set -e tokens[1]",
           "    argparse -si #{optspecs.map { |s| "'#{s}'" }.join(' ')} -- $tokens 2>/dev/null",
@@ -80,8 +78,8 @@ module Clamp
           "    and printf '%s\\n' $argv",
           "end",
           "",
-          "function #{fn}_seen_subcommand_from",
-          "    for p in (#{fn}_subcmd_args)",
+          "function #{completion_function}_seen_subcommand_from",
+          "    for p in (#{completion_function}_subcmd_args)",
           "        if contains -- $p $argv",
           "            return 0",
           "        end",
@@ -135,7 +133,7 @@ module Clamp
       def function_name
         parts = [@executable_name]
         @path.each { |sub| parts << sub.names.first }
-        "__#{parts.join('_')}_params_satisfied"
+        "_clamp_complete_#{parts.join('_')}_params_satisfied"
       end
 
       def to_s

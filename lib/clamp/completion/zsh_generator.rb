@@ -14,21 +14,21 @@ module Clamp
 
       def generate
         lines = ["#compdef #{@executable_name}", ""]
-        generate_functions(lines, @command_class, [function_name], Set.new)
-        lines << "_#{function_name}"
+        generate_functions(lines, @command_class, [completion_function], Set.new)
+        lines << completion_function
         lines.push("").join("\n")
       end
 
       private
 
-      def function_name
-        @executable_name
+      def completion_function
+        "_clamp_complete_#{Completion.encode_name(@executable_name)}"
       end
 
       def generate_functions(lines, command_class, path, visited)
         has_children = command_class.has_subcommands? && !visited.include?(command_class)
         visited |= [command_class]
-        func_name = "_#{path.join('_')}"
+        func_name = path.join("_")
 
         if has_children
           generate_subcommand_node(lines, command_class, path, func_name, visited)
@@ -56,7 +56,7 @@ module Clamp
         lines << "}"
         lines << ""
         command_class.recognised_subcommands.each do |sub|
-          generate_functions(lines, sub.subcommand_class, path + [sanitize(sub.names.first)], visited)
+          generate_functions(lines, sub.subcommand_class, path + [Completion.encode_name(sub.names.first)], visited)
         end
       end
 
@@ -88,7 +88,7 @@ module Clamp
         lines << "    args)"
         lines << "      case $line[1] in"
         command_class.recognised_subcommands.each do |sub|
-          sub_fn = "_#{(path + [sanitize(sub.names.first)]).join('_')}"
+          sub_fn = (path + [Completion.encode_name(sub.names.first)]).join("_")
           pattern = sub.names.join("|")
           lines << "        #{pattern}) #{sub_fn} ;;"
         end
@@ -110,10 +110,6 @@ module Clamp
         short = switches.find { |s| s =~ /^-[^-]/ }
         long = switches.find { |s| s =~ /^--/ }
         short && long ? "{#{short},#{long}}" : (long || short).to_s
-      end
-
-      def sanitize(name)
-        name.gsub(/[^a-zA-Z0-9_]/, "_")
       end
 
       def escape(str)

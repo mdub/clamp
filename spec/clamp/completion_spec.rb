@@ -166,7 +166,7 @@ describe Clamp::Completion do
     end
 
     it "registers the completion function" do
-      expect(script).to include("complete -F _myapp myapp")
+      expect(script).to include("complete -F _clamp_complete_myapp myapp")
     end
 
     it "lists valued options in takes_value function" do

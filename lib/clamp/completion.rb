@@ -33,6 +33,12 @@ module Clamp
 
     module_function
 
+    # Encode a name for use as a shell function identifier.
+    # Special characters are replaced with _XX hex codes.
+    def encode_name(name)
+      name.gsub(/[^a-zA-Z0-9_]/) { |c| format("_%02x", c.ord) }
+    end
+
     def generate(command_class, shell, executable_name)
       generator_class = GENERATORS.fetch(shell) do
         raise ArgumentError, "unsupported shell: #{shell.inspect}"

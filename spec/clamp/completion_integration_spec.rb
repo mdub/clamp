@@ -109,7 +109,7 @@ describe Clamp::Completion do
         #{script}
         COMP_WORDS=(#{comp_words})
         COMP_CWORD=#{words.length - 1}
-        _myapp
+        _clamp_complete_myapp
         printf '%s\\n' "${COMPREPLY[@]}"
       BASH
       stdout, status = Open3.capture2("bash", stdin_data: bash_script)
