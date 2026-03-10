@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "clamp/completion"
+require "tempfile"
 
 RSpec::Matchers.define :be_valid_fish_syntax do
   match do |script|
