@@ -7,6 +7,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - "**/*.zsh"
+    - "vendor/**/*"
 
 Layout/LineLength:
   Max: 120
