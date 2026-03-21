@@ -325,6 +325,11 @@ describe Clamp::Completion do
       expect(verbose_line).not_to include("-r")
     end
 
+    it "emits inherited options only once" do
+      verbose_lines = script.lines.grep(/-l verbose/)
+      expect(verbose_lines.length).to eq(1)
+    end
+
     it "passes fish syntax validation" do
       skip "fish not available" unless system("fish", "--version", out: File::NULL, err: File::NULL)
       expect(script).to be_valid_fish_syntax

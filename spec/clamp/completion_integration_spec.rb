@@ -47,6 +47,10 @@ describe Clamp::Completion do
       expect(complete("myapp remote add --t")).to include("--tracking")
     end
 
+    it "completes inherited options in a subcommand" do
+      expect(complete("myapp remote add --v")).to include("--verbose")
+    end
+
     it "includes nested subcommands and aliases", :aggregate_failures do
       completions = complete("myapp remote ")
       expect(completions).to include("add")
