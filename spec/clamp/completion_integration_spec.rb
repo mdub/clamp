@@ -65,6 +65,10 @@ describe Clamp::Completion do
       expect(complete("myapp --s")).not_to include("--secret")
     end
 
+    it "does not offer options without a dash prefix", :zsh_pending do
+      expect(complete("myapp ")).not_to include("--verbose")
+    end
+
     it "does not offer subcommands before required parameters are filled", :required_params do
       expect(complete("myapp deploy ")).not_to include("start")
     end
@@ -154,6 +158,10 @@ describe Clamp::Completion do
 
     before do
       skip "zsh not available" unless system("zsh", "--version", out: File::NULL, err: File::NULL)
+    end
+
+    before(:example, :zsh_pending) do
+      skip "zsh generator does not yet suppress options without dash prefix"
     end
 
     before(:example, :required_params) do
