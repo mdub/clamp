@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.2 (2026-03-21)
+
+* Reduce fish completion verbosity by emitting inherited options once.
+
 ## 1.5.1 (2026-03-11)
 
 * Fix shell completion scripts: required parameters, subcommand aliases, and option value handling.
